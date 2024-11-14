@@ -42,7 +42,13 @@ The **STAC Merkle Tree CLI Tool** automates the process of computing and embeddi
 - **Python 3.6 or higher**
 - **pip** (Python package installer)
 
-## Installation
+## General Installation
+
+```bash
+pip install stac-merkle-tree-cli
+```
+
+## Building for Development
 
 1. **Clone the Repository**
 
@@ -51,14 +57,51 @@ The **STAC Merkle Tree CLI Tool** automates the process of computing and embeddi
    cd stac-merkle-tree-cli
    ```
 
-2. **Install Required Python Libraries**: The tool relies on the click library for the CLI interface. Install it using pip:
+2. **Install the Package**
 
    ```bash
-   pip install click
+   pip install -e .
    ```
 
-3. **Make the Script Executable (Optional)**: If you're on a Unix-like system and want to run the script directly:
+## Directory Structure
 
-   ```bash
-   chmod +x compute_merkle_info.py
-   ```
+Ensure your STAC catalog follows the directory structure below for optimal processing:
+
+```
+catalog/
+├── catalog.json
+├── collections/
+│   ├── collection1/
+│   │   ├── collection.json
+│   │   ├── item1.json
+│   │   ├── item2.json
+│   │   └── ...
+│   ├── collection2/
+│   │   ├── collection.json
+│   │   ├── item1.json
+│   │   └── ...
+│   └── ...
+```
+
+- **Catalog Level**:
+  - `catalog.json`: Root catalog file.
+  - `collections/`: Directory containing all collections.
+- **Collections Level**:
+  - Each collection has its own directory inside `collections/`, named after the collection.
+  - Inside each collection directory:
+    - `collection.json`: Collection metadata.
+    - `item.json`, `item2.json`, ...: Items belonging to the collection.
+
+## Usage
+
+### Basic Usage
+
+After installing the package, you can use the `stac-merkle-tree-cli` command to compute and add Merkle information to your STAC catalog.
+
+Navigate to the directory containing your catalog.json file and run the command as follows:
+
+```bash
+stac-merkle-cli path/to/catalog.json
+```
+
+### Example

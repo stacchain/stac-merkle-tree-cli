@@ -5,7 +5,7 @@ setup(
     version='0.1.0',
     author='Jonathan Healy',
     author_email='jonathan.d.healy@gmail.com',
-    description='A CLI tool for computing and adding Merkle Tree information to STAC catalogs.',
+    description='A CLI tool for computing and adding Merkle Tree information to STAC catalogs, collections, or items.',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     url='https://github.com/stacchain/stac-merkle-tree-cli',  # Replace with your repository URL
