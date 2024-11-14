@@ -150,6 +150,8 @@ This tool complies with the [Merkle Tree Extension Specification](https://github
 
 - `merkle:object_hash` (string, REQUIRED in Items, Collections, Catalogs)
   - A cryptographic hash of the object's metadata, used to verify its integrity.
+  - For Items: Located within the properties field.
+  - For Collections and Catalogs: Located at the top level.
 - `merkle:hash_method` (object, REQUIRED in Collections and Catalogs)
   - Describes the method used to compute `merkle:object_hash` and `merkle:root`, including:
     - `function`: The hash function used (e.g., sha256).
@@ -168,3 +170,99 @@ All STAC objects processed by this tool will include the Merkle extension URL in
   "https://stacchain.github.io/merkle-tree/v1.0.0/schema.json"
 ]
 ```
+
+## Output
+
+After running the tool, each STAC object will be updated with the appropriate Merkle fields.
+
+### Catalog (catalog.json)
+
+```json
+{
+  "type": "Catalog",
+  "stac_version": "1.1.0",
+  "id": "my-catalog",
+  "description": "My STAC Catalog",
+  "links": [
+    // ... existing links
+  ],
+  "stac_extensions": [
+    // ... existing extensions,
+    "https://stacchain.github.io/merkle-tree/v1.0.0/schema.json"
+  ],
+  "merkle:object_hash": "abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890",
+  "merkle:root": "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+  "merkle:hash_method": {
+    "function": "sha256",
+    "fields": ["*"],
+    "ordering": "ascending",
+    "description": "Computed by excluding Merkle fields and including merkle:object_hash values in ascending order to build the Merkle tree."
+  }
+}
+```
+
+### Collection (collections/collection1/collection.json)
+
+```json
+{
+  "type": "Collection",
+  "stac_version": "1.1.0",
+  "id": "collection1",
+  "description": "My STAC Collection",
+  "extent": {
+    // ... existing extent
+  },
+  "links": [
+    // ... existing links
+  ],
+  "stac_extensions": [
+    // ... existing extensions,
+    "https://stacchain.github.io/merkle-tree/v1.0.0/schema.json"
+  ],
+  "merkle:object_hash": "fedcba0987654321fedcba0987654321fedcba0987654321fedcba0987654321",
+  "merkle:root": "0987654321fedcba0987654321fedcba0987654321fedcba0987654321fedcba",
+  "merkle:hash_method": {
+    "function": "sha256",
+    "fields": ["*"],
+    "ordering": "ascending",
+    "description": "Computed by excluding Merkle fields and including merkle:object_hash values in ascending order to build the Merkle tree."
+  }
+}
+```
+
+### Item (collections/collection1/item1.json)
+
+```json
+{
+  "type": "Feature",
+  "stac_version": "1.1.0",
+  "id": "item1",
+  "properties": {
+    // ... existing properties
+    "merkle:object_hash": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+    "merkle:hash_method": {
+      "function": "sha256",
+      "fields": ["*"],
+      "ordering": "ascending",
+      "description": "Computed by excluding Merkle fields and including merkle:object_hash values in ascending order to build the Merkle tree."
+    }
+  },
+  "geometry": {
+    // ... existing geometry
+  },
+  "links": [
+    // ... existing links
+  ],
+  "assets": {
+    // ... existing assets
+  },
+  "stac_extensions": [
+    // ... existing extensions,
+    "https://stacchain.github.io/merkle-tree/v1.0.0/schema.json"
+  ]
+}
+```
+
+## Contributing
+
+Contributions are welcome! If you encounter issues or have suggestions for improvements, please open an issue or submit a pull request on the [GitHub repository](https://github.com/stacchain/stac-merkle-tree-cli).
