@@ -1,0 +1,28 @@
+from setuptools import setup, find_packages
+
+setup(
+    name='stac-merkle-tree-cli',
+    version='0.1.0',
+    author='Jonathan Healy',
+    author_email='jonathan.d.healy@gmail.com',
+    description='A CLI tool for computing and adding Merkle Tree information to STAC catalogs.',
+    long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
+    url='https://github.com/stacchain/stac-merkle-tree-cli',  # Replace with your repository URL
+    packages=find_packages(),
+    include_package_data=True,
+    install_requires=[
+        'click>=8.0.0',
+    ],
+    entry_points={
+        'console_scripts': [
+            'stac-merkle-tree-cli=stac_merkle_tree_cli.cli:main',
+        ],
+    },
+    classifiers=[
+        'Programming Language :: Python :: 3',
+        'License :: OSI Approved :: MIT License',  # Update if you choose a different license
+        'Operating System :: OS Independent',
+    ],
+    python_requires='>=3.6',
+)
