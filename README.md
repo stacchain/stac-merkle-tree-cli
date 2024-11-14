@@ -183,11 +183,8 @@ After running the tool, each STAC object will be updated with the appropriate Me
   "stac_version": "1.1.0",
   "id": "my-catalog",
   "description": "My STAC Catalog",
-  "links": [
-    // ... existing links
-  ],
+  "links": [],
   "stac_extensions": [
-    // ... existing extensions,
     "https://stacchain.github.io/merkle-tree/v1.0.0/schema.json"
   ],
   "merkle:object_hash": "abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890",
@@ -209,14 +206,9 @@ After running the tool, each STAC object will be updated with the appropriate Me
   "stac_version": "1.1.0",
   "id": "collection1",
   "description": "My STAC Collection",
-  "extent": {
-    // ... existing extent
-  },
-  "links": [
-    // ... existing links
-  ],
+  "extent": {},
+  "links": [],
   "stac_extensions": [
-    // ... existing extensions,
     "https://stacchain.github.io/merkle-tree/v1.0.0/schema.json"
   ],
   "merkle:object_hash": "fedcba0987654321fedcba0987654321fedcba0987654321fedcba0987654321",
@@ -247,17 +239,10 @@ After running the tool, each STAC object will be updated with the appropriate Me
       "description": "Computed by excluding Merkle fields and including merkle:object_hash values in ascending order to build the Merkle tree."
     }
   },
-  "geometry": {
-    // ... existing geometry
-  },
-  "links": [
-    // ... existing links
-  ],
-  "assets": {
-    // ... existing assets
-  },
+  "geometry": {},
+  "links": [],
+  "assets": {},
   "stac_extensions": [
-    // ... existing extensions,
     "https://stacchain.github.io/merkle-tree/v1.0.0/schema.json"
   ]
 }
