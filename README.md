@@ -67,7 +67,7 @@ pip install stac-merkle-tree-cli
 
 Ensure your STAC catalog follows the directory structure below for optimal processing:
 
-```
+```bash
 catalog/
 ├── catalog.json
 ├── collections/
@@ -105,3 +105,43 @@ stac-merkle-cli path/to/catalog.json
 ```
 
 ### Example
+
+Assuming your directory structure is as follows:
+
+```bash
+my_stac_catalog/
+├── catalog.json
+├── collections/
+│   ├── collection1/
+│   │   ├── collection.json
+│   │   ├── item1.json
+│   │   └── item2.json
+│   └── collection2/
+│       ├── collection.json
+│       ├── item1.json
+│       └── item2.json
+
+```
+
+Run the tool:
+
+```bash
+stac-merkle-tree-cli ./my_stac_catalog/catalog.json
+```
+
+Expected Output:
+
+```
+Processed Item: /path/to/my_stac_catalog/collections/collection1/item1.json
+Processed Item: /path/to/my_stac_catalog/collections/collection1/item2.json
+Processed Collection: /path/to/my_stac_catalog/collections/collection1/collection.json
+Processed Item: /path/to/my_stac_catalog/collections/collection2/item1.json
+Processed Item: /path/to/my_stac_catalog/collections/collection2/item2.json
+Processed Collection: /path/to/my_stac_catalog/collections/collection2/collection.json
+Processed Catalog: /path/to/my_stac_catalog/catalog.json
+Merkle info computation and addition completed.
+```
+
+## Merkle Tree Extension Specification
+
+This tool complies with the [Merkle Tree Extension Specification](https://github.com/stacchain/merkle-tree), which outlines how to encode STAC objects in a Merkle tree to ensure metadata integrity.
