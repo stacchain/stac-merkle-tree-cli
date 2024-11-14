@@ -261,25 +261,3 @@ def process_catalog(catalog_path: Path) -> str:
     except Exception as e:
         click.echo(f"Error processing Catalog {catalog_path}: {e}", err=True)
         return ''
-
-@click.command()
-@click.argument('catalog_path', type=click.Path(exists=True, file_okay=True, dir_okay=False))
-def main(catalog_path):
-    """
-    Computes and adds Merkle info to each STAC object in the catalog.
-
-    CATALOG_PATH is the path to your root catalog.json file.
-    """
-    catalog_path = Path(catalog_path).resolve()
-
-    if not catalog_path.exists():
-        click.echo(f"Catalog file does not exist: {catalog_path}", err=True)
-        return
-
-    # Process the root catalog
-    process_catalog(catalog_path)
-
-    click.echo("Merkle info computation and addition completed.")
-
-if __name__ == '__main__':
-    main()
