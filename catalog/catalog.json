@@ -51,5 +51,18 @@
       "type": "application/json",
       "method": "POST"
     }
+  ],
+  "merkle:root": "612793af04533c6b9504d4334c91376fc77b5e1bd3a73d142e2be76717fca279",
+  "merkle:hash_method": {
+    "function": "sha256",
+    "fields": [
+      "*"
+    ],
+    "ordering": "ascending",
+    "description": "Computed by including merkle:object_hash values in ascending order and building the Merkle tree."
+  },
+  "merkle:object_hash": "d3900bc7cb20b2031f0fdcd0033205dbd0f06df54dd81107282f63acf11e8c96",
+  "stac_extensions": [
+    "https://stacchain.github.io/merkle-tree/v1.0.0/schema.json"
   ]
 }

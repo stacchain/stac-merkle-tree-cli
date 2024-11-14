@@ -3,32 +3,33 @@
   "stac_version": "1.0.0",
   "stac_extensions": [
     "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
-    "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
+    "https://stac-extensions.github.io/storage/v1.0.0/schema.json",
+    "https://stacchain.github.io/merkle-tree/v1.0.0/schema.json"
   ],
-  "id": "DEM1_SAR_DGE_30_20101212T230244_20140325T230302_ADS_000000_1jTi",
+  "id": "DEM1_SAR_DGE_30_20101212T230244_20140329T113710_ADS_000000_eAmG",
   "collection": "COP-DEM",
   "geometry": {
     "type": "Polygon",
     "coordinates": [
       [
         [
-          99,
+          100,
           -1
         ],
         [
-          100,
+          101,
           -1
+        ],
+        [
+          101,
+          0
         ],
         [
           100,
           0
         ],
         [
-          99,
-          0
-        ],
-        [
-          99,
+          100,
           -1
         ]
       ]
@@ -40,13 +41,13 @@
     "spatialResolution": 30,
     "polarisationChannels": "HH",
     "datetime": "2010-12-12T23:02:44.000000Z",
-    "end_datetime": "2014-03-25T23:03:02.000000Z",
+    "end_datetime": "2014-03-29T11:37:10.000000Z",
     "start_datetime": "2010-12-12T23:02:44.000000Z"
   },
   "bbox": [
-    99,
-    -1,
     100,
+    -1,
+    101,
     0
   ],
   "links": [
@@ -58,7 +59,7 @@
     {
       "rel": "self",
       "type": "application/json",
-      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items/DEM1_SAR_DGE_30_20101212T230244_20140325T230302_ADS_000000_1jTi"
+      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items/DEM1_SAR_DGE_30_20101212T230244_20140329T113710_ADS_000000_eAmG"
     },
     {
       "rel": "collection",
@@ -68,17 +69,17 @@
   ],
   "assets": {
     "QUICKLOOK": {
-      "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Assets(a75813a4-8a45-4227-9234-5dfab628d907)/$value",
+      "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Assets(54e870fd-268e-460d-be2f-6e5c36171f4b)/$value",
       "title": "QUICKLOOK",
       "type": "image/jpeg"
     },
     "PRODUCT": {
-      "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products(6ef3485f-2eb0-5463-9d3c-a67264c47eb8)/$value",
+      "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products(72c618e4-c942-5d6c-8ab6-629258334d88)/$value",
       "title": "Product",
       "type": "application/octet-stream",
       "alternate": {
         "s3": {
-          "href": "/eodata/auxdata/CopDEM/COP-DEM_GLO-30-DGED/DEM1_SAR_DGE_30_20101212T230244_20140325T230302_ADS_000000_1jTi.DEM",
+          "href": "/eodata/auxdata/CopDEM/COP-DEM_GLO-30-DGED/DEM1_SAR_DGE_30_20101212T230244_20140329T113710_ADS_000000_eAmG.DEM",
           "storage:platform": "CLOUDFERRO",
           "storage:region": "waw",
           "storage:requester_pays": false,
@@ -86,5 +87,14 @@
         }
       }
     }
+  },
+  "merkle:object_hash": "9c6b0b011ec783f4bcdec7c712c2443c3c6eca6d1a0d043842a7c8d587d767c4",
+  "merkle:hash_method": {
+    "function": "sha256",
+    "fields": [
+      "*"
+    ],
+    "ordering": "ascending",
+    "description": "Computed by including merkle:object_hash values in ascending order and building the Merkle tree."
   }
 }

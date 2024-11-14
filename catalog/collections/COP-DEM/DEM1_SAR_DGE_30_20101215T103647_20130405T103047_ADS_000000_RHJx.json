@@ -3,7 +3,8 @@
   "stac_version": "1.0.0",
   "stac_extensions": [
     "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
-    "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
+    "https://stac-extensions.github.io/storage/v1.0.0/schema.json",
+    "https://stacchain.github.io/merkle-tree/v1.0.0/schema.json"
   ],
   "id": "DEM1_SAR_DGE_30_20101215T103647_20130405T103047_ADS_000000_RHJx",
   "collection": "COP-DEM",
@@ -86,5 +87,14 @@
         }
       }
     }
+  },
+  "merkle:object_hash": "762a6152760f8d4868e4036b2ad009a948485e2626c51c6db2a506fc2c7e491c",
+  "merkle:hash_method": {
+    "function": "sha256",
+    "fields": [
+      "*"
+    ],
+    "ordering": "ascending",
+    "description": "Computed by including merkle:object_hash values in ascending order and building the Merkle tree."
   }
 }
