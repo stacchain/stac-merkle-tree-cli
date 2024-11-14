@@ -7,9 +7,13 @@ import hashlib
 from pathlib import Path
 from typing import List, Dict, Any
 
+# Define Merkle fields to exclude from hashing
+MERKLE_FIELDS = {"merkle:object_hash", "merkle:hash_method", "merkle:root"}
+
 def compute_merkle_object_hash(
     stac_object: Dict[str, Any],
     hash_method: Dict[str, Any],
+    is_item: bool = False,
 ) -> str:
     """
     Computes the merkle:object_hash for a STAC object (Catalog, Collection, or Item).
@@ -17,15 +21,29 @@ def compute_merkle_object_hash(
     Parameters:
     - stac_object (dict): The STAC object JSON content.
     - hash_method (dict): The hash method details from merkle:hash_method.
+    - is_item (bool): Indicates if the object is an Item (Feature).
 
     Returns:
     - str: The computed Merkle object hash as a hexadecimal string.
     """
     fields = hash_method.get('fields', ['*'])
     if fields == ['*'] or fields == ['all']:
-        data_to_hash = stac_object
+        # Exclude Merkle fields
+        if is_item:
+            # For Items, Merkle fields are within 'properties'
+            properties = stac_object.get('properties', {})
+            data_to_hash = {k: v for k, v in properties.items() if k not in MERKLE_FIELDS}
+        else:
+            # For Collections and Catalogs, Merkle fields are at the top level
+            data_to_hash = {k: v for k, v in stac_object.items() if k not in MERKLE_FIELDS}
     else:
-        data_to_hash = {field: stac_object.get(field) for field in fields}
+        if is_item:
+            # Include only specified fields, excluding Merkle fields
+            properties = stac_object.get('properties', {})
+            data_to_hash = {field: properties.get(field) for field in fields if field not in MERKLE_FIELDS}
+        else:
+            # For Collections and Catalogs
+            data_to_hash = {field: stac_object.get(field) for field in fields if field not in MERKLE_FIELDS}
 
     # Serialize the data to a canonical JSON string
     json_str = json.dumps(data_to_hash, sort_keys=True, separators=(',', ':'))
@@ -102,9 +120,12 @@ def process_item(item_path: Path, hash_method: Dict[str, Any]) -> str:
             item_json = json.load(f)
 
         # Compute merkle:object_hash
-        own_hash = compute_merkle_object_hash(item_json, hash_method)
-        item_json['merkle:object_hash'] = own_hash
-        item_json['merkle:hash_method'] = hash_method
+        own_hash = compute_merkle_object_hash(item_json, hash_method, is_item=True)
+
+        # Add Merkle fields to 'properties'
+        properties = item_json.setdefault('properties', {})
+        properties['merkle:object_hash'] = own_hash
+        properties['merkle:hash_method'] = hash_method
 
         # Ensure the Merkle extension is listed
         item_json.setdefault('stac_extensions', [])
@@ -159,8 +180,9 @@ def process_collection(collection_path: Path, parent_hash_method: Dict[str, Any]
             if item_hash:
                 item_hashes.append(item_hash)
 
-        # Include own merkle:object_hash in the merkle:root computation
-        own_hash = compute_merkle_object_hash(collection_json, hash_method)
+        # Compute merkle:object_hash
+        own_hash = compute_merkle_object_hash(collection_json, hash_method, is_item=False)
+        collection_json['merkle:object_hash'] = own_hash
         item_hashes.append(own_hash)
 
         # Compute merkle:root
@@ -169,7 +191,6 @@ def process_collection(collection_path: Path, parent_hash_method: Dict[str, Any]
         merkle_root = compute_merkle_root(item_hashes, ordering, hash_function_name)
         collection_json['merkle:root'] = merkle_root
         collection_json['merkle:hash_method'] = hash_method
-        collection_json['merkle:object_hash'] = own_hash
 
         # Ensure the Merkle extension is listed
         collection_json.setdefault('stac_extensions', [])
@@ -231,8 +252,9 @@ def process_catalog(catalog_path: Path) -> str:
                 else:
                     click.echo(f"collection.json not found in {collection_dir}", err=True)
 
-        # Include own merkle:object_hash in the merkle:root computation
-        own_hash = compute_merkle_object_hash(catalog_json, hash_method)
+        # Compute merkle:object_hash
+        own_hash = compute_merkle_object_hash(catalog_json, hash_method, is_item=False)
+        catalog_json['merkle:object_hash'] = own_hash
         collection_hashes.append(own_hash)
 
         # Compute merkle:root
@@ -241,7 +263,6 @@ def process_catalog(catalog_path: Path) -> str:
         merkle_root = compute_merkle_root(collection_hashes, ordering, hash_function_name)
         catalog_json['merkle:root'] = merkle_root
         catalog_json['merkle:hash_method'] = hash_method
-        catalog_json['merkle:object_hash'] = own_hash
 
         # Ensure the Merkle extension is listed
         catalog_json.setdefault('stac_extensions', [])

@@ -42,7 +42,16 @@
     "polarisationChannels": "HH",
     "datetime": "2010-12-16T00:50:27.000000Z",
     "end_datetime": "2013-04-11T00:52:16.000000Z",
-    "start_datetime": "2010-12-16T00:50:27.000000Z"
+    "start_datetime": "2010-12-16T00:50:27.000000Z",
+    "merkle:object_hash": "a2ebb590daa1915fd4d42fb677769d93b3c71e2151c998aa67af83bf2075ecd1",
+    "merkle:hash_method": {
+      "function": "sha256",
+      "fields": [
+        "*"
+      ],
+      "ordering": "ascending",
+      "description": "Computed by including merkle:object_hash values in ascending order and building the Merkle tree."
+    }
   },
   "bbox": [
     -112,
