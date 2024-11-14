@@ -1,0 +1,85 @@
+{
+  "type": "Feature",
+  "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
+    "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
+  ],
+  "id": "DEM1_SAR_DTE_30_20101217T200231_20140802T083458_ADS_000000_tFcK",
+  "collection": "COP-DEM",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          144,
+          -6
+        ],
+        [
+          145,
+          -6
+        ],
+        [
+          145,
+          -5
+        ],
+        [
+          144,
+          -5
+        ],
+        [
+          144,
+          -6
+        ]
+      ]
+    ]
+  },
+  "properties": {
+    "authority": "ESA",
+    "productType": "DTE_30",
+    "spatialResolution": 30,
+    "polarisationChannels": "HH",
+    "datetime": "2010-12-17T20:02:31.000000Z",
+    "end_datetime": "2014-08-02T08:34:58.000000Z",
+    "start_datetime": "2010-12-17T20:02:31.000000Z"
+  },
+  "bbox": [
+    144,
+    -6,
+    145,
+    -5
+  ],
+  "links": [
+    {
+      "rel": "root",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac"
+    },
+    {
+      "rel": "self",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items/DEM1_SAR_DTE_30_20101217T200231_20140802T083458_ADS_000000_tFcK"
+    },
+    {
+      "rel": "collection",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM"
+    }
+  ],
+  "assets": {
+    "PRODUCT": {
+      "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products(0ef9d397-c93f-52b6-ad06-6aea87ad5bc1)/$value",
+      "title": "Product",
+      "type": "application/octet-stream",
+      "alternate": {
+        "s3": {
+          "href": "/eodata/auxdata/CopDEM/COP-DEM_GLO-30-DTED/DEM1_SAR_DTE_30_20101217T200231_20140802T083458_ADS_000000_tFcK.DEM",
+          "storage:platform": "CLOUDFERRO",
+          "storage:region": "waw",
+          "storage:requester_pays": false,
+          "storage:tier": "Online"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "type": "Feature",
+  "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
+    "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
+  ],
+  "id": "DEM1_SAR_DTE_90_20101217T224141_20140127T121413_ADS_000000_0611",
+  "collection": "COP-DEM",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          -84,
+          73
+        ],
+        [
+          -83,
+          73
+        ],
+        [
+          -83,
+          74
+        ],
+        [
+          -84,
+          74
+        ],
+        [
+          -84,
+          73
+        ]
+      ]
+    ]
+  },
+  "properties": {
+    "authority": "ESA",
+    "productType": "DTE_90",
+    "spatialResolution": 90,
+    "polarisationChannels": "HH",
+    "datetime": "2010-12-17T22:42:03.000000Z",
+    "end_datetime": "2010-12-17T22:42:04.000000Z",
+    "start_datetime": "2010-12-17T22:42:03.000000Z"
+  },
+  "bbox": [
+    -84,
+    73,
+    -83,
+    74
+  ],
+  "links": [
+    {
+      "rel": "root",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac"
+    },
+    {
+      "rel": "self",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items/DEM1_SAR_DTE_90_20101217T224141_20140127T121413_ADS_000000_0611"
+    },
+    {
+      "rel": "collection",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM"
+    }
+  ],
+  "assets": {
+    "QUICKLOOK": {
+      "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Assets(78c6380c-8d72-4bcc-9ec0-fd1a16fcee41)/$value",
+      "title": "QUICKLOOK",
+      "type": "image/jpeg"
+    },
+    "PRODUCT": {
+      "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products(7182e702-c208-5295-afc5-68fc52cd95ad)/$value",
+      "title": "Product",
+      "type": "application/octet-stream",
+      "alternate": {
+        "s3": {
+          "href": "/eodata/auxdata/CopDEM/COP-DEM_GLO-90-DTED/DEM1_SAR_DTE_90_20101217T224141_20140127T121413_ADS_000000_0611.DEM",
+          "storage:platform": "CLOUDFERRO",
+          "storage:region": "waw",
+          "storage:requester_pays": false,
+          "storage:tier": "Online"
+        }
+      }
+    }
+  }
+}

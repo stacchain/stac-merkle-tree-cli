@@ -1,0 +1,1412 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "stac_version": "1.0.0",
+      "stac_extensions": [
+        "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
+        "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
+      ],
+      "id": "DEM1_SAR_DTE_90_20101213T034716_20130408T035028_ADS_000000_5033",
+      "collection": "COP-DEM",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [26, -9],
+            [27, -9],
+            [27, -8],
+            [26, -8],
+            [26, -9]
+          ]
+        ]
+      },
+      "properties": {
+        "authority": "ESA",
+        "productType": "DTE_90",
+        "spatialResolution": 90,
+        "polarisationChannels": "HH",
+        "datetime": "2010-12-13T03:47:46.000000Z",
+        "end_datetime": "2010-12-13T03:47:47.000000Z",
+        "start_datetime": "2010-12-13T03:47:46.000000Z"
+      },
+      "bbox": [26, -9, 27, -8],
+      "links": [
+        {
+          "rel": "root",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac"
+        },
+        {
+          "rel": "self",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items/DEM1_SAR_DTE_90_20101213T034716_20130408T035028_ADS_000000_5033"
+        },
+        {
+          "rel": "collection",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM"
+        }
+      ],
+      "assets": {
+        "QUICKLOOK": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Assets(2af0d671-d1bd-4f52-b780-b4aff072aaad)/$value",
+          "title": "QUICKLOOK",
+          "type": "image/jpeg"
+        },
+        "PRODUCT": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products(2f497806-0101-5eea-83fa-c8f68bc56b0c)/$value",
+          "title": "Product",
+          "type": "application/octet-stream",
+          "alternate": {
+            "s3": {
+              "href": "/eodata/auxdata/CopDEM/COP-DEM_GLO-90-DTED/DEM1_SAR_DTE_90_20101213T034716_20130408T035028_ADS_000000_5033.DEM",
+              "storage:platform": "CLOUDFERRO",
+              "storage:region": "waw",
+              "storage:requester_pays": false,
+              "storage:tier": "Online"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "stac_version": "1.0.0",
+      "stac_extensions": [
+        "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
+        "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
+      ],
+      "id": "DEM1_SAR_DTE_90_20101217T224141_20140127T121413_ADS_000000_0611",
+      "collection": "COP-DEM",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-84, 73],
+            [-83, 73],
+            [-83, 74],
+            [-84, 74],
+            [-84, 73]
+          ]
+        ]
+      },
+      "properties": {
+        "authority": "ESA",
+        "productType": "DTE_90",
+        "spatialResolution": 90,
+        "polarisationChannels": "HH",
+        "datetime": "2010-12-17T22:42:03.000000Z",
+        "end_datetime": "2010-12-17T22:42:04.000000Z",
+        "start_datetime": "2010-12-17T22:42:03.000000Z"
+      },
+      "bbox": [-84, 73, -83, 74],
+      "links": [
+        {
+          "rel": "root",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac"
+        },
+        {
+          "rel": "self",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items/DEM1_SAR_DTE_90_20101217T224141_20140127T121413_ADS_000000_0611"
+        },
+        {
+          "rel": "collection",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM"
+        }
+      ],
+      "assets": {
+        "QUICKLOOK": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Assets(78c6380c-8d72-4bcc-9ec0-fd1a16fcee41)/$value",
+          "title": "QUICKLOOK",
+          "type": "image/jpeg"
+        },
+        "PRODUCT": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products(7182e702-c208-5295-afc5-68fc52cd95ad)/$value",
+          "title": "Product",
+          "type": "application/octet-stream",
+          "alternate": {
+            "s3": {
+              "href": "/eodata/auxdata/CopDEM/COP-DEM_GLO-90-DTED/DEM1_SAR_DTE_90_20101217T224141_20140127T121413_ADS_000000_0611.DEM",
+              "storage:platform": "CLOUDFERRO",
+              "storage:region": "waw",
+              "storage:requester_pays": false,
+              "storage:tier": "Online"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "stac_version": "1.0.0",
+      "stac_extensions": [
+        "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
+        "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
+      ],
+      "id": "DEM1_SAR_DTE_90_20101212T102356_20130628T103333_ADS_000000_1705",
+      "collection": "COP-DEM",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-72, -3],
+            [-71, -3],
+            [-71, -2],
+            [-72, -2],
+            [-72, -3]
+          ]
+        ]
+      },
+      "properties": {
+        "authority": "ESA",
+        "productType": "DTE_90",
+        "spatialResolution": 90,
+        "polarisationChannels": "HH",
+        "datetime": "2010-12-12T10:24:00.000000Z",
+        "end_datetime": "2010-12-12T10:24:01.000000Z",
+        "start_datetime": "2010-12-12T10:24:00.000000Z"
+      },
+      "bbox": [-72, -3, -71, -2],
+      "links": [
+        {
+          "rel": "root",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac"
+        },
+        {
+          "rel": "self",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items/DEM1_SAR_DTE_90_20101212T102356_20130628T103333_ADS_000000_1705"
+        },
+        {
+          "rel": "collection",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM"
+        }
+      ],
+      "assets": {
+        "QUICKLOOK": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Assets(05cb577e-0889-489e-bbf6-af935322c852)/$value",
+          "title": "QUICKLOOK",
+          "type": "image/jpeg"
+        },
+        "PRODUCT": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products(3807aa9d-422c-5a41-8b2e-da629c4e86c1)/$value",
+          "title": "Product",
+          "type": "application/octet-stream",
+          "alternate": {
+            "s3": {
+              "href": "/eodata/auxdata/CopDEM/COP-DEM_GLO-90-DTED/DEM1_SAR_DTE_90_20101212T102356_20130628T103333_ADS_000000_1705.DEM",
+              "storage:platform": "CLOUDFERRO",
+              "storage:region": "waw",
+              "storage:requester_pays": false,
+              "storage:tier": "Online"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "stac_version": "1.0.0",
+      "stac_extensions": [
+        "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
+        "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
+      ],
+      "id": "DEM1_SAR_DGE_90_20101212T102356_20130709T103701_ADS_000000_8521",
+      "collection": "COP-DEM",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-72, -9],
+            [-71, -9],
+            [-71, -8],
+            [-72, -8],
+            [-72, -9]
+          ]
+        ]
+      },
+      "properties": {
+        "authority": "ESA",
+        "productType": "DGE_90",
+        "spatialResolution": 90,
+        "polarisationChannels": "HH",
+        "datetime": "2010-12-12T10:24:18.000000Z",
+        "end_datetime": "2010-12-12T10:24:19.000000Z",
+        "start_datetime": "2010-12-12T10:24:18.000000Z"
+      },
+      "bbox": [-72, -9, -71, -8],
+      "links": [
+        {
+          "rel": "root",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac"
+        },
+        {
+          "rel": "self",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items/DEM1_SAR_DGE_90_20101212T102356_20130709T103701_ADS_000000_8521"
+        },
+        {
+          "rel": "collection",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM"
+        }
+      ],
+      "assets": {
+        "QUICKLOOK": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Assets(d91892bd-a6d4-4dd1-9356-f3a8bfe82811)/$value",
+          "title": "QUICKLOOK",
+          "type": "image/jpeg"
+        },
+        "PRODUCT": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products(b5343ba1-adb7-5e64-bac3-4537996c1a6f)/$value",
+          "title": "Product",
+          "type": "application/octet-stream",
+          "alternate": {
+            "s3": {
+              "href": "/eodata/auxdata/CopDEM/COP-DEM_GLO-90-DGED/DEM1_SAR_DGE_90_20101212T102356_20130709T103701_ADS_000000_8521.DEM",
+              "storage:platform": "CLOUDFERRO",
+              "storage:region": "waw",
+              "storage:requester_pays": false,
+              "storage:tier": "Online"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "stac_version": "1.0.0",
+      "stac_extensions": [
+        "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
+        "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
+      ],
+      "id": "DEM1_SAR_DGE_90_20101212T102356_20130709T103701_ADS_000000_6275",
+      "collection": "COP-DEM",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-72, -4],
+            [-71, -4],
+            [-71, -3],
+            [-72, -3],
+            [-72, -4]
+          ]
+        ]
+      },
+      "properties": {
+        "authority": "ESA",
+        "productType": "DGE_90",
+        "spatialResolution": 90,
+        "polarisationChannels": "HH",
+        "datetime": "2010-12-12T10:24:16.000000Z",
+        "end_datetime": "2010-12-12T10:24:17.000000Z",
+        "start_datetime": "2010-12-12T10:24:16.000000Z"
+      },
+      "bbox": [-72, -4, -71, -3],
+      "links": [
+        {
+          "rel": "root",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac"
+        },
+        {
+          "rel": "self",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items/DEM1_SAR_DGE_90_20101212T102356_20130709T103701_ADS_000000_6275"
+        },
+        {
+          "rel": "collection",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM"
+        }
+      ],
+      "assets": {
+        "QUICKLOOK": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Assets(c65420bb-fb18-4c2a-845b-894c7d5f91c0)/$value",
+          "title": "QUICKLOOK",
+          "type": "image/jpeg"
+        },
+        "PRODUCT": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products(7e032dfa-7878-5447-a9d7-04ede0a8b216)/$value",
+          "title": "Product",
+          "type": "application/octet-stream",
+          "alternate": {
+            "s3": {
+              "href": "/eodata/auxdata/CopDEM/COP-DEM_GLO-90-DGED/DEM1_SAR_DGE_90_20101212T102356_20130709T103701_ADS_000000_6275.DEM",
+              "storage:platform": "CLOUDFERRO",
+              "storage:region": "waw",
+              "storage:requester_pays": false,
+              "storage:tier": "Online"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "stac_version": "1.0.0",
+      "stac_extensions": [
+        "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
+        "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
+      ],
+      "id": "DEM1_SAR_DTE_90_20101212T084914_20130418T085214_ADS_000000_5545",
+      "collection": "COP-DEM",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-49, -11],
+            [-48, -11],
+            [-48, -10],
+            [-49, -10],
+            [-49, -11]
+          ]
+        ]
+      },
+      "properties": {
+        "authority": "ESA",
+        "productType": "DTE_90",
+        "spatialResolution": 90,
+        "polarisationChannels": "HH",
+        "datetime": "2010-12-12T08:49:36.000000Z",
+        "end_datetime": "2010-12-12T08:49:37.000000Z",
+        "start_datetime": "2010-12-12T08:49:36.000000Z"
+      },
+      "bbox": [-49, -11, -48, -10],
+      "links": [
+        {
+          "rel": "root",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac"
+        },
+        {
+          "rel": "self",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items/DEM1_SAR_DTE_90_20101212T084914_20130418T085214_ADS_000000_5545"
+        },
+        {
+          "rel": "collection",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM"
+        }
+      ],
+      "assets": {
+        "QUICKLOOK": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Assets(afd2a6b3-e192-4bb2-8044-271cee6425f6)/$value",
+          "title": "QUICKLOOK",
+          "type": "image/jpeg"
+        },
+        "PRODUCT": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products(d132eec8-6fbb-5ea6-aa88-f18b07ca2d4d)/$value",
+          "title": "Product",
+          "type": "application/octet-stream",
+          "alternate": {
+            "s3": {
+              "href": "/eodata/auxdata/CopDEM/COP-DEM_GLO-90-DTED/DEM1_SAR_DTE_90_20101212T084914_20130418T085214_ADS_000000_5545.DEM",
+              "storage:platform": "CLOUDFERRO",
+              "storage:region": "waw",
+              "storage:requester_pays": false,
+              "storage:tier": "Online"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "stac_version": "1.0.0",
+      "stac_extensions": [
+        "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
+        "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
+      ],
+      "id": "DEM1_SAR_DTE_90_20101212T084914_20140212T212323_ADS_000000_1370",
+      "collection": "COP-DEM",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-48, -1],
+            [-47, -1],
+            [-47, 0],
+            [-48, 0],
+            [-48, -1]
+          ]
+        ]
+      },
+      "properties": {
+        "authority": "ESA",
+        "productType": "DTE_90",
+        "spatialResolution": 90,
+        "polarisationChannels": "HH",
+        "datetime": "2010-12-12T08:49:42.000000Z",
+        "end_datetime": "2010-12-12T08:49:43.000000Z",
+        "start_datetime": "2010-12-12T08:49:42.000000Z"
+      },
+      "bbox": [-48, -1, -47, 0],
+      "links": [
+        {
+          "rel": "root",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac"
+        },
+        {
+          "rel": "self",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items/DEM1_SAR_DTE_90_20101212T084914_20140212T212323_ADS_000000_1370"
+        },
+        {
+          "rel": "collection",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM"
+        }
+      ],
+      "assets": {
+        "QUICKLOOK": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Assets(3822a9d3-e315-4899-84c7-c885df32b63f)/$value",
+          "title": "QUICKLOOK",
+          "type": "image/jpeg"
+        },
+        "PRODUCT": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products(ec0bce11-bcf3-52d5-98e0-97588b1f2eb8)/$value",
+          "title": "Product",
+          "type": "application/octet-stream",
+          "alternate": {
+            "s3": {
+              "href": "/eodata/auxdata/CopDEM/COP-DEM_GLO-90-DTED/DEM1_SAR_DTE_90_20101212T084914_20140212T212323_ADS_000000_1370.DEM",
+              "storage:platform": "CLOUDFERRO",
+              "storage:region": "waw",
+              "storage:requester_pays": false,
+              "storage:tier": "Online"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "stac_version": "1.0.0",
+      "stac_extensions": [
+        "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
+        "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
+      ],
+      "id": "DEM1_SAR_DGE_30_20101215T103647_20130405T103047_ADS_000000_oCX9",
+      "collection": "COP-DEM",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [100, 72],
+            [101, 72],
+            [101, 73],
+            [100, 73],
+            [100, 72]
+          ]
+        ]
+      },
+      "properties": {
+        "authority": "ESA",
+        "productType": "DGE_30",
+        "spatialResolution": 30,
+        "polarisationChannels": "HH",
+        "datetime": "2010-12-15T10:36:47.000000Z",
+        "end_datetime": "2013-04-05T10:30:47.000000Z",
+        "start_datetime": "2010-12-15T10:36:47.000000Z"
+      },
+      "bbox": [100, 72, 101, 73],
+      "links": [
+        {
+          "rel": "root",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac"
+        },
+        {
+          "rel": "self",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items/DEM1_SAR_DGE_30_20101215T103647_20130405T103047_ADS_000000_oCX9"
+        },
+        {
+          "rel": "collection",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM"
+        }
+      ],
+      "assets": {
+        "QUICKLOOK": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Assets(6250365a-f0ca-47dd-88ef-a2ebdd96e932)/$value",
+          "title": "QUICKLOOK",
+          "type": "image/jpeg"
+        },
+        "PRODUCT": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products(d69054d7-6c40-5b6d-b94b-49614f3204a7)/$value",
+          "title": "Product",
+          "type": "application/octet-stream",
+          "alternate": {
+            "s3": {
+              "href": "/eodata/auxdata/CopDEM/COP-DEM_GLO-30-DGED/DEM1_SAR_DGE_30_20101215T103647_20130405T103047_ADS_000000_oCX9.DEM",
+              "storage:platform": "CLOUDFERRO",
+              "storage:region": "waw",
+              "storage:requester_pays": false,
+              "storage:tier": "Online"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "stac_version": "1.0.0",
+      "stac_extensions": [
+        "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
+        "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
+      ],
+      "id": "DEM1_SAR_DGE_30_20101215T103647_20130405T103047_ADS_000000_RHJx",
+      "collection": "COP-DEM",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [98, 74],
+            [99, 74],
+            [99, 75],
+            [98, 75],
+            [98, 74]
+          ]
+        ]
+      },
+      "properties": {
+        "authority": "ESA",
+        "productType": "DGE_30",
+        "spatialResolution": 30,
+        "polarisationChannels": "HH",
+        "datetime": "2010-12-15T10:36:47.000000Z",
+        "end_datetime": "2013-04-05T10:30:47.000000Z",
+        "start_datetime": "2010-12-15T10:36:47.000000Z"
+      },
+      "bbox": [98, 74, 99, 75],
+      "links": [
+        {
+          "rel": "root",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac"
+        },
+        {
+          "rel": "self",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items/DEM1_SAR_DGE_30_20101215T103647_20130405T103047_ADS_000000_RHJx"
+        },
+        {
+          "rel": "collection",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM"
+        }
+      ],
+      "assets": {
+        "QUICKLOOK": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Assets(b53dfbe0-2742-4a77-b4f5-02b7df71d576)/$value",
+          "title": "QUICKLOOK",
+          "type": "image/jpeg"
+        },
+        "PRODUCT": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products(29e4dabe-117a-5f9f-ba6e-f9916bba226e)/$value",
+          "title": "Product",
+          "type": "application/octet-stream",
+          "alternate": {
+            "s3": {
+              "href": "/eodata/auxdata/CopDEM/COP-DEM_GLO-30-DGED/DEM1_SAR_DGE_30_20101215T103647_20130405T103047_ADS_000000_RHJx.DEM",
+              "storage:platform": "CLOUDFERRO",
+              "storage:region": "waw",
+              "storage:requester_pays": false,
+              "storage:tier": "Online"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "stac_version": "1.0.0",
+      "stac_extensions": [
+        "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
+        "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
+      ],
+      "id": "DEM1_SAR_DGE_30_20101212T230244_20140329T113710_ADS_000000_eAmG",
+      "collection": "COP-DEM",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [100, -1],
+            [101, -1],
+            [101, 0],
+            [100, 0],
+            [100, -1]
+          ]
+        ]
+      },
+      "properties": {
+        "authority": "ESA",
+        "productType": "DGE_30",
+        "spatialResolution": 30,
+        "polarisationChannels": "HH",
+        "datetime": "2010-12-12T23:02:44.000000Z",
+        "end_datetime": "2014-03-29T11:37:10.000000Z",
+        "start_datetime": "2010-12-12T23:02:44.000000Z"
+      },
+      "bbox": [100, -1, 101, 0],
+      "links": [
+        {
+          "rel": "root",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac"
+        },
+        {
+          "rel": "self",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items/DEM1_SAR_DGE_30_20101212T230244_20140329T113710_ADS_000000_eAmG"
+        },
+        {
+          "rel": "collection",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM"
+        }
+      ],
+      "assets": {
+        "QUICKLOOK": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Assets(54e870fd-268e-460d-be2f-6e5c36171f4b)/$value",
+          "title": "QUICKLOOK",
+          "type": "image/jpeg"
+        },
+        "PRODUCT": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products(72c618e4-c942-5d6c-8ab6-629258334d88)/$value",
+          "title": "Product",
+          "type": "application/octet-stream",
+          "alternate": {
+            "s3": {
+              "href": "/eodata/auxdata/CopDEM/COP-DEM_GLO-30-DGED/DEM1_SAR_DGE_30_20101212T230244_20140329T113710_ADS_000000_eAmG.DEM",
+              "storage:platform": "CLOUDFERRO",
+              "storage:region": "waw",
+              "storage:requester_pays": false,
+              "storage:tier": "Online"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "stac_version": "1.0.0",
+      "stac_extensions": [
+        "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
+        "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
+      ],
+      "id": "DEM1_SAR_DGE_30_20101212T230244_20140325T230302_ADS_000000_1jTi",
+      "collection": "COP-DEM",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [99, -1],
+            [100, -1],
+            [100, 0],
+            [99, 0],
+            [99, -1]
+          ]
+        ]
+      },
+      "properties": {
+        "authority": "ESA",
+        "productType": "DGE_30",
+        "spatialResolution": 30,
+        "polarisationChannels": "HH",
+        "datetime": "2010-12-12T23:02:44.000000Z",
+        "end_datetime": "2014-03-25T23:03:02.000000Z",
+        "start_datetime": "2010-12-12T23:02:44.000000Z"
+      },
+      "bbox": [99, -1, 100, 0],
+      "links": [
+        {
+          "rel": "root",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac"
+        },
+        {
+          "rel": "self",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items/DEM1_SAR_DGE_30_20101212T230244_20140325T230302_ADS_000000_1jTi"
+        },
+        {
+          "rel": "collection",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM"
+        }
+      ],
+      "assets": {
+        "QUICKLOOK": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Assets(a75813a4-8a45-4227-9234-5dfab628d907)/$value",
+          "title": "QUICKLOOK",
+          "type": "image/jpeg"
+        },
+        "PRODUCT": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products(6ef3485f-2eb0-5463-9d3c-a67264c47eb8)/$value",
+          "title": "Product",
+          "type": "application/octet-stream",
+          "alternate": {
+            "s3": {
+              "href": "/eodata/auxdata/CopDEM/COP-DEM_GLO-30-DGED/DEM1_SAR_DGE_30_20101212T230244_20140325T230302_ADS_000000_1jTi.DEM",
+              "storage:platform": "CLOUDFERRO",
+              "storage:region": "waw",
+              "storage:requester_pays": false,
+              "storage:tier": "Online"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "stac_version": "1.0.0",
+      "stac_extensions": [
+        "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
+        "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
+      ],
+      "id": "DEM1_SAR_DTE_30_20101217T200231_20140802T083458_ADS_000000_tFcK",
+      "collection": "COP-DEM",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [144, -6],
+            [145, -6],
+            [145, -5],
+            [144, -5],
+            [144, -6]
+          ]
+        ]
+      },
+      "properties": {
+        "authority": "ESA",
+        "productType": "DTE_30",
+        "spatialResolution": 30,
+        "polarisationChannels": "HH",
+        "datetime": "2010-12-17T20:02:31.000000Z",
+        "end_datetime": "2014-08-02T08:34:58.000000Z",
+        "start_datetime": "2010-12-17T20:02:31.000000Z"
+      },
+      "bbox": [144, -6, 145, -5],
+      "links": [
+        {
+          "rel": "root",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac"
+        },
+        {
+          "rel": "self",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items/DEM1_SAR_DTE_30_20101217T200231_20140802T083458_ADS_000000_tFcK"
+        },
+        {
+          "rel": "collection",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM"
+        }
+      ],
+      "assets": {
+        "PRODUCT": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products(0ef9d397-c93f-52b6-ad06-6aea87ad5bc1)/$value",
+          "title": "Product",
+          "type": "application/octet-stream",
+          "alternate": {
+            "s3": {
+              "href": "/eodata/auxdata/CopDEM/COP-DEM_GLO-30-DTED/DEM1_SAR_DTE_30_20101217T200231_20140802T083458_ADS_000000_tFcK.DEM",
+              "storage:platform": "CLOUDFERRO",
+              "storage:region": "waw",
+              "storage:requester_pays": false,
+              "storage:tier": "Online"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "stac_version": "1.0.0",
+      "stac_extensions": [
+        "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
+        "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
+      ],
+      "id": "DEM1_SAR_DGE_30_20101216T005027_20130411T005216_ADS_000000_Hbh2",
+      "collection": "COP-DEM",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-112, 68],
+            [-111, 68],
+            [-111, 69],
+            [-112, 69],
+            [-112, 68]
+          ]
+        ]
+      },
+      "properties": {
+        "authority": "ESA",
+        "productType": "DGE_30",
+        "spatialResolution": 30,
+        "polarisationChannels": "HH",
+        "datetime": "2010-12-16T00:50:27.000000Z",
+        "end_datetime": "2013-04-11T00:52:16.000000Z",
+        "start_datetime": "2010-12-16T00:50:27.000000Z"
+      },
+      "bbox": [-112, 68, -111, 69],
+      "links": [
+        {
+          "rel": "root",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac"
+        },
+        {
+          "rel": "self",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items/DEM1_SAR_DGE_30_20101216T005027_20130411T005216_ADS_000000_Hbh2"
+        },
+        {
+          "rel": "collection",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM"
+        }
+      ],
+      "assets": {
+        "QUICKLOOK": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Assets(45779138-505e-41a8-8026-e9523b3a6b5a)/$value",
+          "title": "QUICKLOOK",
+          "type": "image/jpeg"
+        },
+        "PRODUCT": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products(f11af67b-fd4b-5a8d-9871-23754f1faaca)/$value",
+          "title": "Product",
+          "type": "application/octet-stream",
+          "alternate": {
+            "s3": {
+              "href": "/eodata/auxdata/CopDEM/COP-DEM_GLO-30-DGED/DEM1_SAR_DGE_30_20101216T005027_20130411T005216_ADS_000000_Hbh2.DEM",
+              "storage:platform": "CLOUDFERRO",
+              "storage:region": "waw",
+              "storage:requester_pays": false,
+              "storage:tier": "Online"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "stac_version": "1.0.0",
+      "stac_extensions": [
+        "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
+        "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
+      ],
+      "id": "DEM1_SAR_DGE_30_20101216T005027_20130331T005208_ADS_000000_J3m5",
+      "collection": "COP-DEM",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-111, 67],
+            [-110, 67],
+            [-110, 68],
+            [-111, 68],
+            [-111, 67]
+          ]
+        ]
+      },
+      "properties": {
+        "authority": "ESA",
+        "productType": "DGE_30",
+        "spatialResolution": 30,
+        "polarisationChannels": "HH",
+        "datetime": "2010-12-16T00:50:27.000000Z",
+        "end_datetime": "2013-03-31T00:52:08.000000Z",
+        "start_datetime": "2010-12-16T00:50:27.000000Z"
+      },
+      "bbox": [-111, 67, -110, 68],
+      "links": [
+        {
+          "rel": "root",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac"
+        },
+        {
+          "rel": "self",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items/DEM1_SAR_DGE_30_20101216T005027_20130331T005208_ADS_000000_J3m5"
+        },
+        {
+          "rel": "collection",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM"
+        }
+      ],
+      "assets": {
+        "QUICKLOOK": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Assets(e83f329f-8e2e-4a21-acbb-66ce87b9da45)/$value",
+          "title": "QUICKLOOK",
+          "type": "image/jpeg"
+        },
+        "PRODUCT": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products(060c817c-6cac-52c5-be67-6ed46388e5df)/$value",
+          "title": "Product",
+          "type": "application/octet-stream",
+          "alternate": {
+            "s3": {
+              "href": "/eodata/auxdata/CopDEM/COP-DEM_GLO-30-DGED/DEM1_SAR_DGE_30_20101216T005027_20130331T005208_ADS_000000_J3m5.DEM",
+              "storage:platform": "CLOUDFERRO",
+              "storage:region": "waw",
+              "storage:requester_pays": false,
+              "storage:tier": "Online"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "stac_version": "1.0.0",
+      "stac_extensions": [
+        "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
+        "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
+      ],
+      "id": "DEM1_SAR_DTE_30_20101216T100443_20140415T214254_ADS_000000_9Wqx",
+      "collection": "COP-DEM",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [122, 10],
+            [123, 10],
+            [123, 11],
+            [122, 11],
+            [122, 10]
+          ]
+        ]
+      },
+      "properties": {
+        "authority": "ESA",
+        "productType": "DTE_30",
+        "spatialResolution": 30,
+        "polarisationChannels": "HH",
+        "datetime": "2010-12-16T10:04:43.000000Z",
+        "end_datetime": "2014-04-15T21:42:54.000000Z",
+        "start_datetime": "2010-12-16T10:04:43.000000Z"
+      },
+      "bbox": [122, 10, 123, 11],
+      "links": [
+        {
+          "rel": "root",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac"
+        },
+        {
+          "rel": "self",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items/DEM1_SAR_DTE_30_20101216T100443_20140415T214254_ADS_000000_9Wqx"
+        },
+        {
+          "rel": "collection",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM"
+        }
+      ],
+      "assets": {
+        "PRODUCT": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products(1e0b3835-e5c4-5276-95ad-52fffaa2a615)/$value",
+          "title": "Product",
+          "type": "application/octet-stream",
+          "alternate": {
+            "s3": {
+              "href": "/eodata/auxdata/CopDEM/COP-DEM_GLO-30-DTED/DEM1_SAR_DTE_30_20101216T100443_20140415T214254_ADS_000000_9Wqx.DEM",
+              "storage:platform": "CLOUDFERRO",
+              "storage:region": "waw",
+              "storage:requester_pays": false,
+              "storage:tier": "Online"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "stac_version": "1.0.0",
+      "stac_extensions": [
+        "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
+        "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
+      ],
+      "id": "DEM1_SAR_DTE_30_20101215T203914_20130404T204908_ADS_000000_CURF",
+      "collection": "COP-DEM",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [133, -13],
+            [134, -13],
+            [134, -12],
+            [133, -12],
+            [133, -13]
+          ]
+        ]
+      },
+      "properties": {
+        "authority": "ESA",
+        "productType": "DTE_30",
+        "spatialResolution": 30,
+        "polarisationChannels": "HH",
+        "datetime": "2010-12-15T20:39:14.000000Z",
+        "end_datetime": "2013-04-04T20:49:08.000000Z",
+        "start_datetime": "2010-12-15T20:39:14.000000Z"
+      },
+      "bbox": [133, -13, 134, -12],
+      "links": [
+        {
+          "rel": "root",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac"
+        },
+        {
+          "rel": "self",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items/DEM1_SAR_DTE_30_20101215T203914_20130404T204908_ADS_000000_CURF"
+        },
+        {
+          "rel": "collection",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM"
+        }
+      ],
+      "assets": {
+        "PRODUCT": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products(dcff5a7a-dce4-52bb-baae-e048f7d8bda0)/$value",
+          "title": "Product",
+          "type": "application/octet-stream",
+          "alternate": {
+            "s3": {
+              "href": "/eodata/auxdata/CopDEM/COP-DEM_GLO-30-DTED/DEM1_SAR_DTE_30_20101215T203914_20130404T204908_ADS_000000_CURF.DEM",
+              "storage:platform": "CLOUDFERRO",
+              "storage:region": "waw",
+              "storage:requester_pays": false,
+              "storage:tier": "Online"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "stac_version": "1.0.0",
+      "stac_extensions": [
+        "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
+        "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
+      ],
+      "id": "DEM1_SAR_DGE_30_20101215T203914_20121226T204852_ADS_000000_Yjwo",
+      "collection": "COP-DEM",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [134, -13],
+            [135, -13],
+            [135, -12],
+            [134, -12],
+            [134, -13]
+          ]
+        ]
+      },
+      "properties": {
+        "authority": "ESA",
+        "productType": "DGE_30",
+        "spatialResolution": 30,
+        "polarisationChannels": "HH",
+        "datetime": "2010-12-15T20:39:14.000000Z",
+        "end_datetime": "2012-12-26T20:48:52.000000Z",
+        "start_datetime": "2010-12-15T20:39:14.000000Z"
+      },
+      "bbox": [134, -13, 135, -12],
+      "links": [
+        {
+          "rel": "root",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac"
+        },
+        {
+          "rel": "self",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items/DEM1_SAR_DGE_30_20101215T203914_20121226T204852_ADS_000000_Yjwo"
+        },
+        {
+          "rel": "collection",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM"
+        }
+      ],
+      "assets": {
+        "QUICKLOOK": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Assets(d1c11bd7-3285-4868-8d01-be53d6c5fd8b)/$value",
+          "title": "QUICKLOOK",
+          "type": "image/jpeg"
+        },
+        "PRODUCT": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products(c6c968da-05df-52ee-aa7b-4007df231269)/$value",
+          "title": "Product",
+          "type": "application/octet-stream",
+          "alternate": {
+            "s3": {
+              "href": "/eodata/auxdata/CopDEM/COP-DEM_GLO-30-DGED/DEM1_SAR_DGE_30_20101215T203914_20121226T204852_ADS_000000_Yjwo.DEM",
+              "storage:platform": "CLOUDFERRO",
+              "storage:region": "waw",
+              "storage:requester_pays": false,
+              "storage:tier": "Online"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "stac_version": "1.0.0",
+      "stac_extensions": [
+        "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
+        "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
+      ],
+      "id": "DEM1_SAR_DTE_30_20101215T203649_20140913T090954_ADS_000000_kipX",
+      "collection": "COP-DEM",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [135, -4],
+            [136, -4],
+            [136, -3],
+            [135, -3],
+            [135, -4]
+          ]
+        ]
+      },
+      "properties": {
+        "authority": "ESA",
+        "productType": "DTE_30",
+        "spatialResolution": 30,
+        "polarisationChannels": "HH",
+        "datetime": "2010-12-15T20:36:49.000000Z",
+        "end_datetime": "2014-09-13T09:09:54.000000Z",
+        "start_datetime": "2010-12-15T20:36:49.000000Z"
+      },
+      "bbox": [135, -4, 136, -3],
+      "links": [
+        {
+          "rel": "root",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac"
+        },
+        {
+          "rel": "self",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items/DEM1_SAR_DTE_30_20101215T203649_20140913T090954_ADS_000000_kipX"
+        },
+        {
+          "rel": "collection",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM"
+        }
+      ],
+      "assets": {
+        "PRODUCT": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products(0d198f20-2dc6-5b72-811a-24a963c1c534)/$value",
+          "title": "Product",
+          "type": "application/octet-stream",
+          "alternate": {
+            "s3": {
+              "href": "/eodata/auxdata/CopDEM/COP-DEM_GLO-30-DTED/DEM1_SAR_DTE_30_20101215T203649_20140913T090954_ADS_000000_kipX.DEM",
+              "storage:platform": "CLOUDFERRO",
+              "storage:region": "waw",
+              "storage:requester_pays": false,
+              "storage:tier": "Online"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "stac_version": "1.0.0",
+      "stac_extensions": [
+        "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
+        "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
+      ],
+      "id": "DEM1_SAR_DGE_30_20101215T203649_20140913T090954_ADS_000000_Quqd",
+      "collection": "COP-DEM",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [135, -5],
+            [136, -5],
+            [136, -4],
+            [135, -4],
+            [135, -5]
+          ]
+        ]
+      },
+      "properties": {
+        "authority": "ESA",
+        "productType": "DGE_30",
+        "spatialResolution": 30,
+        "polarisationChannels": "HH",
+        "datetime": "2010-12-15T20:36:49.000000Z",
+        "end_datetime": "2014-09-13T09:09:54.000000Z",
+        "start_datetime": "2010-12-15T20:36:49.000000Z"
+      },
+      "bbox": [135, -5, 136, -4],
+      "links": [
+        {
+          "rel": "root",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac"
+        },
+        {
+          "rel": "self",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items/DEM1_SAR_DGE_30_20101215T203649_20140913T090954_ADS_000000_Quqd"
+        },
+        {
+          "rel": "collection",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM"
+        }
+      ],
+      "assets": {
+        "QUICKLOOK": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Assets(14d7fbaa-1193-4c21-8292-a2834c6da8c7)/$value",
+          "title": "QUICKLOOK",
+          "type": "image/jpeg"
+        },
+        "PRODUCT": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products(61875bb6-09c9-5660-ad44-66e8feee2ae9)/$value",
+          "title": "Product",
+          "type": "application/octet-stream",
+          "alternate": {
+            "s3": {
+              "href": "/eodata/auxdata/CopDEM/COP-DEM_GLO-30-DGED/DEM1_SAR_DGE_30_20101215T203649_20140913T090954_ADS_000000_Quqd.DEM",
+              "storage:platform": "CLOUDFERRO",
+              "storage:region": "waw",
+              "storage:requester_pays": false,
+              "storage:tier": "Online"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "stac_version": "1.0.0",
+      "stac_extensions": [
+        "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
+        "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
+      ],
+      "id": "DEM1_SAR_DGE_30_20101215T203649_20140913T090954_ADS_000000_4KBA",
+      "collection": "COP-DEM",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [135, -4],
+            [136, -4],
+            [136, -3],
+            [135, -3],
+            [135, -4]
+          ]
+        ]
+      },
+      "properties": {
+        "authority": "ESA",
+        "productType": "DGE_30",
+        "spatialResolution": 30,
+        "polarisationChannels": "HH",
+        "datetime": "2010-12-15T20:36:49.000000Z",
+        "end_datetime": "2014-09-13T09:09:54.000000Z",
+        "start_datetime": "2010-12-15T20:36:49.000000Z"
+      },
+      "bbox": [135, -4, 136, -3],
+      "links": [
+        {
+          "rel": "root",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac"
+        },
+        {
+          "rel": "self",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items/DEM1_SAR_DGE_30_20101215T203649_20140913T090954_ADS_000000_4KBA"
+        },
+        {
+          "rel": "collection",
+          "type": "application/json",
+          "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM"
+        }
+      ],
+      "assets": {
+        "QUICKLOOK": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Assets(de6277bd-35f6-46e3-982a-f7cde10c7a0b)/$value",
+          "title": "QUICKLOOK",
+          "type": "image/jpeg"
+        },
+        "PRODUCT": {
+          "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products(515c3fe2-4bb9-52f5-b417-0ff8f4ba5593)/$value",
+          "title": "Product",
+          "type": "application/octet-stream",
+          "alternate": {
+            "s3": {
+              "href": "/eodata/auxdata/CopDEM/COP-DEM_GLO-30-DGED/DEM1_SAR_DGE_30_20101215T203649_20140913T090954_ADS_000000_4KBA.DEM",
+              "storage:platform": "CLOUDFERRO",
+              "storage:region": "waw",
+              "storage:requester_pays": false,
+              "storage:tier": "Online"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "links": [
+    {
+      "rel": "next",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items?page=2",
+      "type": "application/json"
+    },
+    {
+      "rel": "self",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items",
+      "type": "application/json"
+    },
+    {
+      "rel": "root",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac",
+      "type": "application/json"
+    },
+    {
+      "rel": "collection",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM"
+    },
+    {
+      "rel": "parent",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM"
+    }
+  ]
+}
