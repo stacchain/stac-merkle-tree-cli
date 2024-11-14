@@ -230,7 +230,6 @@ After running the tool, each STAC object will be updated with the appropriate Me
   "stac_version": "1.1.0",
   "id": "item1",
   "properties": {
-    // ... existing properties
     "merkle:object_hash": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
     "merkle:hash_method": {
       "function": "sha256",
