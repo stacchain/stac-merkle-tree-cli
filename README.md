@@ -145,3 +145,26 @@ Merkle info computation and addition completed.
 ## Merkle Tree Extension Specification
 
 This tool complies with the [Merkle Tree Extension Specification](https://github.com/stacchain/merkle-tree), which outlines how to encode STAC objects in a Merkle tree to ensure metadata integrity.
+
+### Fields Added
+
+- `merkle:object_hash` (string, REQUIRED in Items, Collections, Catalogs)
+  - A cryptographic hash of the object's metadata, used to verify its integrity.
+- `merkle:hash_method` (object, REQUIRED in Collections and Catalogs)
+  - Describes the method used to compute `merkle:object_hash` and `merkle:root`, including:
+    - `function`: The hash function used (e.g., sha256).
+    - `fields`: Fields included in the hash computation (e.g., ["*"] for all fields).
+    - `ordering`: How child hashes are ordered when building the Merkle tree (e.g., ascending).
+    - `description`: Additional details about the hash computation method.
+- `merkle:root` (string, REQUIRED in Collections and Catalogs)
+  - The Merkle root hash representing the Collection or Catalog, computed from child object hashes.
+
+### Extension URL
+
+All STAC objects processed by this tool will include the Merkle extension URL in their stac_extensions array:
+
+```json
+"stac_extensions": [
+  "https://stacchain.github.io/merkle-tree/v1.0.0/schema.json"
+]
+```
