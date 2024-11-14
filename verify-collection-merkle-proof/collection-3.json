@@ -1,0 +1,33 @@
+{
+  "type": "Collection",
+  "stac_version": "1.1.0",
+  "id": "collection-3",
+  "description": "Test Collection 3",
+  "merkle:object_hash": "5c4d70df3e57369293269ca28d33dff6e6da47925662683f23b2d7b6f24a8f0e",
+  "merkle:root": "7ce7b602bc2b27be084e6ffba24f4a692eb4819ef7db9d1e813a3992e5e0b4b1",
+  "merkle:hash_method": {
+    "function": "sha256",
+    "fields": ["*"],
+    "ordering": "default",
+    "description": "SHA-256 hash of the collection metadata."
+  },
+  "merkle:proof": {
+    "catalog_root": "7ce7b602bc2b27be084e6ffba24f4a692eb4819ef7db9d1e813a3992e5e0b4b1",
+    "hashes": [
+      "fdb7f9cc90e48a9f6da59dc49a13d064e847345544f0b2f21f74c74656f3e5ae",
+      "bf5d298eb2ebd90b3b9c5c1fb8a57d45e7ab698baac414db6ab0af902bb0db50"
+    ],
+    "positions": ["right", "left"]
+  },
+  "extent": {
+    "spatial": {
+      "bbox": [[-180.0, -90.0, 180.0, 90.0]]
+    },
+    "temporal": {
+      "interval": [["2020-01-01T00:00:00Z", null]]
+    }
+  },
+  "license": "CC-BY-4.0",
+  "links": [],
+  "stac_extensions": []
+}

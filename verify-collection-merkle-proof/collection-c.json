@@ -1,0 +1,33 @@
+{
+  "type": "Collection",
+  "stac_version": "1.1.0",
+  "id": "collection-c",
+  "description": "Test Collection C",
+  "merkle:object_hash": "83baedae0ce10cb05407ba2c842ed5b703cd59607e40f8d3c724a9a4a5fa6f54",
+  "merkle:hash_method": {
+    "function": "sha256",
+    "fields": ["*"],
+    "ordering": "default",
+    "description": "SHA-256 hash of the collection metadata."
+  },
+  "merkle:proof": {
+    "hashes": [
+      "e1e696a8ba31d0f5b7bcbfde0dc0c2a6c1e6d18b814ba2030c8a74b2a036cd2b",
+      "c86be9fa9dfe4e1e69a6c8a0f5a0d80c4ae2eb7f4d6f1f11faba47e1e1a62661",
+      "6367c48dd193d56ea7b0baad25b19455e529f5ee650c768a6925b093efb93ad7"
+    ],
+    "positions": ["right", "left", "right"],
+    "catalog_root": "0c93479e91e08a4b51f5a4e6b7630c2f4c982225ab4a5d8ce9c14a74a0157d1e"
+  },
+  "extent": {
+    "spatial": {
+      "bbox": [[-180.0, -90.0, 180.0, 90.0]]
+    },
+    "temporal": {
+      "interval": [["2021-01-01T00:00:00Z", null]]
+    }
+  },
+  "license": "CC-BY-4.0",
+  "links": [],
+  "stac_extensions": []
+}
