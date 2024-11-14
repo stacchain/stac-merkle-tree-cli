@@ -14,11 +14,7 @@ A Command-Line Interface (CLI) tool for computing and adding Merkle Tree informa
   - [Example](#example)
 - [Merkle Tree Extension Specification](#merkle-tree-extension-specification)
 - [Output](#output)
-- [Error Handling](#error-handling)
-- [Customization](#customization)
-- [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## Overview
 
