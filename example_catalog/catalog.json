@@ -63,6 +63,6 @@
       "*"
     ],
     "ordering": "ascending",
-    "description": "Computed by including merkle:object_hash values in ascending order and building the Merkle tree."
+    "description": "Computed by excluding Merkle fields and including merkle:object_hash values in ascending order to build the Merkle tree."
   }
 }
