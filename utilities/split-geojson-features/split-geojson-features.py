@@ -27,7 +27,7 @@ def load_feature_collection(input_file: str) -> dict:
 
 @click.command()
 @click.argument('input_file', type=click.Path(exists=True, readable=True))
-@click.argument('output_directory', type=click.Path(file_okay=False, writable=True))
+@click.argument('output_directory', type=click.Path(file_okay=False, writable=True, resolve_path=True))
 def main(input_file, output_directory):
     """
     Load a GeoJSON Feature Collection from INPUT_FILE and output each feature as a separate JSON

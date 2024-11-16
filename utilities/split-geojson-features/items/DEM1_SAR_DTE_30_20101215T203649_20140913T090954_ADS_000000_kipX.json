@@ -3,8 +3,7 @@
   "stac_version": "1.0.0",
   "stac_extensions": [
     "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
-    "https://stac-extensions.github.io/storage/v1.0.0/schema.json",
-    "https://stacchain.github.io/merkle-tree/v1.0.0/schema.json"
+    "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
   ],
   "id": "DEM1_SAR_DTE_30_20101215T203649_20140913T090954_ADS_000000_kipX",
   "collection": "COP-DEM",
@@ -42,8 +41,7 @@
     "polarisationChannels": "HH",
     "datetime": "2010-12-15T20:36:49.000000Z",
     "end_datetime": "2014-09-13T09:09:54.000000Z",
-    "start_datetime": "2010-12-15T20:36:49.000000Z",
-    "merkle:object_hash": "371fd0c1f79f165d3cf8a0c32a1380c812f69583c0c183aefdadb741963325a8"
+    "start_datetime": "2010-12-15T20:36:49.000000Z"
   },
   "bbox": [
     135,

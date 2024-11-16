@@ -43,15 +43,7 @@
     "datetime": "2010-12-13T03:47:46.000000Z",
     "end_datetime": "2010-12-13T03:47:47.000000Z",
     "start_datetime": "2010-12-13T03:47:46.000000Z",
-    "merkle:object_hash": "bd6555752f00144ec8fef94a7a0d2ce28579b62546f39438923dcb2b21341ff7",
-    "merkle:hash_method": {
-      "function": "sha256",
-      "fields": [
-        "*"
-      ],
-      "ordering": "ascending",
-      "description": "Computed by including merkle:object_hash values in ascending order and building the Merkle tree."
-    }
+    "merkle:object_hash": "bd6555752f00144ec8fef94a7a0d2ce28579b62546f39438923dcb2b21341ff7"
   },
   "bbox": [
     26,
@@ -96,14 +88,5 @@
         }
       }
     }
-  },
-  "merkle:object_hash": "550175301f559ef22b03c179a2ece08cde642c5502bbeccc40dd55b6526fb6e2",
-  "merkle:hash_method": {
-    "function": "sha256",
-    "fields": [
-      "*"
-    ],
-    "ordering": "ascending",
-    "description": "Computed by including merkle:object_hash values in ascending order and building the Merkle tree."
   }
 }

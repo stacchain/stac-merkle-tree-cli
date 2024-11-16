@@ -3,34 +3,33 @@
   "stac_version": "1.0.0",
   "stac_extensions": [
     "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
-    "https://stac-extensions.github.io/storage/v1.0.0/schema.json",
-    "https://stacchain.github.io/merkle-tree/v1.0.0/schema.json"
+    "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
   ],
-  "id": "DEM1_SAR_DGE_30_20101216T005027_20130411T005216_ADS_000000_Hbh2",
+  "id": "DEM1_SAR_DGE_30_20101212T230244_20140325T230302_ADS_000000_1jTi",
   "collection": "COP-DEM",
   "geometry": {
     "type": "Polygon",
     "coordinates": [
       [
         [
-          -112,
-          68
+          99,
+          -1
         ],
         [
-          -111,
-          68
+          100,
+          -1
         ],
         [
-          -111,
-          69
+          100,
+          0
         ],
         [
-          -112,
-          69
+          99,
+          0
         ],
         [
-          -112,
-          68
+          99,
+          -1
         ]
       ]
     ]
@@ -40,16 +39,15 @@
     "productType": "DGE_30",
     "spatialResolution": 30,
     "polarisationChannels": "HH",
-    "datetime": "2010-12-16T00:50:27.000000Z",
-    "end_datetime": "2013-04-11T00:52:16.000000Z",
-    "start_datetime": "2010-12-16T00:50:27.000000Z",
-    "merkle:object_hash": "a2ebb590daa1915fd4d42fb677769d93b3c71e2151c998aa67af83bf2075ecd1"
+    "datetime": "2010-12-12T23:02:44.000000Z",
+    "end_datetime": "2014-03-25T23:03:02.000000Z",
+    "start_datetime": "2010-12-12T23:02:44.000000Z"
   },
   "bbox": [
-    -112,
-    68,
-    -111,
-    69
+    99,
+    -1,
+    100,
+    0
   ],
   "links": [
     {
@@ -60,7 +58,7 @@
     {
       "rel": "self",
       "type": "application/json",
-      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items/DEM1_SAR_DGE_30_20101216T005027_20130411T005216_ADS_000000_Hbh2"
+      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items/DEM1_SAR_DGE_30_20101212T230244_20140325T230302_ADS_000000_1jTi"
     },
     {
       "rel": "collection",
@@ -70,17 +68,17 @@
   ],
   "assets": {
     "QUICKLOOK": {
-      "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Assets(45779138-505e-41a8-8026-e9523b3a6b5a)/$value",
+      "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Assets(a75813a4-8a45-4227-9234-5dfab628d907)/$value",
       "title": "QUICKLOOK",
       "type": "image/jpeg"
     },
     "PRODUCT": {
-      "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products(f11af67b-fd4b-5a8d-9871-23754f1faaca)/$value",
+      "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products(6ef3485f-2eb0-5463-9d3c-a67264c47eb8)/$value",
       "title": "Product",
       "type": "application/octet-stream",
       "alternate": {
         "s3": {
-          "href": "/eodata/auxdata/CopDEM/COP-DEM_GLO-30-DGED/DEM1_SAR_DGE_30_20101216T005027_20130411T005216_ADS_000000_Hbh2.DEM",
+          "href": "/eodata/auxdata/CopDEM/COP-DEM_GLO-30-DGED/DEM1_SAR_DGE_30_20101212T230244_20140325T230302_ADS_000000_1jTi.DEM",
           "storage:platform": "CLOUDFERRO",
           "storage:region": "waw",
           "storage:requester_pays": false,
