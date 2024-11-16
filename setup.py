@@ -8,7 +8,7 @@ setup(
     description='A CLI tool for computing and adding Merkle Tree information to STAC catalogs, collections, or items.',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    url='https://github.com/stacchain/stac-merkle-tree-cli',  # Replace with your repository URL
+    url='https://github.com/stacchain/stac-merkle-tree-cli',
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
@@ -21,7 +21,7 @@ setup(
     },
     classifiers=[
         'Programming Language :: Python :: 3',
-        'License :: OSI Approved :: MIT License',  # Update if you choose a different license
+        'License :: OSI Approved :: Apache License',
         'Operating System :: OS Independent',
     ],
     python_requires='>=3.6',
