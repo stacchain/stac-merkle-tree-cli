@@ -1,0 +1,63 @@
+{
+  "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stacchain.github.io/merkle-tree/v1.0.0/schema.json"
+  ],
+  "id": "TERRAAQUA",
+  "title": "TERRAAQUA",
+  "description": "Terra MODIS and Aqua MODIS are viewing the entire Earth's surface every 1 to 2 days, acquiring data in 36 spectral bands. MODIS (or Moderate Resolution Imaging Spectroradiometer) is a key instrument aboard the Terra and Aqua satellites. Terra's orbit around the Earth is timed so that it passes from north to south across the equator in the morning, while Aqua passes south to north over the equator in the afternoon [https://modis.gsfc.nasa.gov/about/].",
+  "type": "Collection",
+  "license": "proprietary",
+  "extent": {
+    "spatial": {
+      "bbox": [
+        [
+          -19.0,
+          36.0,
+          51.0,
+          72.0
+        ]
+      ]
+    },
+    "temporal": {
+      "interval": [
+        [
+          "2000-02-16T00:00:00Z",
+          null
+        ]
+      ]
+    }
+  },
+  "links": [
+    {
+      "rel": "root",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac"
+    },
+    {
+      "rel": "parent",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac"
+    },
+    {
+      "rel": "self",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/TERRAAQUA"
+    },
+    {
+      "rel": "items",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/TERRAAQUA/items"
+    }
+  ],
+  "merkle:object_hash": "7c7ab356cff2bc0f573823023c2dec535f3f744341be9cefd00d317375c90782",
+  "merkle:root": "7c7ab356cff2bc0f573823023c2dec535f3f744341be9cefd00d317375c90782",
+  "merkle:hash_method": {
+    "function": "sha256",
+    "fields": [
+      "*"
+    ],
+    "ordering": "ascending",
+    "description": "Computed by excluding Merkle fields and including merkle:object_hash values in ascending order to build the Merkle tree."
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stacchain.github.io/merkle-tree/v1.0.0/schema.json"
+  ],
+  "id": "S2GLC",
+  "title": "S2GLC",
+  "description": "The S2GLC 2017 product represents land cover classification of a major portion of the European continent. The classification has been performed using multi-temporal Sentinel-2 data collected during the year 2017 with the methodology developed in the frame of the Sentinel-2 Global Land Cover (S2GLC) project. The Sentinel-2 Global Land Cover (S2GLC) project was founded by the European Space Agency (ESA) through its Scientific Exploitation of Operational Missions (SEOM) element [https://s2glc.cbk.waw.pl/].",
+  "type": "Collection",
+  "license": "proprietary",
+  "extent": {
+    "spatial": {
+      "bbox": [
+        [
+          -19.0,
+          36.0,
+          51.0,
+          72.0
+        ]
+      ]
+    },
+    "temporal": {
+      "interval": [
+        [
+          "2017-01-01T00:00:00Z",
+          "2017-12-30T23:59:59Z"
+        ]
+      ]
+    }
+  },
+  "links": [
+    {
+      "rel": "root",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac"
+    },
+    {
+      "rel": "parent",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac"
+    },
+    {
+      "rel": "self",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/S2GLC"
+    },
+    {
+      "rel": "items",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/S2GLC/items"
+    }
+  ],
+  "merkle:object_hash": "84ab0e102924c012d4cf2a3b3e10ed4f768f695001174cfd5d9c75d4335b7a48",
+  "merkle:root": "33631c1a3d9339ffc66b3f3a3eb3de8f558bcabe4900494b55ca17aff851e661",
+  "merkle:hash_method": {
+    "function": "sha256",
+    "fields": [
+      "*"
+    ],
+    "ordering": "ascending",
+    "description": "Computed by excluding Merkle fields and including merkle:object_hash values in ascending order to build the Merkle tree."
+  }
+}
