@@ -17,6 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [v0.2.0] - 2024-11-16
+
+### Added
+
+- Enhanced collection processing to support nested subdirectories for items
+
 ## [v0.1.1] - 2024-11-16
 
 ### Fixed
