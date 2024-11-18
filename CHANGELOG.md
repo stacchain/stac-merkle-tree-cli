@@ -17,6 +17,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [v0.2.0] - 2024-11-16
+
+### Added
+
+- Enhanced collection processing to support nested subdirectories for items [#1](https://github.com/stacchain/stac-merkle-tree-cli/pull/1)
+- Test to ensure `merkle:root` values remain the same whether items are nested or not [#1](https://github.com/stacchain/stac-merkle-tree-cli/pull/1)
+
 ## [v0.1.1] - 2024-11-16
 
 ### Fixed

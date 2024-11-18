@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='stac-merkle-tree-cli',
-    version='0.1.0',
+    version='0.2.0',
     author='Jonathan Healy',
     author_email='jonathan.d.healy@gmail.com',
     description='A CLI tool for computing and adding Merkle Tree information to STAC catalogs, collections, or items.',

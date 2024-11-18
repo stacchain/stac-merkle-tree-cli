@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import click
-import os
 import json
 import hashlib
 from pathlib import Path
@@ -12,14 +11,27 @@ MERKLE_FIELDS = {"merkle:object_hash", "merkle:hash_method", "merkle:root"}
 
 def remove_merkle_fields(data):
     """
-    Recursively removes Merkle fields from a nested dictionary.
+    Recursively removes Merkle fields and the Merkle extension URL from a nested dictionary.
+    Also sorts lists like 'stac_extensions' for consistent ordering.
+
+    Parameters:
+    - data: The data structure (dict or list) to process.
+
+    Returns:
+    - The data structure with Merkle fields and extension URL removed, and lists sorted.
     """
     if isinstance(data, dict):
-        return {
-            k: remove_merkle_fields(v)
-            for k, v in data.items()
-            if k not in MERKLE_FIELDS
-        }
+        new_data = {}
+        for k, v in data.items():
+            if k not in MERKLE_FIELDS:
+                if k == 'stac_extensions' and isinstance(v, list):
+                    # Remove Merkle extension URL from stac_extensions
+                    extension_url = 'https://stacchain.github.io/merkle-tree/v1.0.0/schema.json'
+                    v = [ext for ext in v if ext != extension_url]
+                    # Sort the stac_extensions list for consistent ordering
+                    v.sort()
+                new_data[k] = remove_merkle_fields(v)
+        return new_data
     elif isinstance(data, list):
         return [remove_merkle_fields(v) for v in data]
     else:
@@ -65,7 +77,7 @@ def compute_merkle_root(hashes: List[str], ordering: str, hash_function: str) ->
     Parameters:
     - hashes (List[str]): List of merkle:object_hash values of child objects.
     - ordering (str): Ordering method specified in merkle:hash_method.ordering.
-    - hash_function: The hash function to use (e.g., 'sha256').
+    - hash_function (str): The hash function to use (e.g., 'sha256').
 
     Returns:
     - str: The computed Merkle root as a hexadecimal string.
@@ -131,6 +143,7 @@ def process_item(item_path: Path, hash_method: Dict[str, Any]) -> str:
         extension_url = 'https://stacchain.github.io/merkle-tree/v1.0.0/schema.json'
         if extension_url not in item_json['stac_extensions']:
             item_json['stac_extensions'].append(extension_url)
+            item_json['stac_extensions'].sort()  # Sort for consistent ordering
 
         # Save the updated Item JSON
         with item_path.open('w', encoding='utf-8') as f:
@@ -144,6 +157,7 @@ def process_item(item_path: Path, hash_method: Dict[str, Any]) -> str:
     except Exception as e:
         click.echo(f"Error processing Item {item_path}: {e}", err=True)
         return ''
+
 
 def process_collection(collection_path: Path, parent_hash_method: Dict[str, Any]) -> str:
     """
@@ -166,12 +180,27 @@ def process_collection(collection_path: Path, parent_hash_method: Dict[str, Any]
         if not hash_method:
             raise ValueError(f"Hash method not specified for {collection_path}")
 
-        # Process items in the collection folder
+        # Process items in the collection folder, including nested subdirectories
         collection_folder = collection_path.parent
+        item_paths = list(collection_folder.rglob('*.json'))
+        # Exclude the collection file itself
+        item_paths = [p for p in item_paths if p.resolve() == p.resolve() and p.resolve() != collection_path.resolve()]
+
+        # Load items and their IDs
+        items = []
+        for item_file in item_paths:
+            with item_file.open('r', encoding='utf-8') as f:
+                item_json = json.load(f)
+                if item_json.get('type') != 'Feature':
+                    continue  # Skip non-item JSON files
+                item_id = item_json.get('id', '')
+                items.append((item_id, item_file))
+
+        # Sort items based on their IDs
+        items.sort(key=lambda x: x[0])
+
         item_hashes = []
-        for item_file in collection_folder.glob('*.json'):
-            if item_file.name == 'collection.json':
-                continue
+        for item_id, item_file in items:
             item_hash = process_item(item_file, hash_method)
             if item_hash:
                 item_hashes.append(item_hash)
@@ -179,12 +208,11 @@ def process_collection(collection_path: Path, parent_hash_method: Dict[str, Any]
         # Compute merkle:object_hash
         own_hash = compute_merkle_object_hash(collection_json, hash_method)
         collection_json['merkle:object_hash'] = own_hash
-        item_hashes.append(own_hash)
+        item_hashes.append(own_hash)  # Add own hash before computing Merkle root
 
         # Compute merkle:root
-        ordering = hash_method.get('ordering', 'ascending')
         hash_function_name = hash_method.get('function', 'sha256')
-        merkle_root = compute_merkle_root(item_hashes, ordering, hash_function_name)
+        merkle_root = compute_merkle_root(item_hashes, 'unsorted', hash_function_name)
         collection_json['merkle:root'] = merkle_root
         collection_json['merkle:hash_method'] = hash_method
 
@@ -193,6 +221,8 @@ def process_collection(collection_path: Path, parent_hash_method: Dict[str, Any]
         extension_url = 'https://stacchain.github.io/merkle-tree/v1.0.0/schema.json'
         if extension_url not in collection_json['stac_extensions']:
             collection_json['stac_extensions'].append(extension_url)
+        # Sort stac_extensions for consistent ordering
+        collection_json['stac_extensions'].sort()
 
         # Save the updated Collection JSON
         with collection_path.open('w', encoding='utf-8') as f:
@@ -226,7 +256,7 @@ def process_catalog(catalog_path: Path) -> str:
             'function': 'sha256',
             'fields': ['*'],
             'ordering': 'ascending',
-            'description': 'Computed by excluding Merkle fields and including merkle:object_hash values in ascending order to build the Merkle tree.'
+            'description': 'Computed by including the merkle:root of collections and the catalogs own merkle:object_hash.'
         }
 
         # Process collections in the collections folder
@@ -244,16 +274,25 @@ def process_catalog(catalog_path: Path) -> str:
                 if collection_json_path.exists():
                     collection_hash = process_collection(collection_json_path, hash_method)
                     if collection_hash:
-                        collection_hashes.append(collection_hash)
+                        # Load the updated collection.json to get its merkle:root
+                        with collection_json_path.open('r', encoding='utf-8') as f:
+                            collection_json = json.load(f)
+                        collection_root = collection_json.get('merkle:root')
+                        if collection_root:
+                            collection_hashes.append(collection_root)
+                        else:
+                            click.echo(f"Collection merkle:root not found for {collection_json_path}", err=True)
+                    else:
+                        click.echo(f"Failed to process collection {collection_json_path}", err=True)
                 else:
                     click.echo(f"collection.json not found in {collection_dir}", err=True)
 
-        # Compute merkle:object_hash
+        # Compute merkle:object_hash of the catalog
         own_hash = compute_merkle_object_hash(catalog_json, hash_method)
         catalog_json['merkle:object_hash'] = own_hash
         collection_hashes.append(own_hash)
 
-        # Compute merkle:root
+        # Compute merkle:root of the catalog
         ordering = hash_method.get('ordering', 'ascending')
         hash_function_name = hash_method.get('function', 'sha256')
         merkle_root = compute_merkle_root(collection_hashes, ordering, hash_function_name)
@@ -265,6 +304,7 @@ def process_catalog(catalog_path: Path) -> str:
         extension_url = 'https://stacchain.github.io/merkle-tree/v1.0.0/schema.json'
         if extension_url not in catalog_json['stac_extensions']:
             catalog_json['stac_extensions'].append(extension_url)
+        catalog_json['stac_extensions'].sort()
 
         # Save the updated Catalog JSON
         with catalog_path.open('w', encoding='utf-8') as f:

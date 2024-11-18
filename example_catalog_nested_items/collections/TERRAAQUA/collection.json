@@ -3,9 +3,9 @@
   "stac_extensions": [
     "https://stacchain.github.io/merkle-tree/v1.0.0/schema.json"
   ],
-  "id": "S2GLC",
-  "title": "S2GLC",
-  "description": "The S2GLC 2017 product represents land cover classification of a major portion of the European continent. The classification has been performed using multi-temporal Sentinel-2 data collected during the year 2017 with the methodology developed in the frame of the Sentinel-2 Global Land Cover (S2GLC) project. The Sentinel-2 Global Land Cover (S2GLC) project was founded by the European Space Agency (ESA) through its Scientific Exploitation of Operational Missions (SEOM) element [https://s2glc.cbk.waw.pl/].",
+  "id": "TERRAAQUA",
+  "title": "TERRAAQUA",
+  "description": "Terra MODIS and Aqua MODIS are viewing the entire Earth's surface every 1 to 2 days, acquiring data in 36 spectral bands. MODIS (or Moderate Resolution Imaging Spectroradiometer) is a key instrument aboard the Terra and Aqua satellites. Terra's orbit around the Earth is timed so that it passes from north to south across the equator in the morning, while Aqua passes south to north over the equator in the afternoon [https://modis.gsfc.nasa.gov/about/].",
   "type": "Collection",
   "license": "proprietary",
   "extent": {
@@ -22,8 +22,8 @@
     "temporal": {
       "interval": [
         [
-          "2017-01-01T00:00:00Z",
-          "2017-12-30T23:59:59Z"
+          "2000-02-16T00:00:00Z",
+          null
         ]
       ]
     }
@@ -42,16 +42,16 @@
     {
       "rel": "self",
       "type": "application/json",
-      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/S2GLC"
+      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/TERRAAQUA"
     },
     {
       "rel": "items",
       "type": "application/json",
-      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/S2GLC/items"
+      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/TERRAAQUA/items"
     }
   ],
-  "merkle:object_hash": "164a3ea0c299caad2fed2e7799d5c5e2caef872efb41ca56c1e0fc627ecacc4a",
-  "merkle:root": "29e0391249b04fdf945b03ae3cd01662665cd6e29471ffa51e2d43e75d201112",
+  "merkle:object_hash": "7c7ab356cff2bc0f573823023c2dec535f3f744341be9cefd00d317375c90782",
+  "merkle:root": "7c7ab356cff2bc0f573823023c2dec535f3f744341be9cefd00d317375c90782",
   "merkle:hash_method": {
     "function": "sha256",
     "fields": [
