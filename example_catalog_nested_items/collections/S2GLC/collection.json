@@ -3,9 +3,9 @@
   "stac_extensions": [
     "https://stacchain.github.io/merkle-tree/v1.0.0/schema.json"
   ],
-  "id": "TERRAAQUA",
-  "title": "TERRAAQUA",
-  "description": "Terra MODIS and Aqua MODIS are viewing the entire Earth's surface every 1 to 2 days, acquiring data in 36 spectral bands. MODIS (or Moderate Resolution Imaging Spectroradiometer) is a key instrument aboard the Terra and Aqua satellites. Terra's orbit around the Earth is timed so that it passes from north to south across the equator in the morning, while Aqua passes south to north over the equator in the afternoon [https://modis.gsfc.nasa.gov/about/].",
+  "id": "S2GLC",
+  "title": "S2GLC",
+  "description": "The S2GLC 2017 product represents land cover classification of a major portion of the European continent. The classification has been performed using multi-temporal Sentinel-2 data collected during the year 2017 with the methodology developed in the frame of the Sentinel-2 Global Land Cover (S2GLC) project. The Sentinel-2 Global Land Cover (S2GLC) project was founded by the European Space Agency (ESA) through its Scientific Exploitation of Operational Missions (SEOM) element [https://s2glc.cbk.waw.pl/].",
   "type": "Collection",
   "license": "proprietary",
   "extent": {
@@ -22,8 +22,8 @@
     "temporal": {
       "interval": [
         [
-          "2000-02-16T00:00:00Z",
-          null
+          "2017-01-01T00:00:00Z",
+          "2017-12-30T23:59:59Z"
         ]
       ]
     }
@@ -42,16 +42,16 @@
     {
       "rel": "self",
       "type": "application/json",
-      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/TERRAAQUA"
+      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/S2GLC"
     },
     {
       "rel": "items",
       "type": "application/json",
-      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/TERRAAQUA/items"
+      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/S2GLC/items"
     }
   ],
-  "merkle:object_hash": "6ae6f97edd2994b632b415ff810af38639faa84544aa8a33a88bdf867a649374",
-  "merkle:root": "6ae6f97edd2994b632b415ff810af38639faa84544aa8a33a88bdf867a649374",
+  "merkle:object_hash": "84ab0e102924c012d4cf2a3b3e10ed4f768f695001174cfd5d9c75d4335b7a48",
+  "merkle:root": "33631c1a3d9339ffc66b3f3a3eb3de8f558bcabe4900494b55ca17aff851e661",
   "merkle:hash_method": {
     "function": "sha256",
     "fields": [

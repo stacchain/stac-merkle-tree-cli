@@ -1,0 +1,90 @@
+{
+  "type": "Feature",
+  "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
+    "https://stac-extensions.github.io/storage/v1.0.0/schema.json",
+    "https://stacchain.github.io/merkle-tree/v1.0.0/schema.json"
+  ],
+  "id": "S2GLC_T30TWT_2017",
+  "collection": "S2GLC",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          -3.0002674,
+          47.8537018
+        ],
+        [
+          -3.0002624,
+          46.8656999
+        ],
+        [
+          -1.5598502,
+          46.8566399
+        ],
+        [
+          -1.5327226,
+          47.844325
+        ],
+        [
+          -3.0002674,
+          47.8537018
+        ]
+      ]
+    ]
+  },
+  "properties": {
+    "productType": "GLC",
+    "processorVersion": "v1.0",
+    "datetime": "2019-07-15T00:00:00.000000Z",
+    "end_datetime": "2019-07-15T00:00:00.000000Z",
+    "start_datetime": "2019-07-15T00:00:00.000000Z",
+    "merkle:object_hash": "3a3803a0dae5dbaf9561aeb4cce2770bf38b5da4b71ca67398fb24d48c43a68f"
+  },
+  "bbox": [
+    -3.00026750564575,
+    46.8566398620606,
+    -1.53272259235382,
+    47.853702545166
+  ],
+  "links": [
+    {
+      "rel": "root",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac"
+    },
+    {
+      "rel": "self",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/S2GLC/items/S2GLC_T30TWT_2017"
+    },
+    {
+      "rel": "collection",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/S2GLC"
+    }
+  ],
+  "assets": {
+    "QUICKLOOK": {
+      "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Assets(21f88fd7-503f-41cb-adbf-ad7253292cb8)/$value",
+      "title": "QUICKLOOK",
+      "type": "image/png"
+    },
+    "PRODUCT": {
+      "href": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products(f522e1ab-b30d-5bb6-858f-d4f016ca759a)/$value",
+      "title": "Product",
+      "type": "application/octet-stream",
+      "alternate": {
+        "s3": {
+          "href": "/eodata/auxdata/S2GLC/2017/S2GLC_T30TWT_2017",
+          "storage:platform": "CLOUDFERRO",
+          "storage:region": "waw",
+          "storage:requester_pays": false,
+          "storage:tier": "Online"
+        }
+      }
+    }
+  }
+}

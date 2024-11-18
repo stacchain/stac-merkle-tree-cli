@@ -1,0 +1,63 @@
+{
+  "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stacchain.github.io/merkle-tree/v1.0.0/schema.json"
+  ],
+  "id": "COP-DEM",
+  "title": "COP-DEM",
+  "description": "The Copernicus DEM is a Digital Surface Model (DSM) that represents the surface of the Earth including buildings, infrastructure and vegetation. Data were acquired through the TanDEM-X mission between 2011 and 2015 [https://spacedata.copernicus.eu/collections/copernicus-digital-elevation-model].",
+  "type": "Collection",
+  "license": "proprietary",
+  "extent": {
+    "spatial": {
+      "bbox": [
+        [
+          -180,
+          -90,
+          180,
+          90
+        ]
+      ]
+    },
+    "temporal": {
+      "interval": [
+        [
+          "2010-12-12T00:00:00Z",
+          null
+        ]
+      ]
+    }
+  },
+  "links": [
+    {
+      "rel": "root",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac"
+    },
+    {
+      "rel": "parent",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac"
+    },
+    {
+      "rel": "self",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM"
+    },
+    {
+      "rel": "items",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items"
+    }
+  ],
+  "merkle:root": "7e990e84a86dc146547b6e3a3e35196f53e0123b6f216f871abd5d1f55d2ccc5",
+  "merkle:hash_method": {
+    "function": "sha256",
+    "fields": [
+      "*"
+    ],
+    "ordering": "ascending",
+    "description": "Computed by including merkle:object_hash values in ascending order and building the Merkle tree."
+  },
+  "merkle:object_hash": "17789b31f8ae304de8dbe2350a15263dbf5e31adfc0d17a997e7e55f4cfc2f53"
+}
