@@ -50,8 +50,8 @@
       "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/S2GLC/items"
     }
   ],
-  "merkle:object_hash": "84ab0e102924c012d4cf2a3b3e10ed4f768f695001174cfd5d9c75d4335b7a48",
-  "merkle:root": "33631c1a3d9339ffc66b3f3a3eb3de8f558bcabe4900494b55ca17aff851e661",
+  "merkle:object_hash": "164a3ea0c299caad2fed2e7799d5c5e2caef872efb41ca56c1e0fc627ecacc4a",
+  "merkle:root": "29e0391249b04fdf945b03ae3cd01662665cd6e29471ffa51e2d43e75d201112",
   "merkle:hash_method": {
     "function": "sha256",
     "fields": [

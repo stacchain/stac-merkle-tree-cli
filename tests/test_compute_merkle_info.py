@@ -287,5 +287,116 @@ class TestComputeMerkleObjectHash(unittest.TestCase):
             # Clean up the temporary directory
             shutil.rmtree(temp_dir)
 
+    def test_process_collection_with_mixed_items(self):
+        """
+        Test processing a collection with both nested and non-nested items.
+        """
+        # Create a temporary directory to simulate the file structure
+        temp_dir = tempfile.mkdtemp()
+        try:
+            # First collection directory
+            collection_dir1 = Path(temp_dir) / "collection1"
+            collection_dir1.mkdir()
+
+            # Create collection.json file
+            collection_path1 = collection_dir1 / "collection.json"
+            collection_json = {
+                "type": "Collection",
+                "id": "test-collection",
+                "description": "A test collection",
+                "extent": {},
+                "links": [],
+                # Note: 'merkle:object_hash' and 'merkle:hash_method' will be excluded during hashing
+                "merkle:object_hash": "should be excluded",
+                "merkle:hash_method": {
+                    "function": "sha256",
+                    "fields": ["*"],
+                    "ordering": "ascending"
+                }
+            }
+            with collection_path1.open('w', encoding='utf-8') as f:
+                json.dump(collection_json, f, indent=2)
+
+            # Create item1.json file (non-nested)
+            item1_path1 = collection_dir1 / "item1.json"
+            item1_json = {
+                "type": "Feature",
+                "id": "test-item-1",
+                "properties": {
+                    "datetime": "2024-10-15T12:00:00Z",
+                    "other_property": "value1"
+                },
+                "geometry": {},
+                "links": []
+            }
+            with item1_path1.open('w', encoding='utf-8') as f:
+                json.dump(item1_json, f, indent=2)
+
+            # Create nested item2.json file (nested)
+            nested_item_dir1 = collection_dir1 / "item2"
+            nested_item_dir1.mkdir(parents=True, exist_ok=True)
+            nested_item_path1 = nested_item_dir1 / "item2.json"
+            item2_json = {
+                "type": "Feature",
+                "id": "test-item-2",
+                "properties": {
+                    "datetime": "2024-10-16T12:00:00Z",
+                    "other_property": "value2"
+                },
+                "geometry": {},
+                "links": []
+            }
+            with nested_item_path1.open('w', encoding='utf-8') as f:
+                json.dump(item2_json, f, indent=2)
+
+            # Save copies of the original item data to reset later
+            original_item1_json = json.dumps(item1_json, indent=2)
+            original_item2_json = json.dumps(item2_json, indent=2)
+
+            # Set hash_method
+            hash_method = {
+                "function": "sha256",
+                "fields": ["*"],
+                "ordering": "ascending"
+            }
+
+            # Call process_collection function on the first collection
+            collection_hash_1 = process_collection(collection_path1, hash_method)
+
+            # Second collection directory
+            collection_dir2 = Path(temp_dir) / "collection2"
+            shutil.copytree(collection_dir1, collection_dir2)
+
+            # Reset the item files in collection2 to their original state
+            item1_path2 = collection_dir2 / "item1.json"
+            with item1_path2.open('w', encoding='utf-8') as f:
+                f.write(original_item1_json)
+            nested_item_path2 = collection_dir2 / "item2" / "item2.json"
+            with nested_item_path2.open('w', encoding='utf-8') as f:
+                f.write(original_item2_json)
+
+            # Move nested item2.json to non-nested for the second collection
+            item2_path2 = collection_dir2 / "item2.json"
+            nested_item_path2.rename(item2_path2)
+            # Remove the now-empty nested directory
+            (collection_dir2 / "item2").rmdir()
+
+            # Reset the collection.json in collection2 to its original state
+            collection_path2 = collection_dir2 / "collection.json"
+            with collection_path2.open('w', encoding='utf-8') as f:
+                json.dump(collection_json, f, indent=2)
+
+            # Process the collection in the second directory
+            collection_hash_2 = process_collection(collection_path2, hash_method)
+
+            # Assertions to ensure that the hashes are the same
+            self.assertTrue(collection_hash_1)
+            self.assertTrue(collection_hash_2)
+            self.assertEqual(collection_hash_1, collection_hash_2)
+
+        finally:
+            # Clean up the temporary directory
+            shutil.rmtree(temp_dir)
+
 if __name__ == '__main__':
     unittest.main()

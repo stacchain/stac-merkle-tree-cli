@@ -55,14 +55,14 @@
   "stac_extensions": [
     "https://stacchain.github.io/merkle-tree/v1.0.0/schema.json"
   ],
-  "merkle:object_hash": "b14fd102417c1d673f481bc053d19946aefdc27d84c584989b23c676c897bd5a",
-  "merkle:root": "2c637f0bae066e89de80839f3468f73e396e9d1498faefc469f0fd1039e19e0c",
+  "merkle:object_hash": "4adf81a9aba90fe1f483ec3bbe7c628309e598239cee45d4aeafa1bc8c767ae6",
+  "merkle:root": "d40fb6b29b5feafa1c53ae6b2c5be2d271aa32d837c7300c8d80e570f5667724",
   "merkle:hash_method": {
     "function": "sha256",
     "fields": [
       "*"
     ],
     "ordering": "ascending",
-    "description": "Computed by excluding Merkle fields and including merkle:object_hash values in ascending order to build the Merkle tree."
+    "description": "Computed by including the merkle:root of collections and the catalogs own merkle:object_hash."
   }
 }
