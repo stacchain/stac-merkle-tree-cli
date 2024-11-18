@@ -166,10 +166,10 @@ def process_collection(collection_path: Path, parent_hash_method: Dict[str, Any]
         if not hash_method:
             raise ValueError(f"Hash method not specified for {collection_path}")
 
-        # Process items in the collection folder
+        # Process items in the collection folder, including nested subdirectories
         collection_folder = collection_path.parent
         item_hashes = []
-        for item_file in collection_folder.glob('*.json'):
+        for item_file in collection_folder.rglob('*.json'):
             if item_file.name == 'collection.json':
                 continue
             item_hash = process_item(item_file, hash_method)
