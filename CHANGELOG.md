@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Enhanced collection processing to support nested subdirectories for items
+- Enhanced collection processing to support nested subdirectories for items [#1](https://github.com/stacchain/stac-merkle-tree-cli/pull/1)
 
 ## [v0.1.1] - 2024-11-16
 
