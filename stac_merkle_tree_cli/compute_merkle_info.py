@@ -116,34 +116,6 @@ def compute_merkle_root(hashes: List[str], ordering: str, hash_function: str) ->
     root_hash = merkle_tree_level(hashes)[0]
     return root_hash
 
-def remove_merkle_fields(data):
-    """
-    Recursively removes Merkle fields and the Merkle extension URL from a nested dictionary.
-    Also sorts lists like 'stac_extensions' for consistent ordering.
-
-    Parameters:
-    - data: The data structure (dict or list) to process.
-
-    Returns:
-    - The data structure with Merkle fields and extension URL removed, and lists sorted.
-    """
-    if isinstance(data, dict):
-        new_data = {}
-        for k, v in data.items():
-            if k not in MERKLE_FIELDS:
-                if k == 'stac_extensions' and isinstance(v, list):
-                    # Remove Merkle extension URL from stac_extensions
-                    extension_url = 'https://stacchain.github.io/merkle-tree/v1.0.0/schema.json'
-                    v = [ext for ext in v if ext != extension_url]
-                    # Sort the stac_extensions list for consistent ordering
-                    v.sort()
-                new_data[k] = remove_merkle_fields(v)
-        return new_data
-    elif isinstance(data, list):
-        return [remove_merkle_fields(v) for v in data]
-    else:
-        return data
-
 def process_item(item_path: Path, hash_method: Dict[str, Any]) -> str:
     """
     Processes a STAC Item to compute and add Merkle info.
