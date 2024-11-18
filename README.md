@@ -258,13 +258,7 @@ After running the tool, each STAC object will be updated with the appropriate Me
   "stac_version": "1.1.0",
   "id": "item1",
   "properties": {
-    "merkle:object_hash": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
-    "merkle:hash_method": {
-      "function": "sha256",
-      "fields": ["*"],
-      "ordering": "ascending",
-      "description": "Computed by excluding Merkle fields and including merkle:object_hash values in ascending order to build the Merkle tree."
-    }
+    "merkle:object_hash": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
   },
   "geometry": {},
   "links": [],
