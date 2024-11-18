@@ -3,7 +3,10 @@
 import unittest
 import json
 import hashlib
-from stac_merkle_tree_cli.compute_merkle_info import compute_merkle_object_hash, remove_merkle_fields
+import tempfile
+import shutil
+from pathlib import Path
+from stac_merkle_tree_cli.compute_merkle_info import compute_merkle_object_hash, remove_merkle_fields, process_collection
 
 class TestComputeMerkleObjectHash(unittest.TestCase):
     def test_compute_hash_all_fields_item(self):
@@ -221,6 +224,68 @@ class TestComputeMerkleObjectHash(unittest.TestCase):
         expected_json_str = json.dumps(expected_data, sort_keys=True, separators=(',', ':'))
         expected_hash = hashlib.sha256(expected_json_str.encode('utf-8')).hexdigest()
         self.assertEqual(result, expected_hash)
+
+    def test_process_collection_with_nested_items(self):
+        """
+        Test processing a collection with nested items.
+        """
+        # Create a temporary directory to simulate the file structure
+        temp_dir = tempfile.mkdtemp()
+        try:
+            # Create collection.json file
+            collection_path = Path(temp_dir) / "collection.json"
+            collection_json = {
+                "type": "Collection",
+                "id": "test-collection",
+                "description": "A test collection",
+                "extent": {},
+                "links": [],
+                "merkle:object_hash": "should be excluded",
+                "merkle:hash_method": {
+                    "function": "sha256",
+                    "fields": ["*"],
+                    "ordering": "ascending"
+                }
+            }
+            with open(collection_path, 'w', encoding='utf-8') as f:
+                json.dump(collection_json, f, indent=2)
+
+            # Create nested item files
+            item1_path = Path(temp_dir) / "item1" / "item1.json"
+            item1_path.parent.mkdir(parents=True, exist_ok=True)
+            item_json = {
+                "type": "Feature",
+                "id": "test-item",
+                "properties": {
+                    "datetime": "2024-10-15T12:00:00Z",
+                    "other_property": "value"
+                },
+                "geometry": {},
+                "links": []
+            }
+            with open(item1_path, 'w', encoding='utf-8') as f:
+                json.dump(item_json, f, indent=2)
+
+            item2_path = Path(temp_dir) / "item2" / "item2.json"
+            item2_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(item2_path, 'w', encoding='utf-8') as f:
+                json.dump(item_json, f, indent=2)
+
+            # Set hash_method
+            hash_method = {
+                "function": "sha256",
+                "fields": ["*"],
+                "ordering": "ascending"
+            }
+
+            # Call process_collection function
+            collection_hash = process_collection(collection_path, hash_method)
+
+            # Assertions
+            self.assertTrue(collection_hash)
+        finally:
+            # Clean up the temporary directory
+            shutil.rmtree(temp_dir)
 
 if __name__ == '__main__':
     unittest.main()
