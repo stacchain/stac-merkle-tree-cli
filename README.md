@@ -61,7 +61,37 @@ pip install stac-merkle-tree-cli
 
 ## Directory Structure
 
-Ensure your STAC catalog follows the directory structure below for optimal processing:
+Ensure your STAC catalog follows one of the directory structures below for optimal processing:
+
+### Standard Flat Structure
+
+In this structure, all items are at the same level as the `collection.json` file:
+
+```bash
+collection/
+├── collection.json
+├── item1.json
+├── item2.json
+└── ...
+```
+
+### Nested Structure
+
+In this structure, items can be nested inside their own subdirectories within a collection:
+
+```bash
+collection/
+├── collection.json
+├── item1/
+│   └── item1.json
+├── item2/
+│   └── item2.json
+└── ...
+```
+
+### Catalog with Collections and Nested Items
+
+A full STAC catalog with collections, where items can be either at the same level as the `collection.json` or nested within subdirectories:
 
 ```bash
 catalog/
@@ -70,13 +100,14 @@ catalog/
 │   ├── collection1/
 │   │   ├── collection.json
 │   │   ├── item1.json
-│   │   ├── item2.json
-│   │   └── ...
+│   │   ├── item2/
+│   │   │   └── item2.json
 │   ├── collection2/
 │   │   ├── collection.json
-│   │   ├── item1.json
-│   │   └── ...
-│   └── ...
+│   │   ├── item1/
+│   │   │   └── item1.json
+│   │   └── item2.json
+└── ...
 ```
 
 - **Catalog Level**:
@@ -86,7 +117,7 @@ catalog/
   - Each collection has its own directory inside `collections/`, named after the collection.
   - Inside each collection directory:
     - `collection.json`: Collection metadata.
-    - `item.json`, `item2.json`, ...: Items belonging to the collection.
+    - `item.json`, `item2.json`, ...: Items belonging to the collection, either at the same level or nested within subdirectories.
 
 ## Usage
 
@@ -97,7 +128,7 @@ After installing the package, you can use the `stac-merkle-tree-cli` command to 
 Navigate to the directory containing your catalog.json file and run the command as follows:
 
 ```bash
-stac-merkle-cli path/to/catalog.json
+stac-merkle-tree-cli path/to/catalog.json
 ```
 
 ### Example
@@ -111,18 +142,19 @@ my_stac_catalog/
 │   ├── collection1/
 │   │   ├── collection.json
 │   │   ├── item1.json
-│   │   └── item2.json
+│   │   └── item2/
+│   │       └── item2.json
 │   └── collection2/
 │       ├── collection.json
-│       ├── item1.json
+│       ├── item1/
+│       │   └── item1.json
 │       └── item2.json
-
 ```
 
 Run the tool:
 
 ```bash
-stac-merkle-tree-cli ./my_stac_catalog/catalog.json
+stac-merkle-tree-cli my_stac_catalog/catalog.json
 ```
 
 Expected Output:
