@@ -125,11 +125,17 @@ catalog/
 
 After installing the package, you can use the `stac-merkle-tree-cli` command to compute and add Merkle information to your STAC catalog.
 
-Navigate to the directory containing your catalog.json file and run the command as follows:
-
 ```bash
-stac-merkle-tree-cli path/to/catalog.json
+stac-merkle-tree-cli path/to/catalog_directory [OPTIONS]
 ```
+
+#### Parameters:
+
+- path/to/catalog_directory: (Required) Path to the root directory containing catalog.json.
+
+#### Options:
+
+- --merkle-tree-file TEXT: (Optional) Path to the output Merkle tree structure file. Defaults to merkle_tree.json within the provided catalog_directory.
 
 ### Example
 
@@ -154,20 +160,20 @@ my_stac_catalog/
 Run the tool:
 
 ```bash
-stac-merkle-tree-cli my_stac_catalog/catalog.json
+stac-merkle-tree-cli my_stac_catalog/
 ```
 
 Expected Output:
 
 ```
 Processed Item: /path/to/my_stac_catalog/collections/collection1/item1.json
-Processed Item: /path/to/my_stac_catalog/collections/collection1/item2.json
+Processed Item: /path/to/my_stac_catalog/collections/collection1/item2/item2.json
 Processed Collection: /path/to/my_stac_catalog/collections/collection1/collection.json
-Processed Item: /path/to/my_stac_catalog/collections/collection2/item1.json
+Processed Item: /path/to/my_stac_catalog/collections/collection2/item1/item1.json
 Processed Item: /path/to/my_stac_catalog/collections/collection2/item2.json
 Processed Collection: /path/to/my_stac_catalog/collections/collection2/collection.json
 Processed Catalog: /path/to/my_stac_catalog/catalog.json
-Merkle info computation and addition completed.
+Merkle tree structure saved to /path/to/my_stac_catalog/merkle_tree.json
 ```
 
 ## Merkle Tree Extension Specification
@@ -202,6 +208,76 @@ All STAC objects processed by this tool will include the Merkle extension URL in
 ## Output
 
 After running the tool, each STAC object will be updated with the appropriate Merkle fields.
+
+### Merkle Tree Structure (merkle_tree.json)
+
+The tool generates a `merkle_tree.json` file that represents the hierarchical Merkle tree of your STAC catalog. Below is an example of the `merkle_tree.json` structure:
+
+```json
+{
+  "node_id": "Catalogue",
+  "type": "Catalog",
+  "merkle:object_hash": "b14fd102417c1d673f481bc053d19946aefdc27d84c584989b23c676c897bd5a",
+  "merkle:root": "2c637f0bae066e89de80839f3468f73e396e9d1498faefc469f0fd1039e19e0c",
+  "children": [
+    {
+      "node_id": "COP-DEM",
+      "type": "Collection",
+      "merkle:object_hash": "17789b31f8ae304de8dbe2350a15263dbf5e31adfc0d17a997e7e55f4cfc2f53",
+      "merkle:root": "2f4aa32184fbe70bd385d5b6b6e6d4ec5eb8b2e43611b441febcdf407c4e0030",
+      "children": [
+        {
+          "node_id": "DEM1_SAR_DGE_30_20101212T230244_20140325T230302_ADS_000000_1jTi",
+          "type": "Item",
+          "merkle:object_hash": "ce9f56e695ab1751b8f0c8d9ef1f1ecedaf04574ec3077e70e7426ec9fc61ea4"
+        }
+      ]
+    },
+    {
+      "node_id": "TERRAAQUA",
+      "type": "Collection",
+      "merkle:object_hash": "6ae6f97edd2994b632b415ff810af38639faa84544aa8a33a88bdf867a649374",
+      "merkle:root": "6ae6f97edd2994b632b415ff810af38639faa84544aa8a33a88bdf867a649374",
+      "children": []
+    },
+    {
+      "node_id": "S2GLC",
+      "type": "Collection",
+      "merkle:object_hash": "84ab0e102924c012d4cf2a3b3e10ed4f768f695001174cfd5d9c75d4335b7a48",
+      "merkle:root": "33631c1a3d9339ffc66b3f3a3eb3de8f558bcabe4900494b55ca17aff851e661",
+      "children": [
+        {
+          "node_id": "S2GLC_T30TWT_2017",
+          "type": "Item",
+          "merkle:object_hash": "3a3803a0dae5dbaf9561aeb4cce2770bf38b5da4b71ca67398fb24d48c43a68f"
+        }
+      ]
+    }
+  ]
+}
+```
+
+#### Structure Explanation:
+
+- **Root Node** (Catalogue):
+  - node_id: Identifier of the Catalog.
+  - type: Specifies that this node is a Catalog.
+  - merkle:object_hash: Hash of the Catalog's metadata.
+  - merkle:root: The Merkle root representing the entire Catalog.
+  - children: Array containing child nodes, which can be Collections or Items.
+- **Child Nodes** (e.g., COP-DEM, TERRAAQUA, S2GLC):
+
+  - node_id: Identifier of the Collection.
+  - type: Specifies that this node is a Collection.
+  - merkle:object_hash: Hash of the Collection's metadata.
+  - merkle:root: The Merkle root representing the Collection, calculated from its children.
+  - children: Array containing child nodes, which can be Items or further sub-Collections.
+
+- **Leaf Nodes** (e.g., DEM1_SAR_DGE_30_20101212T230244_20140325T230302_ADS_000000_1jTi, S2GLC_T30TWT_2017):
+  - node_id: Identifier of the Item.
+  - type: Specifies that this node is an Item.
+  - merkle:object_hash: Hash of the Item's metadata.
+  - No merkle:root or children: As Items are leaf nodes, they do not contain these fields.
 
 ### Catalog (catalog.json)
 
@@ -278,3 +354,44 @@ After running the tool, each STAC object will be updated with the appropriate Me
 ## Contributing
 
 Contributions are welcome! If you encounter issues or have suggestions for improvements, please open an issue or submit a pull request on the [GitHub repository](https://github.com/stacchain/stac-merkle-tree-cli).
+
+## Verification Steps
+
+### 1. Run the CLI Tool:
+
+```bash
+stac-merkle-tree-cli path/to/catalog_directory
+```
+
+### 2. Check the Output:
+
+- **Console Output**: You should see logs indicating the processing of Items, Collections, and the Catalog.
+
+```ruby
+Processed Item: /path/to/catalog_directory/collections/collection1/item1.json
+Processed Item: /path/to/catalog_directory/collections/collection1/item2/item2.json
+Processed Collection: /path/to/catalog_directory/collections/collection1/collection.json
+Processed Item: /path/to/catalog_directory/collections/collection2/item1/item1.json
+Processed Item: /path/to/catalog_directory/collections/collection2/item2.json
+Processed Collection: /path/to/catalog_directory/collections/collection2/collection.json
+Processed Catalog: /path/to/catalog_directory/catalog.json
+Merkle tree structure saved to /path/to/catalog_directory/merkle_tree.json
+```
+
+- **Merkle Tree JSON**: Verify that the `merkle_tree.json` (or your specified output file) accurately represents the hierarchical structure of your STAC catalog with correct `merkle:object_hash` and `merkle:root` values.
+
+### 3. Verify Integrity:
+
+- **Catalog**: Ensure that the `catalog.json` now includes `merkle:object_hash`, `merkle:root`, and `merkle:hash_method`.
+
+- **Collections**: Each `collection.json` should include `merkle:object_hash`, `merkle:root`, and `merkle:hash_method`.
+
+- **Items**: Each Item's JSON should have `merkle:object_hash` within the properties field.
+
+### 4. Run Tests:
+
+Ensure that all tests pass by executing:
+
+```bash
+pytest -v
+```
