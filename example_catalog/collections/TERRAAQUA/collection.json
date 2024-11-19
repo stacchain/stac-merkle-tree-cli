@@ -50,8 +50,8 @@
       "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/TERRAAQUA/items"
     }
   ],
-  "merkle:object_hash": "7c7ab356cff2bc0f573823023c2dec535f3f744341be9cefd00d317375c90782",
-  "merkle:root": "7c7ab356cff2bc0f573823023c2dec535f3f744341be9cefd00d317375c90782",
+  "merkle:object_hash": "6ae6f97edd2994b632b415ff810af38639faa84544aa8a33a88bdf867a649374",
+  "merkle:root": "6ae6f97edd2994b632b415ff810af38639faa84544aa8a33a88bdf867a649374",
   "merkle:hash_method": {
     "function": "sha256",
     "fields": [

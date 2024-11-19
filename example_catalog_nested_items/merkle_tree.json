@@ -1,0 +1,41 @@
+{
+  "node_id": "Catalogue",
+  "type": "Catalog",
+  "merkle:object_hash": "b14fd102417c1d673f481bc053d19946aefdc27d84c584989b23c676c897bd5a",
+  "merkle:root": "2c637f0bae066e89de80839f3468f73e396e9d1498faefc469f0fd1039e19e0c",
+  "children": [
+    {
+      "node_id": "COP-DEM",
+      "type": "Collection",
+      "merkle:object_hash": "17789b31f8ae304de8dbe2350a15263dbf5e31adfc0d17a997e7e55f4cfc2f53",
+      "merkle:root": "2f4aa32184fbe70bd385d5b6b6e6d4ec5eb8b2e43611b441febcdf407c4e0030",
+      "children": [
+        {
+          "node_id": "DEM1_SAR_DGE_30_20101212T230244_20140325T230302_ADS_000000_1jTi",
+          "type": "Item",
+          "merkle:object_hash": "ce9f56e695ab1751b8f0c8d9ef1f1ecedaf04574ec3077e70e7426ec9fc61ea4"
+        }
+      ]
+    },
+    {
+      "node_id": "TERRAAQUA",
+      "type": "Collection",
+      "merkle:object_hash": "6ae6f97edd2994b632b415ff810af38639faa84544aa8a33a88bdf867a649374",
+      "merkle:root": "6ae6f97edd2994b632b415ff810af38639faa84544aa8a33a88bdf867a649374",
+      "children": []
+    },
+    {
+      "node_id": "S2GLC",
+      "type": "Collection",
+      "merkle:object_hash": "84ab0e102924c012d4cf2a3b3e10ed4f768f695001174cfd5d9c75d4335b7a48",
+      "merkle:root": "33631c1a3d9339ffc66b3f3a3eb3de8f558bcabe4900494b55ca17aff851e661",
+      "children": [
+        {
+          "node_id": "S2GLC_T30TWT_2017",
+          "type": "Item",
+          "merkle:object_hash": "3a3803a0dae5dbaf9561aeb4cce2770bf38b5da4b71ca67398fb24d48c43a68f"
+        }
+      ]
+    }
+  ]
+}

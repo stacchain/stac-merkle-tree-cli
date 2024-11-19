@@ -1,142 +1,121 @@
-#!/usr/bin/env python3
+# stac_merkle_cli/compute_merkle_info.py
 
-import click
 import json
 import hashlib
 from pathlib import Path
 from typing import List, Dict, Any
 
-# Define Merkle fields to exclude from hashing
-MERKLE_FIELDS = {"merkle:object_hash", "merkle:hash_method", "merkle:root"}
 
-def remove_merkle_fields(data):
+def remove_merkle_fields(data: Any) -> Any:
     """
-    Recursively removes Merkle fields and the Merkle extension URL from a nested dictionary.
-    Also sorts lists like 'stac_extensions' for consistent ordering.
-
-    Parameters:
-    - data: The data structure (dict or list) to process.
-
-    Returns:
-    - The data structure with Merkle fields and extension URL removed, and lists sorted.
+    Recursively removes Merkle-specific fields from the data.
     """
     if isinstance(data, dict):
-        new_data = {}
-        for k, v in data.items():
-            if k not in MERKLE_FIELDS:
-                if k == 'stac_extensions' and isinstance(v, list):
-                    # Remove Merkle extension URL from stac_extensions
-                    extension_url = 'https://stacchain.github.io/merkle-tree/v1.0.0/schema.json'
-                    v = [ext for ext in v if ext != extension_url]
-                    # Sort the stac_extensions list for consistent ordering
-                    v.sort()
-                new_data[k] = remove_merkle_fields(v)
-        return new_data
+        return {k: remove_merkle_fields(v) for k, v in data.items() if k not in {"merkle:object_hash", "merkle:hash_method", "merkle:root"}}
     elif isinstance(data, list):
-        return [remove_merkle_fields(v) for v in data]
+        return [remove_merkle_fields(item) for item in data]
     else:
         return data
 
-def compute_merkle_object_hash(
-    stac_object: Dict[str, Any],
-    hash_method: Dict[str, Any]
-) -> str:
+
+def compute_merkle_object_hash(stac_object: Dict[str, Any], hash_method: Dict[str, Any]) -> str:
     """
-    Computes the merkle:object_hash for a STAC object (Catalog, Collection, or Item).
+    Computes the merkle:object_hash for a STAC object.
 
     Parameters:
-    - stac_object (dict): The STAC object JSON content.
-    - hash_method (dict): The hash method details from merkle:hash_method.
+    - stac_object (Dict[str, Any]): The STAC Catalog, Collection, or Item JSON object.
+    - hash_method (Dict[str, Any]): The hash method details from merkle:hash_method.
 
     Returns:
-    - str: The computed Merkle object hash as a hexadecimal string.
+    - str: The computed object hash as a hexadecimal string.
     """
     fields = hash_method.get('fields', ['*'])
     if fields == ['*'] or fields == ['all']:
-        # Exclude Merkle fields from all levels
         data_to_hash = remove_merkle_fields(stac_object)
     else:
-        # Include only specified fields, then remove Merkle fields
         selected_data = {field: stac_object.get(field) for field in fields if field in stac_object}
         data_to_hash = remove_merkle_fields(selected_data)
-    # Serialize the data to a canonical JSON string
+
+    # Serialize the data to a compact JSON string with sorted keys
     json_str = json.dumps(data_to_hash, sort_keys=True, separators=(',', ':'))
+
     # Get the hash function
     hash_function_name = hash_method.get('function', 'sha256').replace('-', '').lower()
     hash_func = getattr(hashlib, hash_function_name, None)
     if not hash_func:
         raise ValueError(f"Unsupported hash function: {hash_function_name}")
-    # Compute the hash
-    merkle_object_hash = hash_func(json_str.encode('utf-8')).hexdigest()
-    return merkle_object_hash
 
-def compute_merkle_root(hashes: List[str], ordering: str, hash_function: str) -> str:
+    # Compute the hash
+    return hash_func(json_str.encode('utf-8')).hexdigest()
+
+
+def compute_merkle_root(hashes: List[str], hash_method: Dict[str, Any]) -> str:
     """
-    Computes the merkle:root by building a Merkle tree from the provided hashes.
+    Computes the merkle:root by building a Merkle tree from a list of hashes.
 
     Parameters:
-    - hashes (List[str]): List of merkle:object_hash values of child objects.
-    - ordering (str): Ordering method specified in merkle:hash_method.ordering.
-    - hash_function (str): The hash function to use (e.g., 'sha256').
+    - hashes (List[str]): List of hexadecimal hash strings.
+    - hash_method (Dict[str, Any]): The hash method details from merkle:hash_method.
 
     Returns:
     - str: The computed Merkle root as a hexadecimal string.
     """
-    # Order the hashes
-    if ordering == 'ascending':
-        hashes.sort()
-    elif ordering == 'descending':
-        hashes.sort(reverse=True)
-    elif ordering == 'unsorted':
-        pass  # Keep the original order
-    else:
-        raise ValueError(f"Unsupported ordering method: {ordering}")
+    if not hashes:
+        return ''
 
-    # Convert hash_function to actual function
-    hash_func = getattr(hashlib, hash_function.replace('-', '').lower(), None)
+    # Get the hash function
+    hash_function_name = hash_method.get('function', 'sha256').replace('-', '').lower()
+    hash_func = getattr(hashlib, hash_function_name, None)
     if not hash_func:
-        raise ValueError(f"Unsupported hash function: {hash_function}")
+        raise ValueError(f"Unsupported hash function: {hash_function_name}")
 
-    # Build the Merkle tree
-    def merkle_tree_level(nodes: List[str]) -> List[str]:
-        if len(nodes) == 1:
-            return nodes
-        new_level = []
-        for i in range(0, len(nodes), 2):
-            left = nodes[i]
-            if i + 1 < len(nodes):
-                right = nodes[i + 1]
+    current_level = hashes.copy()
+
+    # Continue until we have only one hash (the root)
+    while len(current_level) > 1:
+        next_level = []
+        # Process pairs
+        for i in range(0, len(current_level), 2):
+            left = current_level[i]
+            if i + 1 < len(current_level):
+                right = current_level[i + 1]
             else:
-                right = left  # Duplicate the last node if odd number of nodes
+                # If odd number, duplicate the last hash
+                right = left
+            # Combine and hash
             combined = bytes.fromhex(left) + bytes.fromhex(right)
             new_hash = hash_func(combined).hexdigest()
-            new_level.append(new_hash)
-        return merkle_tree_level(new_level)
+            next_level.append(new_hash)
+        current_level = next_level
 
-    root_hash = merkle_tree_level(hashes)[0]
-    return root_hash
+    return current_level[0]
 
-def process_item(item_path: Path, hash_method: Dict[str, Any]) -> str:
+
+def process_item(item_path: Path, hash_method: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Processes a STAC Item to compute and add Merkle info.
+    Processes a STAC Item to compute and return its object hash.
 
     Parameters:
     - item_path (Path): Path to the Item JSON file.
-    - hash_method (dict): The hash method to use.
+    - hash_method (Dict[str, Any]): The hash method to use.
 
     Returns:
-    - str: The merkle:object_hash of the Item.
+    - Dict[str, Any]: A dictionary containing 'node_id' and 'merkle:object_hash'.
     """
     try:
         with item_path.open('r', encoding='utf-8') as f:
             item_json = json.load(f)
 
+        if item_json.get('type') != 'Feature':
+            print(f"Skipping non-Item JSON: {item_path}")
+            return {}
+
         # Compute merkle:object_hash
-        own_hash = compute_merkle_object_hash(item_json, hash_method)
+        object_hash = compute_merkle_object_hash(item_json, hash_method)
 
         # Add merkle:object_hash to 'properties'
         properties = item_json.setdefault('properties', {})
-        properties['merkle:object_hash'] = own_hash
+        properties['merkle:object_hash'] = object_hash
 
         # Ensure the Merkle extension is listed
         item_json.setdefault('stac_extensions', [])
@@ -150,29 +129,38 @@ def process_item(item_path: Path, hash_method: Dict[str, Any]) -> str:
             json.dump(item_json, f, indent=2)
             f.write('\n')
 
-        click.echo(f"Processed Item: {item_path}")
+        print(f"Processed Item: {item_path}")
 
-        return own_hash
+        # Return the structured Item node
+        return {
+            'node_id': item_json.get('id', item_path.stem),
+            'type': 'Item',
+            'merkle:object_hash': object_hash
+        }
 
     except Exception as e:
-        click.echo(f"Error processing Item {item_path}: {e}", err=True)
-        return ''
+        print(f"Error processing Item {item_path}: {e}")
+        return {}
 
 
-def process_collection(collection_path: Path, parent_hash_method: Dict[str, Any]) -> str:
+def process_collection(collection_path: Path, parent_hash_method: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Processes a STAC Collection to compute and add Merkle info.
+    Processes a STAC Collection to compute its merkle:root and builds a hierarchical Merkle node.
 
     Parameters:
     - collection_path (Path): Path to the Collection JSON file.
-    - parent_hash_method (dict): The hash method inherited from the parent.
+    - parent_hash_method (Dict[str, Any]): The hash method inherited from the parent.
 
     Returns:
-    - str: The merkle:object_hash of the Collection.
+    - Dict[str, Any]: The structured Merkle tree node for the collection.
     """
     try:
         with collection_path.open('r', encoding='utf-8') as f:
             collection_json = json.load(f)
+
+        if collection_json.get('type') != 'Collection':
+            print(f"Skipping non-Collection JSON: {collection_path}")
+            return {}
 
         # Determine the hash_method to use
         hash_method = collection_json.get('merkle:hash_method', parent_hash_method)
@@ -180,39 +168,60 @@ def process_collection(collection_path: Path, parent_hash_method: Dict[str, Any]
         if not hash_method:
             raise ValueError(f"Hash method not specified for {collection_path}")
 
-        # Process items in the collection folder, including nested subdirectories
-        collection_folder = collection_path.parent
-        item_paths = list(collection_folder.rglob('*.json'))
-        # Exclude the collection file itself
-        item_paths = [p for p in item_paths if p.resolve() == p.resolve() and p.resolve() != collection_path.resolve()]
+        children = []
 
-        # Load items and their IDs
-        items = []
-        for item_file in item_paths:
-            with item_file.open('r', encoding='utf-8') as f:
-                item_json = json.load(f)
-                if item_json.get('type') != 'Feature':
-                    continue  # Skip non-item JSON files
-                item_id = item_json.get('id', '')
-                items.append((item_id, item_file))
+        collection_dir = collection_path.parent
 
-        # Sort items based on their IDs
-        items.sort(key=lambda x: x[0])
+        # Process items directly in the collection directory
+        for item_file in collection_dir.glob('*.json'):
+            if item_file == collection_path:
+                continue
+            item_node = process_item(item_file, hash_method)
+            if item_node:
+                children.append(item_node)
 
-        item_hashes = []
-        for item_id, item_file in items:
-            item_hash = process_item(item_file, hash_method)
-            if item_hash:
-                item_hashes.append(item_hash)
+        # Recursively process subdirectories
+        for subdirectory in collection_dir.iterdir():
+            if subdirectory.is_dir():
+                sub_collection_json = subdirectory / 'collection.json'
+                sub_catalog_json = subdirectory / 'catalog.json'
 
-        # Compute merkle:object_hash
-        own_hash = compute_merkle_object_hash(collection_json, hash_method)
-        collection_json['merkle:object_hash'] = own_hash
-        item_hashes.append(own_hash)  # Add own hash before computing Merkle root
+                if sub_collection_json.exists():
+                    # Process sub-collection
+                    sub_collection_node = process_collection(sub_collection_json, hash_method)
+                    if sub_collection_node:
+                        children.append(sub_collection_node)
+                elif sub_catalog_json.exists():
+                    # Process sub-catalog
+                    sub_catalog_node = process_catalog(sub_catalog_json, hash_method)
+                    if sub_catalog_node:
+                        children.append(sub_catalog_node)
+                elif is_item_directory(subdirectory):
+                    # Process item in its own directory
+                    item_files = list(subdirectory.glob('*.json'))
+                    if item_files:
+                        item_file = item_files[0]
+                        item_node = process_item(item_file, hash_method)
+                        if item_node:
+                            children.append(item_node)
+                else:
+                    # Handle other cases or ignore
+                    print(f"Unrecognized structure in {subdirectory}")
 
+        # Compute own merkle:object_hash
+        own_object_hash = compute_merkle_object_hash(collection_json, hash_method)
+        collection_json['merkle:object_hash'] = own_object_hash
+
+        # Compute merkle:root from own hash and child object hashes
+        # Collect all hashes: own_object_hash + child hashes
+        child_hashes = [child.get('merkle:object_hash') for child in children if 'merkle:object_hash' in child]
+        # Exclude None values
+        child_hashes = [h for h in child_hashes if h]
+        # Include own_object_hash
+        all_hashes = child_hashes + [own_object_hash]
         # Compute merkle:root
-        hash_function_name = hash_method.get('function', 'sha256')
-        merkle_root = compute_merkle_root(item_hashes, 'unsorted', hash_function_name)
+        merkle_root = compute_merkle_root(all_hashes, hash_method)
+
         collection_json['merkle:root'] = merkle_root
         collection_json['merkle:hash_method'] = hash_method
 
@@ -229,73 +238,83 @@ def process_collection(collection_path: Path, parent_hash_method: Dict[str, Any]
             json.dump(collection_json, f, indent=2)
             f.write('\n')
 
-        click.echo(f"Processed Collection: {collection_path}")
+        print(f"Processed Collection: {collection_path}")
 
-        return own_hash
+        # Build the hierarchical Merkle node
+        collection_node = {
+            'node_id': collection_json.get('id', str(collection_path)),
+            'type': 'Collection',
+            'merkle:object_hash': own_object_hash,
+            'merkle:root': merkle_root,
+            'children': children
+        }
+
+        return collection_node
 
     except Exception as e:
-        click.echo(f"Error processing Collection {collection_path}: {e}", err=True)
-        return ''
+        print(f"Error processing Collection {collection_path}: {e}")
+        return {}
 
-def process_catalog(catalog_path: Path) -> str:
+
+def process_catalog(catalog_path: Path, parent_hash_method: Dict[str, Any] = None) -> Dict[str, Any]:
     """
-    Processes the root STAC Catalog to compute and add Merkle info.
+    Processes the root STAC Catalog to compute its merkle:root and builds a hierarchical Merkle node.
 
     Parameters:
     - catalog_path (Path): Path to the Catalog JSON file.
+    - parent_hash_method (Dict[str, Any], optional): The hash method inherited from the parent.
 
     Returns:
-    - str: The merkle:object_hash of the Catalog.
+    - Dict[str, Any]: The structured Merkle tree node for the catalog.
     """
     try:
         with catalog_path.open('r', encoding='utf-8') as f:
             catalog_json = json.load(f)
 
-        # Root hash method
-        hash_method = {
-            'function': 'sha256',
-            'fields': ['*'],
-            'ordering': 'ascending',
-            'description': 'Computed by including the merkle:root of collections and the catalogs own merkle:object_hash.'
-        }
+        if catalog_json.get('type') != 'Catalog':
+            print(f"Skipping non-Catalog JSON: {catalog_path}")
+            return {}
 
-        # Process collections in the collections folder
-        catalog_folder = catalog_path.parent
-        collections_folder = catalog_folder / 'collections'
-        collection_hashes = []
+        # Determine the hash_method to use
+        hash_method = catalog_json.get('merkle:hash_method', parent_hash_method)
 
-        if not collections_folder.exists():
-            click.echo(f"Collections folder not found: {collections_folder}", err=True)
-            return ''
+        if not hash_method:
+            raise ValueError(f"Hash method not specified for {catalog_path}")
 
-        for collection_dir in collections_folder.iterdir():
-            if collection_dir.is_dir():
-                collection_json_path = collection_dir / 'collection.json'
-                if collection_json_path.exists():
-                    collection_hash = process_collection(collection_json_path, hash_method)
-                    if collection_hash:
-                        # Load the updated collection.json to get its merkle:root
-                        with collection_json_path.open('r', encoding='utf-8') as f:
-                            collection_json = json.load(f)
-                        collection_root = collection_json.get('merkle:root')
-                        if collection_root:
-                            collection_hashes.append(collection_root)
-                        else:
-                            click.echo(f"Collection merkle:root not found for {collection_json_path}", err=True)
+        children = []
+
+        catalog_dir = catalog_path.parent
+
+        # Process collections in the 'collections' directory
+        collections_dir = catalog_dir / 'collections'
+        if not collections_dir.exists():
+            print(f"No 'collections' directory found in {catalog_dir}")
+            # It's possible for a catalog to have no collections
+        else:
+            for collection_dir in collections_dir.iterdir():
+                if collection_dir.is_dir():
+                    collection_json_path = collection_dir / 'collection.json'
+                    if collection_json_path.exists():
+                        collection_node = process_collection(collection_json_path, hash_method)
+                        if collection_node:
+                            children.append(collection_node)
                     else:
-                        click.echo(f"Failed to process collection {collection_json_path}", err=True)
-                else:
-                    click.echo(f"collection.json not found in {collection_dir}", err=True)
+                        print(f"'collection.json' not found in {collection_dir}")
 
-        # Compute merkle:object_hash of the catalog
-        own_hash = compute_merkle_object_hash(catalog_json, hash_method)
-        catalog_json['merkle:object_hash'] = own_hash
-        collection_hashes.append(own_hash)
+        # Compute own merkle:object_hash
+        own_object_hash = compute_merkle_object_hash(catalog_json, hash_method)
+        catalog_json['merkle:object_hash'] = own_object_hash
 
-        # Compute merkle:root of the catalog
-        ordering = hash_method.get('ordering', 'ascending')
-        hash_function_name = hash_method.get('function', 'sha256')
-        merkle_root = compute_merkle_root(collection_hashes, ordering, hash_function_name)
+        # Compute merkle:root from own hash and child object hashes
+        # Collect all hashes: own_object_hash + child hashes
+        child_hashes = [child.get('merkle:object_hash') for child in children if 'merkle:object_hash' in child]
+        # Exclude None values
+        child_hashes = [h for h in child_hashes if h]
+        # Include own_object_hash
+        all_hashes = child_hashes + [own_object_hash]
+        # Compute merkle:root
+        merkle_root = compute_merkle_root(all_hashes, hash_method)
+
         catalog_json['merkle:root'] = merkle_root
         catalog_json['merkle:hash_method'] = hash_method
 
@@ -304,6 +323,7 @@ def process_catalog(catalog_path: Path) -> str:
         extension_url = 'https://stacchain.github.io/merkle-tree/v1.0.0/schema.json'
         if extension_url not in catalog_json['stac_extensions']:
             catalog_json['stac_extensions'].append(extension_url)
+        # Sort stac_extensions for consistent ordering
         catalog_json['stac_extensions'].sort()
 
         # Save the updated Catalog JSON
@@ -311,10 +331,40 @@ def process_catalog(catalog_path: Path) -> str:
             json.dump(catalog_json, f, indent=2)
             f.write('\n')
 
-        click.echo(f"Processed Catalog: {catalog_path}")
+        print(f"Processed Catalog: {catalog_path}")
 
-        return own_hash
+        # Build the hierarchical Merkle node
+        catalog_node = {
+            'node_id': catalog_json.get('id', str(catalog_path)),
+            'type': 'Catalog',
+            'merkle:object_hash': own_object_hash,
+            'merkle:root': merkle_root,
+            'children': children
+        }
+
+        return catalog_node
 
     except Exception as e:
-        click.echo(f"Error processing Catalog {catalog_path}: {e}", err=True)
-        return ''
+        print(f"Error processing Catalog {catalog_path}: {e}")
+        return {}
+
+
+def is_item_directory(directory: Path) -> bool:
+    """
+    Determines if a given directory contains a single Item JSON file.
+
+    Parameters:
+    - directory (Path): The directory to check.
+
+    Returns:
+    - bool: True if the directory contains exactly one Item JSON file, False otherwise.
+    """
+    item_files = list(directory.glob('*.json'))
+    if len(item_files) == 1:
+        try:
+            with item_files[0].open('r', encoding='utf-8') as f:
+                data = json.load(f)
+                return data.get('type') == 'Feature'
+        except:
+            return False
+    return False
