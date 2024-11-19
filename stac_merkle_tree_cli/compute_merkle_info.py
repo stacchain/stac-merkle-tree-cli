@@ -134,6 +134,7 @@ def process_item(item_path: Path, hash_method: Dict[str, Any]) -> Dict[str, Any]
         # Return the structured Item node
         return {
             'node_id': item_json.get('id', item_path.stem),
+            'type': 'Item',
             'merkle:object_hash': object_hash
         }
 
@@ -242,6 +243,7 @@ def process_collection(collection_path: Path, parent_hash_method: Dict[str, Any]
         # Build the hierarchical Merkle node
         collection_node = {
             'node_id': collection_json.get('id', str(collection_path)),
+            'type': 'Collection',
             'merkle:object_hash': own_object_hash,
             'merkle:root': merkle_root,
             'children': children
@@ -334,6 +336,7 @@ def process_catalog(catalog_path: Path, parent_hash_method: Dict[str, Any] = Non
         # Build the hierarchical Merkle node
         catalog_node = {
             'node_id': catalog_json.get('id', str(catalog_path)),
+            'type': 'Catalog',
             'merkle:object_hash': own_object_hash,
             'merkle:root': merkle_root,
             'children': children
