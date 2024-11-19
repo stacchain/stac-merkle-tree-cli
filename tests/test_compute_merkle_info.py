@@ -308,17 +308,14 @@ class TestProcessCollection(unittest.TestCase):
         if sub_collections:
             for sub_col in sub_collections:
                 sub_col_id = sub_col["id"]
-                # Create 'collections' subdirectory within the current collection
-                sub_collections_dir = collection_dir / "collections"
-                sub_collections_dir.mkdir(exist_ok=True)
-                # Recursively create sub-collections under the 'collections' subdirectory
+                # Directly nest sub-collections under the parent collection
                 self.create_collection(
                     sub_col_id,
                     sub_col.get("items", []),
                     sub_col.get("sub_collections"),
                     sub_col.get("sub_catalogs"),
                     sub_col.get("nested_items"),
-                    parent_dir=sub_collections_dir  # Pass the 'collections' subdirectory
+                    parent_dir=collection_dir  # Directly nest under parent collection
                 )
 
         # Create sub-catalogs
@@ -347,7 +344,7 @@ class TestProcessCollection(unittest.TestCase):
                         sub_cat_collection.get("sub_collections"),
                         sub_cat_collection.get("sub_catalogs"),
                         sub_cat_collection.get("nested_items"),
-                        parent_dir=sub_cat_dir / "collections"  # Pass the 'collections' subdirectory
+                        parent_dir=sub_cat_dir  # Directly nest under sub-catalog
                     )
 
         # Create nested items if any (items directly within the collection directory)
@@ -356,6 +353,7 @@ class TestProcessCollection(unittest.TestCase):
                 item_path = collection_dir / f"{item['id']}.json"
                 with item_path.open('w', encoding='utf-8') as f:
                     json.dump(item, f, indent=2)
+
 
     def test_process_collection_with_nested_items(self):
         """
