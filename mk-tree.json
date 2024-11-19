@@ -1,4 +1,111 @@
-{"node_id": "COP-DEM", "merkle_root": "e44ae40b64353440093564a47f94a234b8d6f59a910ba8be932db60da75767bc", "child_hashes_file": "/tmp/tmpmoicvahc"}
-{"node_id": "TERRAAQUA", "merkle_root": "7c7ab356cff2bc0f573823023c2dec535f3f744341be9cefd00d317375c90782", "child_hashes_file": "/tmp/tmp5vfpc921"}
-{"node_id": "S2GLC", "merkle_root": "a889a9985adea43893bf5278e4a49199952c1583d8f5714a549c7dbb76166377", "child_hashes_file": "/tmp/tmpn2_ng7t6"}
-{"node_id": "Catalogue", "merkle_root": "7515e9b9b0ff51778dd251c0ec8e6b37bdc9356a9f3edb01af67b1b51de2c5e0", "child_hashes_file": "/tmp/tmpc508eiz2"}
+{
+  "node_id": "Catalogue",
+  "merkle:object_hash": "b14fd102417c1d673f481bc053d19946aefdc27d84c584989b23c676c897bd5a",
+  "merkle:root": "2c637f0bae066e89de80839f3468f73e396e9d1498faefc469f0fd1039e19e0c",
+  "children": [
+    {
+      "node_id": "COP-DEM",
+      "merkle:object_hash": "17789b31f8ae304de8dbe2350a15263dbf5e31adfc0d17a997e7e55f4cfc2f53",
+      "merkle:root": "fd2700dd6b39d254530a1a996d667620c4c7aacb69c86e9ea4ec71a7269f6aac",
+      "children": [
+        {
+          "node_id": "DEM1_SAR_DGE_30_20101215T103647_20130405T103047_ADS_000000_oCX9",
+          "merkle:object_hash": "22a31ab988181f280a0bfc6872556ad1d670373bd997f711389d057e1b1f531a"
+        },
+        {
+          "node_id": "DEM1_SAR_DGE_30_20101215T103647_20130405T103047_ADS_000000_RHJx",
+          "merkle:object_hash": "39969fd5f4a3a170ff39df8f2c13ebca66aab40890275a94ce798e281b85d54d"
+        },
+        {
+          "node_id": "DEM1_SAR_DTE_90_20101213T034716_20130408T035028_ADS_000000_5033",
+          "merkle:object_hash": "c1511bd4889e8078010287a820d3fcc216cad1ab48374e324fb7098fd1c3f882"
+        },
+        {
+          "node_id": "DEM1_SAR_DGE_30_20101215T203649_20140913T090954_ADS_000000_4KBA",
+          "merkle:object_hash": "3c22648957e7c76f75a9fbfdf7c164e7d745d9e4ebe809db15d2474e01be4764"
+        },
+        {
+          "node_id": "DEM1_SAR_DGE_30_20101216T005027_20130411T005216_ADS_000000_Hbh2",
+          "merkle:object_hash": "176a6f0026a763a85909d64d3eeac37873cd7c970fae685a6f37bd16d806b3fe"
+        },
+        {
+          "node_id": "DEM1_SAR_DTE_30_20101217T200231_20140802T083458_ADS_000000_tFcK",
+          "merkle:object_hash": "d0114075968ff1a3860eaf90d85317304f96757d6313f396eb556546a9c95006"
+        },
+        {
+          "node_id": "DEM1_SAR_DGE_30_20101216T005027_20130331T005208_ADS_000000_J3m5",
+          "merkle:object_hash": "90a0e5265d02fd58ab81437d14ef1c318ec1b86167ac935d6abb598602798690"
+        },
+        {
+          "node_id": "DEM1_SAR_DGE_30_20101215T203649_20140913T090954_ADS_000000_Quqd",
+          "merkle:object_hash": "6d16f23e2fe2849ce0316c012e9284b413f7c086a11d6de421c0582b397f513e"
+        },
+        {
+          "node_id": "DEM1_SAR_DTE_90_20101212T084914_20140212T212323_ADS_000000_1370",
+          "merkle:object_hash": "c4a241c5917f7fcb82bedca10127ad22504b3462c0d3704d76a5f549e2c24010"
+        },
+        {
+          "node_id": "DEM1_SAR_DGE_30_20101212T230244_20140329T113710_ADS_000000_eAmG",
+          "merkle:object_hash": "ac66e07717b56e8421c8fec00b2b300afd49d30a8ec9c6d505df3b0568de9c77"
+        },
+        {
+          "node_id": "DEM1_SAR_DGE_90_20101212T102356_20130709T103701_ADS_000000_6275",
+          "merkle:object_hash": "ffaee98a244aaad0f970100f0f3b11bf3ffd3f5de74fa473ed86cc851c73dbc9"
+        },
+        {
+          "node_id": "DEM1_SAR_DGE_30_20101215T203914_20121226T204852_ADS_000000_Yjwo",
+          "merkle:object_hash": "ed99b4348ede45959a9cf471490f0f2c6a106bb4337a46d07d4fc4b4988f099f"
+        },
+        {
+          "node_id": "DEM1_SAR_DGE_90_20101212T102356_20130709T103701_ADS_000000_8521",
+          "merkle:object_hash": "6d7dca89eec5da5e31023b7e24b9527e33a021099c8e74791ecda860f96091ab"
+        },
+        {
+          "node_id": "DEM1_SAR_DTE_90_20101212T084914_20130418T085214_ADS_000000_5545",
+          "merkle:object_hash": "7611aa1e37ee256bb346d0405c210c9e2256c43e7ed9854b4a91ef75caf59d09"
+        },
+        {
+          "node_id": "DEM1_SAR_DTE_90_20101217T224141_20140127T121413_ADS_000000_0611",
+          "merkle:object_hash": "9c33c4c49913483588fb7e2aa8084e675649ed253083ab62ac1ebebcfc16a944"
+        },
+        {
+          "node_id": "DEM1_SAR_DTE_30_20101215T203914_20130404T204908_ADS_000000_CURF",
+          "merkle:object_hash": "457aa1fbc4005627077b55cd673a4457f2afc8a15ef3b776af8df60e60e8e1ab"
+        },
+        {
+          "node_id": "DEM1_SAR_DTE_30_20101215T203649_20140913T090954_ADS_000000_kipX",
+          "merkle:object_hash": "88f4d9bb5b1512f214f1ca60e6ff2bac28640fd0a00339d01c453b6db9fd7f88"
+        },
+        {
+          "node_id": "DEM1_SAR_DTE_30_20101216T100443_20140415T214254_ADS_000000_9Wqx",
+          "merkle:object_hash": "e7b65b76ed20f947d8a2b4ae126b832d9f07fb18822863556c9fa0ac40dae873"
+        },
+        {
+          "node_id": "DEM1_SAR_DGE_30_20101212T230244_20140325T230302_ADS_000000_1jTi",
+          "merkle:object_hash": "ce9f56e695ab1751b8f0c8d9ef1f1ecedaf04574ec3077e70e7426ec9fc61ea4"
+        },
+        {
+          "node_id": "DEM1_SAR_DTE_90_20101212T102356_20130628T103333_ADS_000000_1705",
+          "merkle:object_hash": "ae063aa10078d5316f36718b92f966c9f96f63f621839bd031730eb068c1c265"
+        }
+      ]
+    },
+    {
+      "node_id": "TERRAAQUA",
+      "merkle:object_hash": "6ae6f97edd2994b632b415ff810af38639faa84544aa8a33a88bdf867a649374",
+      "merkle:root": "6ae6f97edd2994b632b415ff810af38639faa84544aa8a33a88bdf867a649374",
+      "children": []
+    },
+    {
+      "node_id": "S2GLC",
+      "merkle:object_hash": "84ab0e102924c012d4cf2a3b3e10ed4f768f695001174cfd5d9c75d4335b7a48",
+      "merkle:root": "33631c1a3d9339ffc66b3f3a3eb3de8f558bcabe4900494b55ca17aff851e661",
+      "children": [
+        {
+          "node_id": "S2GLC_T30TWT_2017",
+          "merkle:object_hash": "3a3803a0dae5dbaf9561aeb4cce2770bf38b5da4b71ca67398fb24d48c43a68f"
+        }
+      ]
+    }
+  ]
+}

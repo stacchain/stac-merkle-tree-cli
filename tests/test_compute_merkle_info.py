@@ -250,12 +250,30 @@ class TestProcessCollection(unittest.TestCase):
         """
         shutil.rmtree(self.temp_dir)
 
-    def create_collection(self, collection_id: str, items: List[Dict[str, Any]], sub_collections: Optional[List[Dict[str, Any]]] = None, sub_catalogs: Optional[List[Dict[str, Any]]] = None, nested_items: Optional[List[Dict[str, Any]]] = None):
+    def create_collection(
+        self,
+        collection_id: str,
+        items: List[Dict[str, Any]],
+        sub_collections: Optional[List[Dict[str, Any]]] = None,
+        sub_catalogs: Optional[List[Dict[str, Any]]] = None,
+        nested_items: Optional[List[Dict[str, Any]]] = None,
+        parent_dir: Optional[Path] = None  # New parameter
+    ):
         """
         Helper function to create a collection with items, sub-collections, and sub-catalogs.
+
+        Parameters:
+        - collection_id (str): The ID of the collection to create.
+        - items (List[Dict[str, Any]]): List of item dictionaries to include in the collection.
+        - sub_collections (Optional[List[Dict[str, Any]]]): List of sub-collection dictionaries.
+        - sub_catalogs (Optional[List[Dict[str, Any]]]): List of sub-catalog dictionaries.
+        - nested_items (Optional[List[Dict[str, Any]]]): List of items directly within the collection directory.
+        - parent_dir (Optional[Path]): The directory under which to create this collection. Defaults to self.collections_dir.
         """
-        collection_dir = self.collections_dir / collection_id
-        collection_dir.mkdir()
+        if parent_dir is None:
+            parent_dir = self.collections_dir
+        collection_dir = parent_dir / collection_id
+        collection_dir.mkdir(parents=True, exist_ok=True)
 
         collection_json = {
             "type": "Collection",
@@ -290,7 +308,18 @@ class TestProcessCollection(unittest.TestCase):
         if sub_collections:
             for sub_col in sub_collections:
                 sub_col_id = sub_col["id"]
-                self.create_collection(sub_col_id, sub_col.get("items", []), sub_col.get("sub_collections"), sub_col.get("sub_catalogs"), sub_col.get("nested_items"))
+                # Create 'collections' subdirectory within the current collection
+                sub_collections_dir = collection_dir / "collections"
+                sub_collections_dir.mkdir(exist_ok=True)
+                # Recursively create sub-collections under the 'collections' subdirectory
+                self.create_collection(
+                    sub_col_id,
+                    sub_col.get("items", []),
+                    sub_col.get("sub_collections"),
+                    sub_col.get("sub_catalogs"),
+                    sub_col.get("nested_items"),
+                    parent_dir=sub_collections_dir  # Pass the 'collections' subdirectory
+                )
 
         # Create sub-catalogs
         if sub_catalogs:
@@ -312,7 +341,14 @@ class TestProcessCollection(unittest.TestCase):
 
                 # Create collections within sub-catalogs
                 for sub_cat_collection in sub_cat.get("collections", []):
-                    self.create_collection(sub_cat_collection["id"], sub_cat_collection.get("items", []), sub_cat_collection.get("sub_collections"), sub_cat_collection.get("sub_catalogs"), sub_cat_collection.get("nested_items"))
+                    self.create_collection(
+                        sub_cat_collection["id"],
+                        sub_cat_collection.get("items", []),
+                        sub_cat_collection.get("sub_collections"),
+                        sub_cat_collection.get("sub_catalogs"),
+                        sub_cat_collection.get("nested_items"),
+                        parent_dir=sub_cat_dir / "collections"  # Pass the 'collections' subdirectory
+                    )
 
         # Create nested items if any (items directly within the collection directory)
         if nested_items:
@@ -331,7 +367,7 @@ class TestProcessCollection(unittest.TestCase):
                 "type": "Feature",
                 "id": "item1",
                 "properties": {
-                    "datetime": "2024-10-15T12:00:00Z",
+                    "datetime": "2024-10-18T12:00:00Z",
                     "other_property": "value1"
                 },
                 "geometry": {},
@@ -341,61 +377,61 @@ class TestProcessCollection(unittest.TestCase):
                 "type": "Feature",
                 "id": "item2",
                 "properties": {
-                    "datetime": "2024-10-16T12:00:00Z",
+                    "datetime": "2024-10-19T12:00:00Z",
                     "other_property": "value2"
                 },
                 "geometry": {},
                 "links": []
             }
         ]
-        self.create_collection(collection_id, items=items, nested_items=[
-            {
-                "type": "Feature",
-                "id": "item3",
-                "properties": {
-                    "datetime": "2024-10-17T12:00:00Z",
-                    "other_property": "value3"
-                },
-                "geometry": {},
-                "links": []
-            }
-        ])
+        self.create_collection(
+            collection_id,
+            items=items,
+            nested_items=[
+                {
+                    "type": "Feature",
+                    "id": "item3",
+                    "properties": {
+                        "datetime": "2024-10-20T12:00:00Z",
+                        "other_property": "value3"
+                    },
+                    "geometry": {},
+                    "links": []
+                }
+            ]
+        )
 
         collection_json_path = self.collections_dir / collection_id / "collection.json"
-        merkle_tree_file = Path(self.temp_dir) / "merkle_tree.json"
 
         # Define the hash_method
         hash_method = {
             "function": "sha256",
             "fields": ["*"],
-            "ordering": "ascending"
+            "ordering": "ascending",
+            "description": "Test hash method."
         }
 
         # Process the collection via process_collection only
-        collection_hash = process_collection(collection_json_path, hash_method, merkle_tree_file)
+        collection_node = process_collection(collection_json_path, hash_method)
 
         # Assertions
-        self.assertTrue(collection_hash)
+        self.assertIsNotNone(collection_node)
+        self.assertIn('node_id', collection_node)
+        self.assertIn('merkle:object_hash', collection_node)
+        self.assertIn('merkle:root', collection_node)
+        self.assertIn('children', collection_node)
 
-        # Load the updated collection.json
-        with collection_json_path.open('r', encoding='utf-8') as f:
-            updated_collection = json.load(f)
+        self.assertEqual(collection_node['node_id'], collection_id)
+        self.assertTrue(collection_node['merkle:object_hash'])
+        self.assertTrue(collection_node['merkle:root'])
+        self.assertEqual(len(collection_node['children']), 3)  # item1, item2, item3
 
-        # Check merkle:object_hash and merkle:root
-        self.assertIn('merkle:object_hash', updated_collection)
-        self.assertEqual(updated_collection['merkle:object_hash'], collection_hash)
-
-        # Check merkle:root
-        self.assertIn('merkle:root', updated_collection)
-        self.assertTrue(updated_collection['merkle:root'])
-
-        # Check merkle:hash_method
-        self.assertIn('merkle:hash_method', updated_collection)
-        self.assertEqual(updated_collection['merkle:hash_method'], hash_method)
-
-        # Check stac_extensions
-        self.assertIn('stac_extensions', updated_collection)
-        self.assertIn('https://stacchain.github.io/merkle-tree/v1.0.0/schema.json', updated_collection['stac_extensions'])
+        # Check individual items
+        item_ids = {"item1", "item2", "item3"}
+        for child in collection_node['children']:
+            self.assertIn('node_id', child)
+            self.assertIn('merkle:object_hash', child)
+            self.assertIn(child['node_id'], item_ids)
 
     def test_process_collection_with_sub_collections_and_items_in_folders(self):
         """
@@ -448,43 +484,63 @@ class TestProcessCollection(unittest.TestCase):
                 ]
             }
         ]
-        self.create_collection(collection_id, items=items, sub_collections=sub_collections)
+        self.create_collection(
+            collection_id,
+            items=items,
+            sub_collections=sub_collections
+        )
 
         collection_json_path = self.collections_dir / collection_id / "collection.json"
-        merkle_tree_file = Path(self.temp_dir) / "merkle_tree.json"
 
         # Define the hash_method
         hash_method = {
             "function": "sha256",
             "fields": ["*"],
-            "ordering": "ascending"
+            "ordering": "ascending",
+            "description": "Test hash method."
         }
 
         # Process the collection via process_collection only
-        collection_hash = process_collection(collection_json_path, hash_method, merkle_tree_file)
+        collection_node = process_collection(collection_json_path, hash_method)
 
         # Assertions
-        self.assertTrue(collection_hash)
+        self.assertIsNotNone(collection_node)
+        self.assertIn('node_id', collection_node)
+        self.assertIn('merkle:object_hash', collection_node)
+        self.assertIn('merkle:root', collection_node)
+        self.assertIn('children', collection_node)
 
-        # Load the updated collection.json
-        with collection_json_path.open('r', encoding='utf-8') as f:
-            updated_collection = json.load(f)
+        self.assertEqual(collection_node['node_id'], collection_id)
+        self.assertTrue(collection_node['merkle:object_hash'])
+        self.assertTrue(collection_node['merkle:root'])
+        self.assertEqual(len(collection_node['children']), 2)  # item1 and sub_collection1
 
-        # Check merkle:object_hash and merkle:root
-        self.assertIn('merkle:object_hash', updated_collection)
-        self.assertEqual(updated_collection['merkle:object_hash'], collection_hash)
+        # Check individual children
+        child_ids = {child['node_id'] for child in collection_node['children']}
+        self.assertIn('item1', child_ids)
+        self.assertIn('sub_collection1', child_ids)
 
-        # Check merkle:root
-        self.assertIn('merkle:root', updated_collection)
-        self.assertTrue(updated_collection['merkle:root'])
+        # Further checks to ensure sub_collection1 has its children
+        sub_collection_node = next((child for child in collection_node['children'] if child['node_id'] == 'sub_collection1'), None)
+        self.assertIsNotNone(sub_collection_node)
+        self.assertIn('children', sub_collection_node)
+        self.assertEqual(len(sub_collection_node['children']), 2)  # item2 and sub_sub_collection1
 
-        # Check merkle:hash_method
-        self.assertIn('merkle:hash_method', updated_collection)
-        self.assertEqual(updated_collection['merkle:hash_method'], hash_method)
+        # Check sub_sub_collection1
+        sub_sub_collection_node = next((child for child in sub_collection_node['children'] if child['node_id'] == 'sub_sub_collection1'), None)
+        self.assertIsNotNone(sub_sub_collection_node)
+        self.assertIn('children', sub_sub_collection_node)
+        self.assertEqual(len(sub_sub_collection_node['children']), 1)  # item3
 
-        # Check stac_extensions
-        self.assertIn('stac_extensions', updated_collection)
-        self.assertIn('https://stacchain.github.io/merkle-tree/v1.0.0/schema.json', updated_collection['stac_extensions'])
+        # Check item2
+        item2_node = next((child for child in sub_collection_node['children'] if child['node_id'] == 'item2'), None)
+        self.assertIsNotNone(item2_node)
+        self.assertIn('merkle:object_hash', item2_node)
+
+        # Check item3
+        item3_node = next((child for child in sub_sub_collection_node['children'] if child['node_id'] == 'item3'), None)
+        self.assertIsNotNone(item3_node)
+        self.assertIn('merkle:object_hash', item3_node)
 
 
 class TestIsItemDirectory(unittest.TestCase):
@@ -592,12 +648,30 @@ class TestProcessCatalog(unittest.TestCase):
         """
         shutil.rmtree(self.temp_dir)
 
-    def create_collection(self, collection_id: str, items: List[Dict[str, Any]], sub_collections: Optional[List[Dict[str, Any]]] = None, sub_catalogs: Optional[List[Dict[str, Any]]] = None, nested_items: Optional[List[Dict[str, Any]]] = None):
+    def create_collection(
+        self,
+        collection_id: str,
+        items: List[Dict[str, Any]],
+        sub_collections: Optional[List[Dict[str, Any]]] = None,
+        sub_catalogs: Optional[List[Dict[str, Any]]] = None,
+        nested_items: Optional[List[Dict[str, Any]]] = None,
+        parent_dir: Optional[Path] = None  # New parameter
+    ):
         """
         Helper function to create a collection with items, sub-collections, and sub-catalogs.
+
+        Parameters:
+        - collection_id (str): The ID of the collection to create.
+        - items (List[Dict[str, Any]]): List of item dictionaries to include in the collection.
+        - sub_collections (Optional[List[Dict[str, Any]]]): List of sub-collection dictionaries.
+        - sub_catalogs (Optional[List[Dict[str, Any]]]): List of sub-catalog dictionaries.
+        - nested_items (Optional[List[Dict[str, Any]]]): List of items directly within the collection directory.
+        - parent_dir (Optional[Path]): The directory under which to create this collection. Defaults to self.collections_dir.
         """
-        collection_dir = self.collections_dir / collection_id
-        collection_dir.mkdir()
+        if parent_dir is None:
+            parent_dir = self.collections_dir
+        collection_dir = parent_dir / collection_id
+        collection_dir.mkdir(parents=True, exist_ok=True)
 
         collection_json = {
             "type": "Collection",
@@ -632,7 +706,18 @@ class TestProcessCatalog(unittest.TestCase):
         if sub_collections:
             for sub_col in sub_collections:
                 sub_col_id = sub_col["id"]
-                self.create_collection(sub_col_id, sub_col.get("items", []), sub_col.get("sub_collections"), sub_col.get("sub_catalogs"), sub_col.get("nested_items"))
+                # Create 'collections' subdirectory within the current collection
+                sub_collections_dir = collection_dir / "collections"
+                sub_collections_dir.mkdir(exist_ok=True)
+                # Recursively create sub-collections under the 'collections' subdirectory
+                self.create_collection(
+                    sub_col_id,
+                    sub_col.get("items", []),
+                    sub_col.get("sub_collections"),
+                    sub_col.get("sub_catalogs"),
+                    sub_col.get("nested_items"),
+                    parent_dir=sub_collections_dir  # Pass the 'collections' subdirectory
+                )
 
         # Create sub-catalogs
         if sub_catalogs:
@@ -654,7 +739,14 @@ class TestProcessCatalog(unittest.TestCase):
 
                 # Create collections within sub-catalogs
                 for sub_cat_collection in sub_cat.get("collections", []):
-                    self.create_collection(sub_cat_collection["id"], sub_cat_collection.get("items", []), sub_cat_collection.get("sub_collections"), sub_cat_collection.get("sub_catalogs"), sub_cat_collection.get("nested_items"))
+                    self.create_collection(
+                        sub_cat_collection["id"],
+                        sub_cat_collection.get("items", []),
+                        sub_cat_collection.get("sub_collections"),
+                        sub_cat_collection.get("sub_catalogs"),
+                        sub_cat_collection.get("nested_items"),
+                        parent_dir=sub_cat_dir / "collections"  # Pass the 'collections' subdirectory
+                    )
 
         # Create nested items if any (items directly within the collection directory)
         if nested_items:
@@ -734,59 +826,37 @@ class TestProcessCatalog(unittest.TestCase):
         with catalog_json_path.open('w', encoding='utf-8') as f:
             json.dump(catalog_json, f, indent=2)
 
-        # Define merkle_tree_file
-        merkle_tree_file = Path(self.temp_dir) / "merkle_tree.json"
-
         # Process the catalog instead of processing the collection directly
-        catalog_hash = process_catalog(catalog_json_path, hash_method, merkle_tree_file)
+        merkle_tree = process_catalog(catalog_json_path, hash_method)
 
         # Assertions
-        self.assertTrue(catalog_hash)
+        self.assertIsNotNone(merkle_tree)
+        self.assertIn('node_id', merkle_tree)
+        self.assertIn('merkle:object_hash', merkle_tree)
+        self.assertIn('merkle:root', merkle_tree)
+        self.assertIn('children', merkle_tree)
+        self.assertEqual(merkle_tree['node_id'], 'root_catalog')
+        self.assertTrue(merkle_tree['merkle:object_hash'])
+        self.assertTrue(merkle_tree['merkle:root'])
+        self.assertEqual(len(merkle_tree['children']), 1)  # Only collection1
 
-        # Load updated catalog.json
-        with catalog_json_path.open('r', encoding='utf-8') as f:
-            updated_catalog = json.load(f)
+        # Check children (collections)
+        collection_node = merkle_tree['children'][0]
+        self.assertEqual(collection_node['node_id'], 'collection1')
+        self.assertIn('merkle:object_hash', collection_node)
+        self.assertIn('merkle:root', collection_node)
+        self.assertIn('children', collection_node)
+        self.assertEqual(len(collection_node['children']), 2)  # item1 and item2
 
-        # Load updated collection.json to access 'merkle:root'
-        with collection_json_path.open('r', encoding='utf-8') as f:
-            updated_collection = json.load(f)
+        # Check items
+        item_node1 = collection_node['children'][0]
+        self.assertEqual(item_node1['node_id'], 'item1')
+        self.assertIn('merkle:object_hash', item_node1)
 
-        # Check that 'merkle:object_hash' matches the returned 'catalog_hash'
-        self.assertIn('merkle:object_hash', updated_catalog)
-        self.assertEqual(updated_catalog['merkle:object_hash'], catalog_hash)
+        item_node2 = collection_node['children'][1]
+        self.assertEqual(item_node2['node_id'], 'item2')
+        self.assertIn('merkle:object_hash', item_node2)
 
-        # Check that 'merkle:root' exists and is valid
-        self.assertIn('merkle:root', updated_catalog)
-        self.assertTrue(updated_catalog['merkle:root'])
-
-        # Check that 'merkle:hash_method' is correctly set
-        self.assertIn('merkle:hash_method', updated_catalog)
-        self.assertEqual(updated_catalog['merkle:hash_method'], hash_method)
-
-        # Check that 'stac_extensions' includes the Merkle extension
-        self.assertIn('stac_extensions', updated_catalog)
-        self.assertIn('https://stacchain.github.io/merkle-tree/v1.0.0/schema.json', updated_catalog['stac_extensions'])
-
-        # Check merkle_tree.json
-        with merkle_tree_file.open('r', encoding='utf-8') as f:
-            merkle_tree = [json.loads(line) for line in f if line.strip()]
-
-        # Expecting two entries: one for the collection and one for the catalog
-        self.assertEqual(len(merkle_tree), 2)
-
-        # Check collection node
-        collection_node = next((node for node in merkle_tree if node['node_id'] == collection_id), None)
-        self.assertIsNotNone(collection_node)
-
-        # Compare collection's merkle_root with its own 'merkle:root'
-        self.assertEqual(collection_node['merkle_root'], updated_collection['merkle:root'])
-
-        # Check catalog node
-        catalog_node = next((node for node in merkle_tree if node['node_id'] == "root_catalog"), None)
-        self.assertIsNotNone(catalog_node)
-
-        # **UPDATED**: Compare catalog's merkle_root with 'merkle:root' in catalog.json
-        self.assertEqual(catalog_node['merkle_root'], updated_catalog['merkle:root'])
 
 if __name__ == '__main__':
     unittest.main()
