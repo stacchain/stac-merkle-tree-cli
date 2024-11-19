@@ -50,7 +50,7 @@
       "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items"
     }
   ],
-  "merkle:root": "458a7fa66b5a2e0a4993f648813eaff0879a54ffdece2b2d58c546d177925174",
+  "merkle:root": "e44ae40b64353440093564a47f94a234b8d6f59a910ba8be932db60da75767bc",
   "merkle:hash_method": {
     "function": "sha256",
     "fields": [

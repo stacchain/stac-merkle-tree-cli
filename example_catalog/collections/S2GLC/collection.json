@@ -51,7 +51,7 @@
     }
   ],
   "merkle:object_hash": "164a3ea0c299caad2fed2e7799d5c5e2caef872efb41ca56c1e0fc627ecacc4a",
-  "merkle:root": "29e0391249b04fdf945b03ae3cd01662665cd6e29471ffa51e2d43e75d201112",
+  "merkle:root": "a889a9985adea43893bf5278e4a49199952c1583d8f5714a549c7dbb76166377",
   "merkle:hash_method": {
     "function": "sha256",
     "fields": [

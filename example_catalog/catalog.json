@@ -56,13 +56,13 @@
     "https://stacchain.github.io/merkle-tree/v1.0.0/schema.json"
   ],
   "merkle:object_hash": "4adf81a9aba90fe1f483ec3bbe7c628309e598239cee45d4aeafa1bc8c767ae6",
-  "merkle:root": "6dcb155aa44f0384cf23af6843fb0505d752b11aaaa0778829889b9d598c176f",
+  "merkle:root": "7515e9b9b0ff51778dd251c0ec8e6b37bdc9356a9f3edb01af67b1b51de2c5e0",
   "merkle:hash_method": {
     "function": "sha256",
     "fields": [
       "*"
     ],
     "ordering": "ascending",
-    "description": "Computed by including the merkle:root of collections and the catalogs own merkle:object_hash."
+    "description": "Computed by including the merkle:root of collections and the catalog's own merkle:object_hash."
   }
 }
