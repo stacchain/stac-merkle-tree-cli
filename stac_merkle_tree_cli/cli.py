@@ -43,7 +43,7 @@ def main(catalog_path: str, merkle_tree_file: str):
         exit(1)
     
     # Save the merkle_tree.json
-    output_path = Path(merkle_tree_file)
+    output_path = Path(f"{catalog_path}/{merkle_tree_file}")
     try:
         with output_path.open('w', encoding='utf-8') as f:
             json.dump(merkle_tree, f, indent=2)
