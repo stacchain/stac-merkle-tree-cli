@@ -15,6 +15,7 @@ A Command-Line Interface (CLI) tool for computing and adding Merkle Tree informa
 - [Merkle Tree Extension Specification](#merkle-tree-extension-specification)
 - [Output](#output)
 - [Contributing](#contributing)
+- [Verification Steps](#verification-steps)
 
 ## Overview
 
