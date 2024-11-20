@@ -2,13 +2,13 @@
   "node_id": "Catalogue",
   "type": "Catalog",
   "merkle:object_hash": "b14fd102417c1d673f481bc053d19946aefdc27d84c584989b23c676c897bd5a",
-  "merkle:root": "2c637f0bae066e89de80839f3468f73e396e9d1498faefc469f0fd1039e19e0c",
+  "merkle:root": "797bfc76d971db745b9b476d8c44e9fa021af889d5761476b74e982d69e7a3c2",
   "children": [
     {
       "node_id": "COP-DEM",
       "type": "Collection",
       "merkle:object_hash": "17789b31f8ae304de8dbe2350a15263dbf5e31adfc0d17a997e7e55f4cfc2f53",
-      "merkle:root": "fd2700dd6b39d254530a1a996d667620c4c7aacb69c86e9ea4ec71a7269f6aac",
+      "merkle:root": "aa7f89b29cb339032ec86d81d4090bdbd52199152fb657f50b08eec1b3234ee2",
       "children": [
         {
           "node_id": "DEM1_SAR_DGE_30_20101215T103647_20130405T103047_ADS_000000_oCX9",
