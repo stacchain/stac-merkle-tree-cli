@@ -1,0 +1,21 @@
+{
+  "node_id": "Catalogue",
+  "type": "Catalog",
+  "merkle:object_hash": "b14fd102417c1d673f481bc053d19946aefdc27d84c584989b23c676c897bd5a",
+  "merkle:root": "f0ed08b316b917a98c085e699c090af1cea964b697dd0bc44491ebced4d0006c",
+  "children": [
+    {
+      "node_id": "COP-DEM",
+      "type": "Collection",
+      "merkle:object_hash": "17789b31f8ae304de8dbe2350a15263dbf5e31adfc0d17a997e7e55f4cfc2f53",
+      "merkle:root": "7e990e84a86dc146547b6e3a3e35196f53e0123b6f216f871abd5d1f55d2ccc5",
+      "children": [
+        {
+          "node_id": "DEM1_SAR_DGE_30_20101212T230244_20140325T230302_ADS_000000_1jTi",
+          "type": "Item",
+          "merkle:object_hash": "ce9f56e695ab1751b8f0c8d9ef1f1ecedaf04574ec3077e70e7426ec9fc61ea4"
+        }
+      ]
+    }
+  ]
+}

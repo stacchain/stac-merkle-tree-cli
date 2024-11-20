@@ -56,7 +56,7 @@
     "https://stacchain.github.io/merkle-tree/v1.0.0/schema.json"
   ],
   "merkle:object_hash": "b14fd102417c1d673f481bc053d19946aefdc27d84c584989b23c676c897bd5a",
-  "merkle:root": "2c637f0bae066e89de80839f3468f73e396e9d1498faefc469f0fd1039e19e0c",
+  "merkle:root": "797bfc76d971db745b9b476d8c44e9fa021af889d5761476b74e982d69e7a3c2",
   "merkle:hash_method": {
     "function": "sha256",
     "fields": [

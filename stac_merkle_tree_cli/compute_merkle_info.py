@@ -50,45 +50,42 @@ def compute_merkle_object_hash(stac_object: Dict[str, Any], hash_method: Dict[st
 
 
 def compute_merkle_root(hashes: List[str], hash_method: Dict[str, Any]) -> str:
-    """
-    Computes the merkle:root by building a Merkle tree from a list of hashes.
-
-    Parameters:
-    - hashes (List[str]): List of hexadecimal hash strings.
-    - hash_method (Dict[str, Any]): The hash method details from merkle:hash_method.
-
-    Returns:
-    - str: The computed Merkle root as a hexadecimal string.
-    """
     if not hashes:
         return ''
-
+    
+    # Enforce ordering
+    ordering = hash_method.get('ordering', 'ascending')
+    if ordering == 'ascending':
+        hashes.sort()
+    elif ordering == 'descending':
+        hashes.sort(reverse=True)
+    elif ordering != 'unsorted':
+        raise ValueError(f"Unsupported ordering: {ordering}")
+    
     # Get the hash function
     hash_function_name = hash_method.get('function', 'sha256').replace('-', '').lower()
     hash_func = getattr(hashlib, hash_function_name, None)
     if not hash_func:
         raise ValueError(f"Unsupported hash function: {hash_function_name}")
-
+    
     current_level = hashes.copy()
+    print(f"Initial hashes for merkle:root computation: {current_level}")
 
-    # Continue until we have only one hash (the root)
     while len(current_level) > 1:
         next_level = []
-        # Process pairs
         for i in range(0, len(current_level), 2):
             left = current_level[i]
-            if i + 1 < len(current_level):
-                right = current_level[i + 1]
-            else:
-                # If odd number, duplicate the last hash
-                right = left
-            # Combine and hash
+            right = current_level[i + 1] if i + 1 < len(current_level) else left
             combined = bytes.fromhex(left) + bytes.fromhex(right)
             new_hash = hash_func(combined).hexdigest()
             next_level.append(new_hash)
+            print(f"Combined '{left}' + '{right}' => '{new_hash}'")
         current_level = next_level
+        print(f"Next level hashes: {current_level}")
 
+    print(f"Final merkle:root: {current_level[0]}")
     return current_level[0]
+
 
 
 def process_item(item_path: Path, hash_method: Dict[str, Any]) -> Dict[str, Any]:
@@ -212,25 +209,31 @@ def process_collection(collection_path: Path, parent_hash_method: Dict[str, Any]
         own_object_hash = compute_merkle_object_hash(collection_json, hash_method)
         collection_json['merkle:object_hash'] = own_object_hash
 
-        # Compute merkle:root from own hash and child object hashes
         # Collect all hashes: own_object_hash + child hashes
-        child_hashes = [child.get('merkle:object_hash') for child in children if 'merkle:object_hash' in child]
+        child_hashes = []
+        for child in children:
+            if child['type'] in {'Collection', 'Catalog'}:
+                child_hashes.append(child.get('merkle:root'))
+            else:
+                child_hashes.append(child.get('merkle:object_hash'))
+
         # Exclude None values
         child_hashes = [h for h in child_hashes if h]
+
         # Include own_object_hash
         all_hashes = child_hashes + [own_object_hash]
+
         # Compute merkle:root
         merkle_root = compute_merkle_root(all_hashes, hash_method)
 
         collection_json['merkle:root'] = merkle_root
         collection_json['merkle:hash_method'] = hash_method
 
-        # Ensure the Merkle extension is listed
-        collection_json.setdefault('stac_extensions', [])
+        # Ensure the Merkle extension is listed and sorted
         extension_url = 'https://stacchain.github.io/merkle-tree/v1.0.0/schema.json'
+        collection_json.setdefault('stac_extensions', [])
         if extension_url not in collection_json['stac_extensions']:
             collection_json['stac_extensions'].append(extension_url)
-        # Sort stac_extensions for consistent ordering
         collection_json['stac_extensions'].sort()
 
         # Save the updated Collection JSON
@@ -305,25 +308,31 @@ def process_catalog(catalog_path: Path, parent_hash_method: Dict[str, Any] = Non
         own_object_hash = compute_merkle_object_hash(catalog_json, hash_method)
         catalog_json['merkle:object_hash'] = own_object_hash
 
-        # Compute merkle:root from own hash and child object hashes
         # Collect all hashes: own_object_hash + child hashes
-        child_hashes = [child.get('merkle:object_hash') for child in children if 'merkle:object_hash' in child]
+        child_hashes = []
+        for child in children:
+            if child['type'] in {'Collection', 'Catalog'}:
+                child_hashes.append(child.get('merkle:root'))
+            else:
+                child_hashes.append(child.get('merkle:object_hash'))
+
         # Exclude None values
         child_hashes = [h for h in child_hashes if h]
+
         # Include own_object_hash
         all_hashes = child_hashes + [own_object_hash]
+
         # Compute merkle:root
         merkle_root = compute_merkle_root(all_hashes, hash_method)
 
         catalog_json['merkle:root'] = merkle_root
         catalog_json['merkle:hash_method'] = hash_method
 
-        # Ensure the Merkle extension is listed
-        catalog_json.setdefault('stac_extensions', [])
+        # Ensure the Merkle extension is listed and sorted
         extension_url = 'https://stacchain.github.io/merkle-tree/v1.0.0/schema.json'
+        catalog_json.setdefault('stac_extensions', [])
         if extension_url not in catalog_json['stac_extensions']:
             catalog_json['stac_extensions'].append(extension_url)
-        # Sort stac_extensions for consistent ordering
         catalog_json['stac_extensions'].sort()
 
         # Save the updated Catalog JSON

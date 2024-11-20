@@ -4,21 +4,28 @@ import click
 import json
 from pathlib import Path
 from .compute_merkle_info import process_catalog
+from .verify_merkle_tree_json import verify_merkle_tree
 
+@click.group()
+def cli():
+    """
+    STAC Merkle Tree CLI Tool.
 
-@click.command()
+    Commands:
+      compute    Compute Merkle hashes for a STAC catalog.
+      verify     Verify the integrity of a Merkle tree JSON file.
+    """
+    pass
+
+@cli.command()
 @click.argument('catalog_path', type=click.Path(exists=True, file_okay=False), required=True)
 @click.option('--merkle-tree-file', type=click.Path(), default='merkle_tree.json',
               help='Path to the output Merkle tree structure file.')
-def main(catalog_path: str, merkle_tree_file: str):
+def compute(catalog_path: str, merkle_tree_file: str):
     """
-    CLI tool to compute Merkle hashes for STAC catalogs, handling nested catalogs and collections.
+    Compute Merkle hashes for STAC catalogs, handling nested catalogs and collections.
 
-    Parameters:
-    - CATALOG_PATH: Path to the root directory containing 'catalog.json'.
-
-    Options:
-    --merkle-tree-file TEXT  Path to the output Merkle tree structure file. Defaults to 'merkle_tree.json'.
+    CATALOG_PATH: Path to the root directory containing 'catalog.json'.
     """
     catalog_dir = Path(catalog_path)
     catalog_json_path = catalog_dir / 'catalog.json'
@@ -43,7 +50,7 @@ def main(catalog_path: str, merkle_tree_file: str):
         exit(1)
     
     # Save the merkle_tree.json
-    output_path = Path(f"{catalog_path}/{merkle_tree_file}")
+    output_path = Path(catalog_path) / merkle_tree_file
     try:
         with output_path.open('w', encoding='utf-8') as f:
             json.dump(merkle_tree, f, indent=2)
@@ -52,6 +59,22 @@ def main(catalog_path: str, merkle_tree_file: str):
         click.echo(f"Error writing to {output_path}: {e}", err=True)
         exit(1)
 
+@cli.command()
+@click.argument('merkle_tree_file', type=click.Path(exists=True, dir_okay=False), required=True)
+def verify(merkle_tree_file: str):
+    """
+    Verify that the merkle:root in the Merkle tree JSON matches the recalculated root.
+
+    MERKLE_TREE_FILE: Path to the Merkle tree JSON file.
+    """
+    merkle_tree_path = Path(merkle_tree_file)
+    verification_result = verify_merkle_tree(merkle_tree_path)
+    if verification_result:
+        click.echo("Verification Successful: The merkle:root matches.")
+        exit(0)
+    else:
+        click.echo("Verification Failed: The merkle:root does not match.", err=True)
+        exit(1)
 
 if __name__ == '__main__':
-    main()
+    cli()

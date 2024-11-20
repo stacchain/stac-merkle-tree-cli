@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='stac-merkle-tree-cli',
+    name='stac_merkle_tree_cli',
     version='0.3.0',
     author='Jonathan Healy',
     author_email='jonathan.d.healy@gmail.com',
@@ -16,7 +16,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'stac-merkle-tree-cli=stac_merkle_tree_cli.cli:main',
+            'stac-merkle-tree-cli=stac_merkle_tree_cli.cli:cli',
         ],
     },
     classifiers=[
