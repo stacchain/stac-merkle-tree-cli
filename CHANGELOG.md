@@ -9,13 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
+- Added `verify` command to cli with accompanying script to ensure that the Merkle tree verification json produced by the `compute` command matches [#2](https://github.com/stacchain/stac-merkle-tree-cli/pull/2)
 
 ## [v0.3.0] - 2024-11-20
 

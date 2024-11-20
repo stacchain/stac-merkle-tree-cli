@@ -123,21 +123,27 @@ catalog/
 
 ### Basic Usage
 
-After installing the package, you can use the `stac-merkle-tree-cli` command to compute and add Merkle information to your STAC catalog.
+After installing the package, you can use the `stac-merkle-tree-cli` command to compute or verify Merkle information in your STAC catalog.
+
+### Commands:
+
+#### 1. `compute`
+
+The compute command computes and adds Merkle information (`merkle:object_hash`, `merkle:root`, `merkle:hash_method`) to your STAC catalog.
 
 ```bash
-stac-merkle-tree-cli path/to/catalog_directory [OPTIONS]
+stac-merkle-tree-cli compute path/to/catalog_directory [OPTIONS]
 ```
 
 #### Parameters:
 
-- path/to/catalog_directory: (Required) Path to the root directory containing catalog.json.
+- `path/to/catalog_directory`: (Required) Path to the root directory containing `catalog.json`.
 
 #### Options:
 
-- --merkle-tree-file TEXT: (Optional) Path to the output Merkle tree structure file. Defaults to merkle_tree.json within the provided catalog_directory.
+- `--merkle-tree-file TEXT`: (Optional) Path to the output Merkle tree structure file. Defaults to `merkle_tree.json` within the provided catalog_directory.
 
-### Example
+#### Example
 
 Assuming your directory structure is as follows:
 
@@ -160,7 +166,7 @@ my_stac_catalog/
 Run the tool:
 
 ```bash
-stac-merkle-tree-cli my_stac_catalog/
+stac-merkle-tree-cli compute my_stac_catalog/
 ```
 
 Expected Output:
@@ -174,6 +180,43 @@ Processed Item: /path/to/my_stac_catalog/collections/collection2/item2.json
 Processed Collection: /path/to/my_stac_catalog/collections/collection2/collection.json
 Processed Catalog: /path/to/my_stac_catalog/catalog.json
 Merkle tree structure saved to /path/to/my_stac_catalog/merkle_tree.json
+```
+
+#### 2. `verify`
+
+The `verify` command validates the integrity of a Merkle tree JSON file by recalculating `merkle:root` values and comparing them to the expected values.
+
+```bash
+stac-merkle-tree-cli verify path/to/merkle_tree.json
+```
+
+#### Parameters:
+
+- `path/to/merkle_tree.json`: (Required) Path to the Merkle tree JSON file to verify.
+
+#### Example:
+
+Run the command:
+
+```bash
+stac-merkle-tree-cli verify my_stac_catalog/merkle_tree.json
+```
+
+Example Output (Success):
+
+```bash
+Verification Successful: The merkle:root matches.
+```
+
+Example Output (Failure):
+
+```bash
+Verification Failed:
+ - Expected merkle:root: 5808b480d9bed10e7663d52c218571d053c7b5df42a5aefc11e216c66c711f77
+ - Calculated merkle:root: f0ed08b316b917a98c085e699c090af1cea964b697dd0bc44491ebced4d0006c
+Discrepancies found in the following nodes:
+ - Collection 'COP-DEM' has mismatched merkle:root.
+ - Catalog 'Catalogue' has mismatched merkle:root.
 ```
 
 ## Merkle Tree Extension Specification
@@ -357,15 +400,19 @@ Contributions are welcome! If you encounter issues or have suggestions for impro
 
 ## Verification Steps
 
-### 1. Run the CLI Tool:
+### 1. Compute Merkle Tree
+
+Use the `compute` command to process your STAC catalog and generate a Merkle tree structure.
 
 ```bash
-stac-merkle-tree-cli path/to/catalog_directory
+stac-merkle-tree-cli compute path/to/catalog_directory
 ```
 
-### 2. Check the Output:
+#### Options:
 
-- **Console Output**: You should see logs indicating the processing of Items, Collections, and the Catalog.
+--merkle-tree-file <file_path>: Specify the output file name for the Merkle tree JSON (default is merkle_tree.json).
+
+#### Example Output:
 
 ```ruby
 Processed Item: /path/to/catalog_directory/collections/collection1/item1.json
@@ -378,17 +425,64 @@ Processed Catalog: /path/to/catalog_directory/catalog.json
 Merkle tree structure saved to /path/to/catalog_directory/merkle_tree.json
 ```
 
-- **Merkle Tree JSON**: Verify that the `merkle_tree.json` (or your specified output file) accurately represents the hierarchical structure of your STAC catalog with correct `merkle:object_hash` and `merkle:root` values.
+- The tool will generate a `merkle_tree.json` file (or the specified output file), which represents the hierarchical structure of your STAC catalog, including `merkle:object_hash` and `merkle:root` values.
 
-### 3. Verify Integrity:
+### 2. Verify Merkle Tree
 
-- **Catalog**: Ensure that the `catalog.json` now includes `merkle:object_hash`, `merkle:root`, and `merkle:hash_method`.
+Use the verify command to validate the integrity of the generated Merkle tree JSON file.
 
-- **Collections**: Each `collection.json` should include `merkle:object_hash`, `merkle:root`, and `merkle:hash_method`.
+```bash
+stac-merkle-tree-cli verify path/to/catalog_directory/merkle_tree.json
+```
 
-- **Items**: Each Item's JSON should have `merkle:object_hash` within the properties field.
+#### Example Output (Success):
 
-### 4. Run Tests:
+```bash
+Verification Successful: The merkle:root matches.
+```
+
+#### Example Output (Failure):
+
+```bash
+Verification Failed:
+ - Expected merkle:root: 5808b480d9bed10e7663d52c218571d053c7b5df42a5aefc11e216c66c711f77
+ - Calculated merkle:root: f0ed08b316b917a98c085e699c090af1cea964b697dd0bc44491ebced4d0006c
+Discrepancies found in the following nodes:
+ - Collection 'COP-DEM' has mismatched merkle:root.
+ - Catalog 'Catalogue' has mismatched merkle:root.
+```
+
+### 3. Validate STAC Structure Updates
+
+Ensure that the STAC files (e.g., `catalog.json`, `collection.json`, item files) have been updated correctly:
+
+#### Catalog:
+
+- `catalog.json` should include:
+
+  - `merkle:object_hash`
+  - `merkle:root`
+  - `merkle:hash_method`
+
+#### Collections:
+
+- Each `collection.json` should include:
+  - `merkle:object_hash`
+  - `merkle:root`
+  - `merkle:hash_method`
+
+#### Items:
+
+- Each Item JSON should have `merkle:object_hash` within its properties field.
+
+### 4. Verify Output File
+
+Review the generated merkle_tree.json file to confirm:
+
+- Proper hierarchical representation of the catalog.
+- Correct merkle:object_hash and merkle:root values for each node
+
+### 5. Run Tests:
 
 Ensure that all tests pass by executing:
 

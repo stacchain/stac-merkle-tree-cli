@@ -4,7 +4,7 @@ import click
 import json
 from pathlib import Path
 from .compute_merkle_info import process_catalog
-from .verify_merkle_info import verify_merkle_tree
+from .verify_merkle_tree_json import verify_merkle_tree
 
 @click.group()
 def cli():
