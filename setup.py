@@ -16,7 +16,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'stac-merkle-tree-cli=stac_merkle_tree_cli.cli:main',
+            'stac-merkle-tree-cli=stac_merkle_tree_cli.cli:cli',
         ],
     },
     classifiers=[
