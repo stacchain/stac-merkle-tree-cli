@@ -127,7 +127,7 @@ After installing the package, you can use the `stac-merkle-tree-cli` command to 
 
 ### Commands:
 
-#### 1. `compute`
+### 1. `compute`
 
 The compute command computes and adds Merkle information (`merkle:object_hash`, `merkle:root`, `merkle:hash_method`) to your STAC catalog.
 
@@ -182,7 +182,7 @@ Processed Catalog: /path/to/my_stac_catalog/catalog.json
 Merkle tree structure saved to /path/to/my_stac_catalog/merkle_tree.json
 ```
 
-#### 2. `verify`
+### 2. `verify`
 
 The `verify` command validates the integrity of a Merkle tree JSON file by recalculating `merkle:root` values and comparing them to the expected values.
 
