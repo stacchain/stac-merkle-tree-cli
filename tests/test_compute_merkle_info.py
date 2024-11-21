@@ -8,16 +8,17 @@ import shutil
 from pathlib import Path
 from typing import List, Dict, Any, Optional
 from unittest.mock import patch
-from stac_merkle_tree_cli.compute_merkle_info import (
-    compute_merkle_object_hash,
-    remove_merkle_fields,
-    process_collection,
-    process_catalog,
-    is_item_directory
-)
+from stac_merkle_tree_cli.compute_merkle_info import MerkleTreeProcessor, is_item_directory
 
 
 class TestComputeMerkleObjectHash(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        """
+        Initialize the MerkleTreeProcessor instance for the test class.
+        """
+        cls.processor = MerkleTreeProcessor()
+
     def test_compute_hash_all_fields_item(self):
         """
         Test hashing all fields for a STAC Item, ensuring Merkle fields are excluded.
@@ -44,7 +45,7 @@ class TestComputeMerkleObjectHash(unittest.TestCase):
             "description": "Test hash method."
         }
 
-        result = compute_merkle_object_hash(stac_object, hash_method)
+        result = self.processor.compute_merkle_object_hash(stac_object, hash_method)
 
         # Expected data excludes Merkle fields recursively
         expected_data = {
@@ -84,7 +85,7 @@ class TestComputeMerkleObjectHash(unittest.TestCase):
             "description": "Test hash method."
         }
 
-        result = compute_merkle_object_hash(stac_object, hash_method)
+        result = self.processor.compute_merkle_object_hash(stac_object, hash_method)
 
         # Expected data excludes Merkle fields
         expected_data = {
@@ -122,11 +123,11 @@ class TestComputeMerkleObjectHash(unittest.TestCase):
             "description": "Test hash method with specific fields."
         }
 
-        result = compute_merkle_object_hash(stac_object, hash_method)
+        result = self.processor.compute_merkle_object_hash(stac_object, hash_method)
 
         # Expected data includes only specified fields, excluding Merkle fields
         selected_data = {field: stac_object[field] for field in hash_method['fields'] if field in stac_object}
-        expected_data = remove_merkle_fields(selected_data)
+        expected_data = self.processor.remove_merkle_fields(selected_data)
 
         # Debugging: Print the expected data being hashed
         print("Expected data in test:", json.dumps(expected_data, indent=2, sort_keys=True))
@@ -159,7 +160,7 @@ class TestComputeMerkleObjectHash(unittest.TestCase):
             "description": "Test unsupported hash function."
         }
         with self.assertRaises(ValueError) as context:
-            compute_merkle_object_hash(stac_object, hash_method)
+            self.processor.compute_merkle_object_hash(stac_object, hash_method)
         self.assertIn("Unsupported hash function", str(context.exception))
 
     def test_compute_hash_missing_fields(self):
@@ -176,7 +177,7 @@ class TestComputeMerkleObjectHash(unittest.TestCase):
             "ordering": "ascending",
             "description": "Test with missing fields."
         }
-        result = compute_merkle_object_hash(stac_object, hash_method)
+        result = self.processor.compute_merkle_object_hash(stac_object, hash_method)
         # Expected data is empty because the specified field doesn't exist
         expected_data = {}
         expected_json_str = json.dumps(expected_data, sort_keys=True, separators=(',', ':'))
@@ -198,7 +199,7 @@ class TestComputeMerkleObjectHash(unittest.TestCase):
                 "ordering": "ascending",
                 "description": f"Test with hash function {func}."
             }
-            result = compute_merkle_object_hash(stac_object, hash_method)
+            result = self.processor.compute_merkle_object_hash(stac_object, hash_method)
             expected_data = {
                 "id": "test-object"
             }
@@ -224,7 +225,7 @@ class TestComputeMerkleObjectHash(unittest.TestCase):
             "ordering": "ascending",
             "description": "Test exclusion of Merkle fields."
         }
-        result = compute_merkle_object_hash(stac_object, hash_method)
+        result = self.processor.compute_merkle_object_hash(stac_object, hash_method)
         # Expected data excludes Merkle fields
         expected_data = {
             "id": "test-object",
@@ -236,6 +237,13 @@ class TestComputeMerkleObjectHash(unittest.TestCase):
 
 
 class TestProcessCollection(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        """
+        Set up the MerkleTreeProcessor instance for testing collections.
+        """
+        cls.processor = MerkleTreeProcessor()
+
     def setUp(self):
         """
         Set up a temporary directory for testing collections.
@@ -410,7 +418,7 @@ class TestProcessCollection(unittest.TestCase):
         }
 
         # Process the collection via process_collection only
-        collection_node = process_collection(collection_json_path, hash_method)
+        collection_node = self.processor.process_collection(collection_json_path, hash_method)
 
         # Assertions
         self.assertIsNotNone(collection_node)
@@ -499,7 +507,7 @@ class TestProcessCollection(unittest.TestCase):
         }
 
         # Process the collection via process_collection only
-        collection_node = process_collection(collection_json_path, hash_method)
+        collection_node = self.processor.process_collection(collection_path=collection_json_path, parent_hash_method=hash_method)
 
         # Assertions
         self.assertIsNotNone(collection_node)
@@ -630,6 +638,13 @@ class TestIsItemDirectory(unittest.TestCase):
 
 
 class TestProcessCatalog(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        """
+        Set up the MerkleTreeProcessor instance for testing collections.
+        """
+        cls.processor = MerkleTreeProcessor()
+
     def setUp(self):
         """
         Set up a temporary directory for testing catalogs.
@@ -753,7 +768,6 @@ class TestProcessCatalog(unittest.TestCase):
                 with item_path.open('w', encoding='utf-8') as f:
                     json.dump(item, f, indent=2)
 
-    @unittest.skip("Skipping this test temporarily due to CI environment inconsistency. Passing locally?")
     def test_process_catalog_simple(self):
         """
         Test processing a simple catalog with a single collection and items.
@@ -826,7 +840,7 @@ class TestProcessCatalog(unittest.TestCase):
             json.dump(catalog_json, f, indent=2)
 
         # Process the catalog instead of processing the collection directly
-        merkle_tree = process_catalog(catalog_json_path, hash_method)
+        merkle_tree = self.processor.process_catalog(catalog_json_path, hash_method)
 
         # Assertions
         self.assertIsNotNone(merkle_tree)

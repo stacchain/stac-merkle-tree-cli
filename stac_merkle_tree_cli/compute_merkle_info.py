@@ -346,6 +346,10 @@ class MerkleTreeProcessor:
                 'children': children
             }
 
+            # Sort children by node_id for consistency
+            collection_node['children'] = sorted(children, key=lambda x: x['node_id'])
+
+
             return collection_node
         
         except Exception as e:
@@ -453,6 +457,10 @@ class MerkleTreeProcessor:
                 'merkle:root': merkle_root,
                 'children': children
             }
+
+            # Sort children by node_id for consistency
+            catalog_node['children'] = sorted(catalog_node['children'], key=lambda x: x['node_id'])
+
 
             return catalog_node
 
