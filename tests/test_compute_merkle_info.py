@@ -1,23 +1,27 @@
 # tests/test_compute_merkle_info.py
 
-import unittest
-import json
 import hashlib
-import tempfile
+import json
 import shutil
+import tempfile
+import unittest
 from pathlib import Path
-from typing import List, Dict, Any, Optional
-from unittest.mock import patch
+from typing import Any, Dict, List, Optional
+
 from stac_merkle_tree_cli.compute_merkle_info import (
-    compute_merkle_object_hash,
-    remove_merkle_fields,
-    process_collection,
-    process_catalog,
-    is_item_directory
+    MerkleTreeProcessor,
+    is_item_directory,
 )
 
 
 class TestComputeMerkleObjectHash(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        """
+        Initialize the MerkleTreeProcessor instance for the test class.
+        """
+        cls.processor = MerkleTreeProcessor()
+
     def test_compute_hash_all_fields_item(self):
         """
         Test hashing all fields for a STAC Item, ensuring Merkle fields are excluded.
@@ -28,23 +32,23 @@ class TestComputeMerkleObjectHash(unittest.TestCase):
             "properties": {
                 "datetime": "2024-10-15T12:00:00Z",
                 "other_property": "value",
-                "merkle:object_hash": "should be excluded"
+                "merkle:object_hash": "should be excluded",
             },
             "geometry": {},
             "links": [],
             "assets": {},
             "merkle:object_hash": "should be excluded at top level",
-            "merkle:hash_method": "should be excluded at top level"
+            "merkle:hash_method": "should be excluded at top level",
         }
 
         hash_method = {
             "function": "sha256",
             "fields": ["*"],
             "ordering": "ascending",
-            "description": "Test hash method."
+            "description": "Test hash method.",
         }
 
-        result = compute_merkle_object_hash(stac_object, hash_method)
+        result = self.processor.compute_merkle_object_hash(stac_object, hash_method)
 
         # Expected data excludes Merkle fields recursively
         expected_data = {
@@ -52,14 +56,16 @@ class TestComputeMerkleObjectHash(unittest.TestCase):
             "id": "test-item",
             "properties": {
                 "datetime": "2024-10-15T12:00:00Z",
-                "other_property": "value"
+                "other_property": "value",
             },
             "geometry": {},
             "links": [],
-            "assets": {}
+            "assets": {},
         }
-        expected_json_str = json.dumps(expected_data, sort_keys=True, separators=(',', ':'))
-        expected_hash = hashlib.sha256(expected_json_str.encode('utf-8')).hexdigest()
+        expected_json_str = json.dumps(
+            expected_data, sort_keys=True, separators=(",", ":")
+        )
+        expected_hash = hashlib.sha256(expected_json_str.encode("utf-8")).hexdigest()
         self.assertEqual(result, expected_hash)
 
     def test_compute_hash_all_fields_collection(self):
@@ -74,17 +80,17 @@ class TestComputeMerkleObjectHash(unittest.TestCase):
             "links": [],
             "merkle:object_hash": "should be excluded",
             "merkle:hash_method": "should be excluded",
-            "merkle:root": "should be excluded"
+            "merkle:root": "should be excluded",
         }
 
         hash_method = {
             "function": "sha256",
             "fields": ["*"],
             "ordering": "ascending",
-            "description": "Test hash method."
+            "description": "Test hash method.",
         }
 
-        result = compute_merkle_object_hash(stac_object, hash_method)
+        result = self.processor.compute_merkle_object_hash(stac_object, hash_method)
 
         # Expected data excludes Merkle fields
         expected_data = {
@@ -92,10 +98,12 @@ class TestComputeMerkleObjectHash(unittest.TestCase):
             "id": "test-collection",
             "description": "A test collection",
             "extent": {},
-            "links": []
+            "links": [],
         }
-        expected_json_str = json.dumps(expected_data, sort_keys=True, separators=(',', ':'))
-        expected_hash = hashlib.sha256(expected_json_str.encode('utf-8')).hexdigest()
+        expected_json_str = json.dumps(
+            expected_data, sort_keys=True, separators=(",", ":")
+        )
+        expected_hash = hashlib.sha256(expected_json_str.encode("utf-8")).hexdigest()
         self.assertEqual(result, expected_hash)
 
     def test_compute_hash_specific_fields_item(self):
@@ -109,36 +117,51 @@ class TestComputeMerkleObjectHash(unittest.TestCase):
                 "other_property": "value",
                 "datetime": "2024-10-15T12:00:00Z",
                 "extra_property": "should be excluded",
-                "merkle:object_hash": "should be excluded"
+                "merkle:object_hash": "should be excluded",
             },
             "geometry": {},
-            "links": []
+            "links": [],
         }
 
         hash_method = {
             "function": "sha256",
             "fields": ["id", "properties"],
             "ordering": "ascending",
-            "description": "Test hash method with specific fields."
+            "description": "Test hash method with specific fields.",
         }
 
-        result = compute_merkle_object_hash(stac_object, hash_method)
+        result = self.processor.compute_merkle_object_hash(stac_object, hash_method)
 
         # Expected data includes only specified fields, excluding Merkle fields
-        selected_data = {field: stac_object[field] for field in hash_method['fields'] if field in stac_object}
-        expected_data = remove_merkle_fields(selected_data)
+        selected_data = {
+            field: stac_object[field]
+            for field in hash_method["fields"]
+            if field in stac_object
+        }
+        expected_data = self.processor.remove_merkle_fields(selected_data)
 
         # Debugging: Print the expected data being hashed
-        print("Expected data in test:", json.dumps(expected_data, indent=2, sort_keys=True))
-        print("Expected JSON string in test:", json.dumps(expected_data, sort_keys=True, separators=(',', ':')))
+        print(
+            "Expected data in test:",
+            json.dumps(expected_data, indent=2, sort_keys=True),
+        )
+        print(
+            "Expected JSON string in test:",
+            json.dumps(expected_data, sort_keys=True, separators=(",", ":")),
+        )
 
-        expected_json_str = json.dumps(expected_data, sort_keys=True, separators=(',', ':'))
+        expected_json_str = json.dumps(
+            expected_data, sort_keys=True, separators=(",", ":")
+        )
 
         # Compute expected hash
-        expected_hash = hashlib.sha256(expected_json_str.encode('utf-8')).hexdigest()
+        expected_hash = hashlib.sha256(expected_json_str.encode("utf-8")).hexdigest()
 
         # Debugging: Print actual data being hashed in the function
-        print("Data to hash in function:", json.dumps(expected_data, indent=2, sort_keys=True))
+        print(
+            "Data to hash in function:",
+            json.dumps(expected_data, indent=2, sort_keys=True),
+        )
         print("JSON string in function:", expected_json_str)
         print("Expected hash:", expected_hash)
         print("Actual hash:", result)
@@ -149,62 +172,57 @@ class TestComputeMerkleObjectHash(unittest.TestCase):
         """
         Test behavior when an unsupported hash function is specified.
         """
-        stac_object = {
-            "id": "test-object"
-        }
+        stac_object = {"id": "test-object"}
         hash_method = {
             "function": "unsupported-hash",
             "fields": ["*"],
             "ordering": "ascending",
-            "description": "Test unsupported hash function."
+            "description": "Test unsupported hash function.",
         }
         with self.assertRaises(ValueError) as context:
-            compute_merkle_object_hash(stac_object, hash_method)
+            self.processor.compute_merkle_object_hash(stac_object, hash_method)
         self.assertIn("Unsupported hash function", str(context.exception))
 
     def test_compute_hash_missing_fields(self):
         """
         Test behavior when specified fields are missing from the object.
         """
-        stac_object = {
-            "id": "test-object",
-            "some_field": "some value"
-        }
+        stac_object = {"id": "test-object", "some_field": "some value"}
         hash_method = {
             "function": "sha256",
             "fields": ["non_existent_field"],
             "ordering": "ascending",
-            "description": "Test with missing fields."
+            "description": "Test with missing fields.",
         }
-        result = compute_merkle_object_hash(stac_object, hash_method)
+        result = self.processor.compute_merkle_object_hash(stac_object, hash_method)
         # Expected data is empty because the specified field doesn't exist
         expected_data = {}
-        expected_json_str = json.dumps(expected_data, sort_keys=True, separators=(',', ':'))
-        expected_hash = hashlib.sha256(expected_json_str.encode('utf-8')).hexdigest()
+        expected_json_str = json.dumps(
+            expected_data, sort_keys=True, separators=(",", ":")
+        )
+        expected_hash = hashlib.sha256(expected_json_str.encode("utf-8")).hexdigest()
         self.assertEqual(result, expected_hash)
 
     def test_compute_hash_different_hash_functions(self):
         """
         Test hashing with different hash functions.
         """
-        stac_object = {
-            "id": "test-object"
-        }
+        stac_object = {"id": "test-object"}
         hash_functions = ["sha256", "md5", "sha1", "sha512"]
         for func in hash_functions:
             hash_method = {
                 "function": func,
                 "fields": ["*"],
                 "ordering": "ascending",
-                "description": f"Test with hash function {func}."
+                "description": f"Test with hash function {func}.",
             }
-            result = compute_merkle_object_hash(stac_object, hash_method)
-            expected_data = {
-                "id": "test-object"
-            }
-            expected_json_str = json.dumps(expected_data, sort_keys=True, separators=(',', ':'))
-            hash_func = getattr(hashlib, func.replace('-', '').lower())
-            expected_hash = hash_func(expected_json_str.encode('utf-8')).hexdigest()
+            result = self.processor.compute_merkle_object_hash(stac_object, hash_method)
+            expected_data = {"id": "test-object"}
+            expected_json_str = json.dumps(
+                expected_data, sort_keys=True, separators=(",", ":")
+            )
+            hash_func = getattr(hashlib, func.replace("-", "").lower())
+            expected_hash = hash_func(expected_json_str.encode("utf-8")).hexdigest()
             self.assertEqual(result, expected_hash)
 
     def test_compute_hash_excludes_merkle_fields(self):
@@ -216,26 +234,32 @@ class TestComputeMerkleObjectHash(unittest.TestCase):
             "merkle:object_hash": "should be excluded",
             "merkle:hash_method": "should be excluded",
             "merkle:root": "should be excluded",
-            "other_field": "value"
+            "other_field": "value",
         }
         hash_method = {
             "function": "sha256",
             "fields": ["*"],
             "ordering": "ascending",
-            "description": "Test exclusion of Merkle fields."
+            "description": "Test exclusion of Merkle fields.",
         }
-        result = compute_merkle_object_hash(stac_object, hash_method)
+        result = self.processor.compute_merkle_object_hash(stac_object, hash_method)
         # Expected data excludes Merkle fields
-        expected_data = {
-            "id": "test-object",
-            "other_field": "value"
-        }
-        expected_json_str = json.dumps(expected_data, sort_keys=True, separators=(',', ':'))
-        expected_hash = hashlib.sha256(expected_json_str.encode('utf-8')).hexdigest()
+        expected_data = {"id": "test-object", "other_field": "value"}
+        expected_json_str = json.dumps(
+            expected_data, sort_keys=True, separators=(",", ":")
+        )
+        expected_hash = hashlib.sha256(expected_json_str.encode("utf-8")).hexdigest()
         self.assertEqual(result, expected_hash)
 
 
 class TestProcessCollection(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        """
+        Set up the MerkleTreeProcessor instance for testing collections.
+        """
+        cls.processor = MerkleTreeProcessor()
+
     def setUp(self):
         """
         Set up a temporary directory for testing collections.
@@ -257,7 +281,7 @@ class TestProcessCollection(unittest.TestCase):
         sub_collections: Optional[List[Dict[str, Any]]] = None,
         sub_catalogs: Optional[List[Dict[str, Any]]] = None,
         nested_items: Optional[List[Dict[str, Any]]] = None,
-        parent_dir: Optional[Path] = None  # New parameter
+        parent_dir: Optional[Path] = None,  # New parameter
     ):
         """
         Helper function to create a collection with items, sub-collections, and sub-catalogs.
@@ -280,20 +304,16 @@ class TestProcessCollection(unittest.TestCase):
             "id": collection_id,
             "description": f"Description for {collection_id}",
             "extent": {},
-            "links": []
+            "links": [],
         }
 
         # Optionally add merkle:hash_method
-        hash_method = {
-            "function": "sha256",
-            "fields": ["*"],
-            "ordering": "ascending"
-        }
+        hash_method = {"function": "sha256", "fields": ["*"], "ordering": "ascending"}
         collection_json["merkle:hash_method"] = hash_method
 
         # Save collection.json
         collection_json_path = collection_dir / "collection.json"
-        with collection_json_path.open('w', encoding='utf-8') as f:
+        with collection_json_path.open("w", encoding="utf-8") as f:
             json.dump(collection_json, f, indent=2)
 
         # Create items
@@ -301,7 +321,7 @@ class TestProcessCollection(unittest.TestCase):
             item_dir = collection_dir / item["id"]
             item_dir.mkdir(parents=True, exist_ok=True)
             item_path = item_dir / f"{item['id']}.json"
-            with item_path.open('w', encoding='utf-8') as f:
+            with item_path.open("w", encoding="utf-8") as f:
                 json.dump(item, f, indent=2)
 
         # Create sub-collections
@@ -315,7 +335,7 @@ class TestProcessCollection(unittest.TestCase):
                     sub_col.get("sub_collections"),
                     sub_col.get("sub_catalogs"),
                     sub_col.get("nested_items"),
-                    parent_dir=collection_dir  # Directly nest under parent collection
+                    parent_dir=collection_dir,  # Directly nest under parent collection
                 )
 
         # Create sub-catalogs
@@ -328,12 +348,12 @@ class TestProcessCollection(unittest.TestCase):
                     "type": "Catalog",
                     "id": sub_cat_id,
                     "description": f"Description for {sub_cat_id}",
-                    "links": []
+                    "links": [],
                 }
                 # Optionally add merkle:hash_method
                 sub_cat_json["merkle:hash_method"] = hash_method
                 sub_cat_json_path = sub_cat_dir / "catalog.json"
-                with sub_cat_json_path.open('w', encoding='utf-8') as f:
+                with sub_cat_json_path.open("w", encoding="utf-8") as f:
                     json.dump(sub_cat_json, f, indent=2)
 
                 # Create collections within sub-catalogs
@@ -344,16 +364,15 @@ class TestProcessCollection(unittest.TestCase):
                         sub_cat_collection.get("sub_collections"),
                         sub_cat_collection.get("sub_catalogs"),
                         sub_cat_collection.get("nested_items"),
-                        parent_dir=sub_cat_dir  # Directly nest under sub-catalog
+                        parent_dir=sub_cat_dir,  # Directly nest under sub-catalog
                     )
 
         # Create nested items if any (items directly within the collection directory)
         if nested_items:
             for item in nested_items:
                 item_path = collection_dir / f"{item['id']}.json"
-                with item_path.open('w', encoding='utf-8') as f:
+                with item_path.open("w", encoding="utf-8") as f:
                     json.dump(item, f, indent=2)
-
 
     def test_process_collection_with_nested_items(self):
         """
@@ -366,21 +385,21 @@ class TestProcessCollection(unittest.TestCase):
                 "id": "item1",
                 "properties": {
                     "datetime": "2024-10-18T12:00:00Z",
-                    "other_property": "value1"
+                    "other_property": "value1",
                 },
                 "geometry": {},
-                "links": []
+                "links": [],
             },
             {
                 "type": "Feature",
                 "id": "item2",
                 "properties": {
                     "datetime": "2024-10-19T12:00:00Z",
-                    "other_property": "value2"
+                    "other_property": "value2",
                 },
                 "geometry": {},
-                "links": []
-            }
+                "links": [],
+            },
         ]
         self.create_collection(
             collection_id,
@@ -391,12 +410,12 @@ class TestProcessCollection(unittest.TestCase):
                     "id": "item3",
                     "properties": {
                         "datetime": "2024-10-20T12:00:00Z",
-                        "other_property": "value3"
+                        "other_property": "value3",
                     },
                     "geometry": {},
-                    "links": []
+                    "links": [],
                 }
-            ]
+            ],
         )
 
         collection_json_path = self.collections_dir / collection_id / "collection.json"
@@ -406,30 +425,32 @@ class TestProcessCollection(unittest.TestCase):
             "function": "sha256",
             "fields": ["*"],
             "ordering": "ascending",
-            "description": "Test hash method."
+            "description": "Test hash method.",
         }
 
         # Process the collection via process_collection only
-        collection_node = process_collection(collection_json_path, hash_method)
+        collection_node = self.processor.process_collection(
+            collection_json_path, hash_method
+        )
 
         # Assertions
         self.assertIsNotNone(collection_node)
-        self.assertIn('node_id', collection_node)
-        self.assertIn('merkle:object_hash', collection_node)
-        self.assertIn('merkle:root', collection_node)
-        self.assertIn('children', collection_node)
+        self.assertIn("node_id", collection_node)
+        self.assertIn("merkle:object_hash", collection_node)
+        self.assertIn("merkle:root", collection_node)
+        self.assertIn("children", collection_node)
 
-        self.assertEqual(collection_node['node_id'], collection_id)
-        self.assertTrue(collection_node['merkle:object_hash'])
-        self.assertTrue(collection_node['merkle:root'])
-        self.assertEqual(len(collection_node['children']), 3)  # item1, item2, item3
+        self.assertEqual(collection_node["node_id"], collection_id)
+        self.assertTrue(collection_node["merkle:object_hash"])
+        self.assertTrue(collection_node["merkle:root"])
+        self.assertEqual(len(collection_node["children"]), 3)  # item1, item2, item3
 
         # Check individual items
         item_ids = {"item1", "item2", "item3"}
-        for child in collection_node['children']:
-            self.assertIn('node_id', child)
-            self.assertIn('merkle:object_hash', child)
-            self.assertIn(child['node_id'], item_ids)
+        for child in collection_node["children"]:
+            self.assertIn("node_id", child)
+            self.assertIn("merkle:object_hash", child)
+            self.assertIn(child["node_id"], item_ids)
 
     def test_process_collection_with_sub_collections_and_items_in_folders(self):
         """
@@ -442,10 +463,10 @@ class TestProcessCollection(unittest.TestCase):
                 "id": "item1",
                 "properties": {
                     "datetime": "2024-10-18T12:00:00Z",
-                    "other_property": "value1"
+                    "other_property": "value1",
                 },
                 "geometry": {},
-                "links": []
+                "links": [],
             }
         ]
         sub_collections = [
@@ -457,10 +478,10 @@ class TestProcessCollection(unittest.TestCase):
                         "id": "item2",
                         "properties": {
                             "datetime": "2024-10-19T12:00:00Z",
-                            "other_property": "value2"
+                            "other_property": "value2",
                         },
                         "geometry": {},
-                        "links": []
+                        "links": [],
                     }
                 ],
                 "sub_collections": [
@@ -472,20 +493,18 @@ class TestProcessCollection(unittest.TestCase):
                                 "id": "item3",
                                 "properties": {
                                     "datetime": "2024-10-20T12:00:00Z",
-                                    "other_property": "value3"
+                                    "other_property": "value3",
                                 },
                                 "geometry": {},
-                                "links": []
+                                "links": [],
                             }
-                        ]
+                        ],
                     }
-                ]
+                ],
             }
         ]
         self.create_collection(
-            collection_id,
-            items=items,
-            sub_collections=sub_collections
+            collection_id, items=items, sub_collections=sub_collections
         )
 
         collection_json_path = self.collections_dir / collection_id / "collection.json"
@@ -495,50 +514,84 @@ class TestProcessCollection(unittest.TestCase):
             "function": "sha256",
             "fields": ["*"],
             "ordering": "ascending",
-            "description": "Test hash method."
+            "description": "Test hash method.",
         }
 
         # Process the collection via process_collection only
-        collection_node = process_collection(collection_json_path, hash_method)
+        collection_node = self.processor.process_collection(
+            collection_path=collection_json_path, parent_hash_method=hash_method
+        )
 
         # Assertions
         self.assertIsNotNone(collection_node)
-        self.assertIn('node_id', collection_node)
-        self.assertIn('merkle:object_hash', collection_node)
-        self.assertIn('merkle:root', collection_node)
-        self.assertIn('children', collection_node)
+        self.assertIn("node_id", collection_node)
+        self.assertIn("merkle:object_hash", collection_node)
+        self.assertIn("merkle:root", collection_node)
+        self.assertIn("children", collection_node)
 
-        self.assertEqual(collection_node['node_id'], collection_id)
-        self.assertTrue(collection_node['merkle:object_hash'])
-        self.assertTrue(collection_node['merkle:root'])
-        self.assertEqual(len(collection_node['children']), 2)  # item1 and sub_collection1
+        self.assertEqual(collection_node["node_id"], collection_id)
+        self.assertTrue(collection_node["merkle:object_hash"])
+        self.assertTrue(collection_node["merkle:root"])
+        self.assertEqual(
+            len(collection_node["children"]), 2
+        )  # item1 and sub_collection1
 
         # Check individual children
-        child_ids = {child['node_id'] for child in collection_node['children']}
-        self.assertIn('item1', child_ids)
-        self.assertIn('sub_collection1', child_ids)
+        child_ids = {child["node_id"] for child in collection_node["children"]}
+        self.assertIn("item1", child_ids)
+        self.assertIn("sub_collection1", child_ids)
 
         # Further checks to ensure sub_collection1 has its children
-        sub_collection_node = next((child for child in collection_node['children'] if child['node_id'] == 'sub_collection1'), None)
+        sub_collection_node = next(
+            (
+                child
+                for child in collection_node["children"]
+                if child["node_id"] == "sub_collection1"
+            ),
+            None,
+        )
         self.assertIsNotNone(sub_collection_node)
-        self.assertIn('children', sub_collection_node)
-        self.assertEqual(len(sub_collection_node['children']), 2)  # item2 and sub_sub_collection1
+        self.assertIn("children", sub_collection_node)
+        self.assertEqual(
+            len(sub_collection_node["children"]), 2
+        )  # item2 and sub_sub_collection1
 
         # Check sub_sub_collection1
-        sub_sub_collection_node = next((child for child in sub_collection_node['children'] if child['node_id'] == 'sub_sub_collection1'), None)
+        sub_sub_collection_node = next(
+            (
+                child
+                for child in sub_collection_node["children"]
+                if child["node_id"] == "sub_sub_collection1"
+            ),
+            None,
+        )
         self.assertIsNotNone(sub_sub_collection_node)
-        self.assertIn('children', sub_sub_collection_node)
-        self.assertEqual(len(sub_sub_collection_node['children']), 1)  # item3
+        self.assertIn("children", sub_sub_collection_node)
+        self.assertEqual(len(sub_sub_collection_node["children"]), 1)  # item3
 
         # Check item2
-        item2_node = next((child for child in sub_collection_node['children'] if child['node_id'] == 'item2'), None)
+        item2_node = next(
+            (
+                child
+                for child in sub_collection_node["children"]
+                if child["node_id"] == "item2"
+            ),
+            None,
+        )
         self.assertIsNotNone(item2_node)
-        self.assertIn('merkle:object_hash', item2_node)
+        self.assertIn("merkle:object_hash", item2_node)
 
         # Check item3
-        item3_node = next((child for child in sub_sub_collection_node['children'] if child['node_id'] == 'item3'), None)
+        item3_node = next(
+            (
+                child
+                for child in sub_sub_collection_node["children"]
+                if child["node_id"] == "item3"
+            ),
+            None,
+        )
         self.assertIsNotNone(item3_node)
-        self.assertIn('merkle:object_hash', item3_node)
+        self.assertIn("merkle:object_hash", item3_node)
 
 
 class TestIsItemDirectory(unittest.TestCase):
@@ -565,12 +618,12 @@ class TestIsItemDirectory(unittest.TestCase):
             "id": "itema",
             "properties": {},
             "geometry": {},
-            "links": []
+            "links": [],
         }
         item_path = item_dir / "itema.json"
-        with item_path.open('w', encoding='utf-8') as f:
+        with item_path.open("w", encoding="utf-8") as f:
             json.dump(item_json, f, indent=2)
-        
+
         self.assertTrue(is_item_directory(item_dir))
 
     def test_is_item_directory_false_multiple_files(self):
@@ -584,22 +637,22 @@ class TestIsItemDirectory(unittest.TestCase):
             "id": "itemb1",
             "properties": {},
             "geometry": {},
-            "links": []
+            "links": [],
         }
         item_json2 = {
             "type": "Feature",
             "id": "itemb2",
             "properties": {},
             "geometry": {},
-            "links": []
+            "links": [],
         }
         item_path1 = item_dir / "itemb1.json"
         item_path2 = item_dir / "itemb2.json"
-        with item_path1.open('w', encoding='utf-8') as f:
+        with item_path1.open("w", encoding="utf-8") as f:
             json.dump(item_json1, f, indent=2)
-        with item_path2.open('w', encoding='utf-8') as f:
+        with item_path2.open("w", encoding="utf-8") as f:
             json.dump(item_json2, f, indent=2)
-        
+
         self.assertFalse(is_item_directory(item_dir))
 
     def test_is_item_directory_false_non_feature(self):
@@ -611,12 +664,12 @@ class TestIsItemDirectory(unittest.TestCase):
         non_feature_json = {
             "type": "Collection",
             "id": "itemc",
-            "description": "A non-Feature type"
+            "description": "A non-Feature type",
         }
         item_path = item_dir / "itemc.json"
-        with item_path.open('w', encoding='utf-8') as f:
+        with item_path.open("w", encoding="utf-8") as f:
             json.dump(non_feature_json, f, indent=2)
-        
+
         self.assertFalse(is_item_directory(item_dir))
 
     def test_is_item_directory_false_no_json_files(self):
@@ -630,6 +683,13 @@ class TestIsItemDirectory(unittest.TestCase):
 
 
 class TestProcessCatalog(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        """
+        Set up the MerkleTreeProcessor instance for testing collections.
+        """
+        cls.processor = MerkleTreeProcessor()
+
     def setUp(self):
         """
         Set up a temporary directory for testing catalogs.
@@ -653,7 +713,7 @@ class TestProcessCatalog(unittest.TestCase):
         sub_collections: Optional[List[Dict[str, Any]]] = None,
         sub_catalogs: Optional[List[Dict[str, Any]]] = None,
         nested_items: Optional[List[Dict[str, Any]]] = None,
-        parent_dir: Optional[Path] = None  # New parameter
+        parent_dir: Optional[Path] = None,  # New parameter
     ):
         """
         Helper function to create a collection with items, sub-collections, and sub-catalogs.
@@ -676,20 +736,16 @@ class TestProcessCatalog(unittest.TestCase):
             "id": collection_id,
             "description": f"Description for {collection_id}",
             "extent": {},
-            "links": []
+            "links": [],
         }
 
         # Optionally add merkle:hash_method
-        hash_method = {
-            "function": "sha256",
-            "fields": ["*"],
-            "ordering": "ascending"
-        }
+        hash_method = {"function": "sha256", "fields": ["*"], "ordering": "ascending"}
         collection_json["merkle:hash_method"] = hash_method
 
         # Save collection.json
         collection_json_path = collection_dir / "collection.json"
-        with collection_json_path.open('w', encoding='utf-8') as f:
+        with collection_json_path.open("w", encoding="utf-8") as f:
             json.dump(collection_json, f, indent=2)
 
         # Create items
@@ -697,7 +753,7 @@ class TestProcessCatalog(unittest.TestCase):
             item_dir = collection_dir / item["id"]
             item_dir.mkdir(parents=True, exist_ok=True)
             item_path = item_dir / f"{item['id']}.json"
-            with item_path.open('w', encoding='utf-8') as f:
+            with item_path.open("w", encoding="utf-8") as f:
                 json.dump(item, f, indent=2)
 
         # Create sub-collections
@@ -714,7 +770,7 @@ class TestProcessCatalog(unittest.TestCase):
                     sub_col.get("sub_collections"),
                     sub_col.get("sub_catalogs"),
                     sub_col.get("nested_items"),
-                    parent_dir=sub_collections_dir  # Pass the 'collections' subdirectory
+                    parent_dir=sub_collections_dir,  # Pass the 'collections' subdirectory
                 )
 
         # Create sub-catalogs
@@ -727,12 +783,12 @@ class TestProcessCatalog(unittest.TestCase):
                     "type": "Catalog",
                     "id": sub_cat_id,
                     "description": f"Description for {sub_cat_id}",
-                    "links": []
+                    "links": [],
                 }
                 # Optionally add merkle:hash_method
                 sub_cat_json["merkle:hash_method"] = hash_method
                 sub_cat_json_path = sub_cat_dir / "catalog.json"
-                with sub_cat_json_path.open('w', encoding='utf-8') as f:
+                with sub_cat_json_path.open("w", encoding="utf-8") as f:
                     json.dump(sub_cat_json, f, indent=2)
 
                 # Create collections within sub-catalogs
@@ -743,17 +799,17 @@ class TestProcessCatalog(unittest.TestCase):
                         sub_cat_collection.get("sub_collections"),
                         sub_cat_collection.get("sub_catalogs"),
                         sub_cat_collection.get("nested_items"),
-                        parent_dir=sub_cat_dir / "collections"  # Pass the 'collections' subdirectory
+                        parent_dir=sub_cat_dir
+                        / "collections",  # Pass the 'collections' subdirectory
                     )
 
         # Create nested items if any (items directly within the collection directory)
         if nested_items:
             for item in nested_items:
                 item_path = collection_dir / f"{item['id']}.json"
-                with item_path.open('w', encoding='utf-8') as f:
+                with item_path.open("w", encoding="utf-8") as f:
                     json.dump(item, f, indent=2)
 
-    @unittest.skip("Skipping this test temporarily due to CI environment inconsistency. Passing locally?")
     def test_process_catalog_simple(self):
         """
         Test processing a simple catalog with a single collection and items.
@@ -767,17 +823,13 @@ class TestProcessCatalog(unittest.TestCase):
             "id": collection_id,
             "description": "A simple collection",
             "extent": {},
-            "links": []
+            "links": [],
         }
-        hash_method = {
-            "function": "sha256",
-            "fields": ["*"],
-            "ordering": "ascending"
-        }
+        hash_method = {"function": "sha256", "fields": ["*"], "ordering": "ascending"}
         collection_json["merkle:hash_method"] = hash_method
 
         collection_json_path = collection_dir / "collection.json"
-        with collection_json_path.open('w', encoding='utf-8') as f:
+        with collection_json_path.open("w", encoding="utf-8") as f:
             json.dump(collection_json, f, indent=2)
 
         # Create items
@@ -786,31 +838,31 @@ class TestProcessCatalog(unittest.TestCase):
             "id": "item1",
             "properties": {
                 "datetime": "2024-10-23T12:00:00Z",
-                "other_property": "value1"
+                "other_property": "value1",
             },
             "geometry": {},
-            "links": []
+            "links": [],
         }
         item2 = {
             "type": "Feature",
             "id": "item2",
             "properties": {
                 "datetime": "2024-10-24T12:00:00Z",
-                "other_property": "value2"
+                "other_property": "value2",
             },
             "geometry": {},
-            "links": []
+            "links": [],
         }
         item1_dir = collection_dir / "item1"
         item1_dir.mkdir()
         item1_path = item1_dir / "item1.json"
-        with item1_path.open('w', encoding='utf-8') as f:
+        with item1_path.open("w", encoding="utf-8") as f:
             json.dump(item1, f, indent=2)
 
         item2_dir = collection_dir / "item2"
         item2_dir.mkdir()
         item2_path = item2_dir / "item2.json"
-        with item2_path.open('w', encoding='utf-8') as f:
+        with item2_path.open("w", encoding="utf-8") as f:
             json.dump(item2, f, indent=2)
 
         # Create catalog.json
@@ -818,44 +870,44 @@ class TestProcessCatalog(unittest.TestCase):
             "type": "Catalog",
             "id": "root_catalog",
             "description": "Root Catalog",
-            "links": []
+            "links": [],
         }
         catalog_json["merkle:hash_method"] = hash_method
         catalog_json_path = self.catalog_dir / "catalog.json"
-        with catalog_json_path.open('w', encoding='utf-8') as f:
+        with catalog_json_path.open("w", encoding="utf-8") as f:
             json.dump(catalog_json, f, indent=2)
 
         # Process the catalog instead of processing the collection directly
-        merkle_tree = process_catalog(catalog_json_path, hash_method)
+        merkle_tree = self.processor.process_catalog(catalog_json_path, hash_method)
 
         # Assertions
         self.assertIsNotNone(merkle_tree)
-        self.assertIn('node_id', merkle_tree)
-        self.assertIn('merkle:object_hash', merkle_tree)
-        self.assertIn('merkle:root', merkle_tree)
-        self.assertIn('children', merkle_tree)
-        self.assertEqual(merkle_tree['node_id'], 'root_catalog')
-        self.assertTrue(merkle_tree['merkle:object_hash'])
-        self.assertTrue(merkle_tree['merkle:root'])
-        self.assertEqual(len(merkle_tree['children']), 1)  # Only collection1
+        self.assertIn("node_id", merkle_tree)
+        self.assertIn("merkle:object_hash", merkle_tree)
+        self.assertIn("merkle:root", merkle_tree)
+        self.assertIn("children", merkle_tree)
+        self.assertEqual(merkle_tree["node_id"], "root_catalog")
+        self.assertTrue(merkle_tree["merkle:object_hash"])
+        self.assertTrue(merkle_tree["merkle:root"])
+        self.assertEqual(len(merkle_tree["children"]), 1)  # Only collection1
 
         # Check children (collections)
-        collection_node = merkle_tree['children'][0]
-        self.assertEqual(collection_node['node_id'], 'collection1')
-        self.assertIn('merkle:object_hash', collection_node)
-        self.assertIn('merkle:root', collection_node)
-        self.assertIn('children', collection_node)
-        self.assertEqual(len(collection_node['children']), 2)  # item1 and item2
+        collection_node = merkle_tree["children"][0]
+        self.assertEqual(collection_node["node_id"], "collection1")
+        self.assertIn("merkle:object_hash", collection_node)
+        self.assertIn("merkle:root", collection_node)
+        self.assertIn("children", collection_node)
+        self.assertEqual(len(collection_node["children"]), 2)  # item1 and item2
 
         # Check items
-        item_node1 = collection_node['children'][0]
-        self.assertEqual(item_node1['node_id'], 'item1')
-        self.assertIn('merkle:object_hash', item_node1)
+        item_node1 = collection_node["children"][0]
+        self.assertEqual(item_node1["node_id"], "item1")
+        self.assertIn("merkle:object_hash", item_node1)
 
-        item_node2 = collection_node['children'][1]
-        self.assertEqual(item_node2['node_id'], 'item2')
-        self.assertIn('merkle:object_hash', item_node2)
+        item_node2 = collection_node["children"][1]
+        self.assertEqual(item_node2["node_id"], "item2")
+        self.assertIn("merkle:object_hash", item_node2)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

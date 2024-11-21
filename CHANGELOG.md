@@ -9,7 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added `verify` command to cli with accompanying script to ensure that the Merkle tree verification json produced by the `compute` command matches [#3](https://github.com/stacchain/stac-merkle-tree-cli/pull/3)
+- Logging to cli tool and associated scripts [#5](https://github.com/stacchain/stac-merkle-tree-cli/pull/5)
+- `verify` command to cli with accompanying script to ensure that the Merkle tree verification json produced by the `compute` command matches [#3](https://github.com/stacchain/stac-merkle-tree-cli/pull/3)
+
+### Changed
+
+- Moved compute and verifcation logic into classes for better oop functionality [#5](https://github.com/stacchain/stac-merkle-tree-cli/pull/5)
 
 ## [v0.3.0] - 2024-11-20
 
