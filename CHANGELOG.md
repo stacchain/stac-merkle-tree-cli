@@ -12,14 +12,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **Merkle Proofs**: Added new `proofs` command to generate standalone Merkle Inclusion Proof JSON files and link them in STAC Items (Spec v1.1.1).
-- **Deep Integrity**: Added `--deep-integrity` flag to the `compute` command. When enabled, it includes asset `file:checksum` values in the hash calculation.
-- **Safer Hashing**: Added `--ignore-links` flag (default: True) to exclude the `links` field from hashing, preventing circular dependency issues.
+[#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
+- **Deep Integrity**: Added `--deep-integrity` flag to the `compute` command. When enabled, it includes asset `file:checksum` values in the hash calculation. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
+- **Safer Hashing**: Added `--ignore-links` flag (default: True) to exclude the `links` field from hashing, preventing circular dependency issues. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
 - **Verification**: Added `verify` command to ensure the `merkle_tree.json` structure matches the computed hashes [#3](https://github.com/stacchain/stac-merkle-tree-cli/pull/3).
 
 ### Changed
 
-- Updated default extension URL to `v1.1.1`.
-- Refactored `compute` logic to use a safer default field list (excluding links) instead of a wildcard `*`.
+- Updated default extension URL to `v1.1.1`. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
+- Refactored `compute` logic to use a safer default field list (excluding links) instead of a wildcard `*`. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
 
 ## [v0.3.0] - 2024-11-20
 
@@ -38,7 +39,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - first release
 
-[Unreleased]: https://github.com/stacchain/stac-merkle-tree-cli/tree/v0.3.0...main
+[Unreleased]: https://github.com/stacchain/stac-merkle-tree-cli/tree/v0.4.0...main
+[v0.4.0]: https://github.com/stacchain/stac-merkle-tree-cli/tree/v0.3.0...v0.4.0
 [v0.3.0]: https://github.com/stacchain/stac-merkle-tree-cli/tree/v0.2.0...v0.3.0
 [v0.2.0]: https://github.com/stacchain/stac-merkle-tree-cli/tree/v0.1.0...v0.2.0
 [v0.1.0]: https://github.com/stacchain/stac-merkle-tree-cli/tree/v0.1.0
