@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
-import click
 import json
 import os
 from pathlib import Path
+
+import click
+
 
 def load_feature_collection(input_file: str) -> dict:
     """
@@ -16,18 +18,24 @@ def load_feature_collection(input_file: str) -> dict:
     - dict: Parsed JSON content of the feature collection.
     """
     try:
-        with open(input_file, 'r', encoding='utf-8') as f:
+        with open(input_file, "r", encoding="utf-8") as f:
             data = json.load(f)
         if data.get("type") != "FeatureCollection" or "features" not in data:
-            raise ValueError("The provided file is not a valid GeoJSON Feature Collection.")
+            raise ValueError(
+                "The provided file is not a valid GeoJSON Feature Collection."
+            )
         return data
     except Exception as e:
         click.echo(f"Error loading Feature Collection file: {e}", err=True)
         raise
 
+
 @click.command()
-@click.argument('input_file', type=click.Path(exists=True, readable=True))
-@click.argument('output_directory', type=click.Path(file_okay=False, writable=True, resolve_path=True))
+@click.argument("input_file", type=click.Path(exists=True, readable=True))
+@click.argument(
+    "output_directory",
+    type=click.Path(file_okay=False, writable=True, resolve_path=True),
+)
 def main(input_file, output_directory):
     """
     Load a GeoJSON Feature Collection from INPUT_FILE and output each feature as a separate JSON
@@ -55,11 +63,12 @@ def main(input_file, output_directory):
 
         # Write feature to JSON file
         try:
-            with open(output_file_path, 'w', encoding='utf-8') as f:
+            with open(output_file_path, "w", encoding="utf-8") as f:
                 json.dump(feature, f, indent=2)
             click.echo(f"Feature saved to: {output_file_path}")
         except Exception as e:
             click.echo(f"Error writing feature {feature_id} to file: {e}", err=True)
+
 
 if __name__ == "__main__":
     main()
