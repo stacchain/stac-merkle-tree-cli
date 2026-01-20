@@ -1,31 +1,31 @@
-# stac_merkle_cli/cli.py
-
 import click
 import json
 from pathlib import Path
 from .compute_merkle_info import process_catalog
-from .verify_merkle_tree_json import verify_merkle_tree
 
 @click.group()
-def cli():
+def main():
     """
-    STAC Merkle Tree CLI Tool.
-
-    Commands:
-      compute    Compute Merkle hashes for a STAC catalog.
-      verify     Verify the integrity of a Merkle tree JSON file.
+    STAC Merkle Tree CLI
+    
+    Tools for ensuring metadata integrity and provenance in STAC Catalogs.
     """
     pass
 
-@cli.command()
+@main.command()
 @click.argument('catalog_path', type=click.Path(exists=True, file_okay=False), required=True)
 @click.option('--merkle-tree-file', type=click.Path(), default='merkle_tree.json',
               help='Path to the output Merkle tree structure file.')
-def compute(catalog_path: str, merkle_tree_file: str):
+@click.option('--deep-integrity', is_flag=True, default=False,
+              help='Enable Deep Integrity: Verify and include asset file checksums in the hash.')
+@click.option('--ignore-links/--include-links', default=True,
+              help='Exclude the "links" field from hashing to prevent circular dependencies (Default: True).')
+def compute(catalog_path: str, merkle_tree_file: str, deep_integrity: bool, ignore_links: bool):
     """
-    Compute Merkle hashes for STAC catalogs, handling nested catalogs and collections.
-
-    CATALOG_PATH: Path to the root directory containing 'catalog.json'.
+    Computes Merkle hashes for a STAC Catalog.
+    
+    Walks the catalog hierarchy, computes 'merkle:object_hash' for every Item, 
+    and aggregates them into 'merkle:root' values for Collections and Catalogs.
     """
     catalog_dir = Path(catalog_path)
     catalog_json_path = catalog_dir / 'catalog.json'
@@ -37,44 +37,78 @@ def compute(catalog_path: str, merkle_tree_file: str):
     # Define the root hash_method
     root_hash_method = {
         'function': 'sha256',
-        'fields': ['*'],
+        'fields': ['*'],  # This will be filtered by ignore_links logic internally
         'ordering': 'ascending',
         'description': 'Computed by including the merkle:root of collections and the catalog\'s own merkle:object_hash.'
     }
     
-    # Process the root catalog
-    merkle_tree = process_catalog(catalog_json_path, root_hash_method)
+    click.echo(f"Starting compute process...")
+    click.echo(f" - Deep Integrity: {'Enabled' if deep_integrity else 'Disabled'}")
+    click.echo(f" - Ignore Links: {'Yes' if ignore_links else 'No'}")
+
+    # Process the root catalog with new flags
+    merkle_tree = process_catalog(
+        catalog_json_path, 
+        root_hash_method, 
+        deep_integrity=deep_integrity, 
+        ignore_links=ignore_links
+    )
     
     if not merkle_tree:
         click.echo("Error: Merkle tree is empty. Check your Catalog structure and hash methods.", err=True)
         exit(1)
     
     # Save the merkle_tree.json
-    output_path = Path(catalog_path) / merkle_tree_file
+    output_path = Path(f"{catalog_path}/{merkle_tree_file}")
     try:
         with output_path.open('w', encoding='utf-8') as f:
             json.dump(merkle_tree, f, indent=2)
-        click.echo(f"Merkle tree structure saved to {output_path}")
+        click.echo(f"Success! Merkle tree structure saved to {output_path}")
     except Exception as e:
         click.echo(f"Error writing to {output_path}: {e}", err=True)
         exit(1)
 
-@cli.command()
-@click.argument('merkle_tree_file', type=click.Path(exists=True, dir_okay=False), required=True)
-def verify(merkle_tree_file: str):
+@main.command()
+@click.argument('catalog_path', type=click.Path(exists=True, file_okay=False), required=True)
+@click.option('--base-url', required=True, help='The base URL where proof files will be hosted.')
+@click.option('--output-dir', type=click.Path(), default='proofs', help='Directory to save proof files (default: ./proofs)')
+def proofs(catalog_path: str, base_url: str, output_dir: str):
     """
-    Verify that the merkle:root in the Merkle tree JSON matches the recalculated root.
-
-    MERKLE_TREE_FILE: Path to the Merkle tree JSON file.
+    Generates Merkle Inclusion Proofs for all Items.
+    
+    Reads the 'merkle_tree.json' (must run 'compute' first) and generates 
+    individual JSON proof files for every Item in the catalog.
     """
-    merkle_tree_path = Path(merkle_tree_file)
-    verification_result = verify_merkle_tree(merkle_tree_path)
-    if verification_result:
-        click.echo("Verification Successful: The merkle:root matches.")
-        exit(0)
-    else:
-        click.echo("Verification Failed: The merkle:root does not match.", err=True)
+    catalog_dir = Path(catalog_path)
+    merkle_tree_path = catalog_dir / 'merkle_tree.json'
+    
+    if not merkle_tree_path.exists():
+        click.echo(f"Error: 'merkle_tree.json' not found. Run 'compute' first.", err=True)
         exit(1)
 
+    click.echo(f"Generating proofs for {catalog_path}...")
+    
+    # Implementation hook
+    # generate_item_proofs(merkle_tree_path, output_dir, base_url)
+    
+    click.echo(f"Proof generation logic not yet linked. (See next step)")
+
+
+@main.command()
+@click.argument('catalog_path', type=click.Path(exists=True, file_okay=False), required=True)
+def verify(catalog_path: str):
+    """
+    Verifies the integrity of the Merkle Tree.
+    
+    Re-calculates hashes from the tree structure and compares them 
+    against the stored 'merkle:root' values.
+    """
+    click.echo(f"Verifying Merkle Tree for {catalog_path}...")
+    
+    # Implementation hook
+    # verify_tree(catalog_path)
+    
+    click.echo(f"Verify logic not yet linked.")
+
 if __name__ == '__main__':
-    cli()
+    main()
