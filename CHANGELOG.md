@@ -7,9 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v0.4.0] - 2026-01-12
+
 ### Added
 
-- Added `verify` command to cli with accompanying script to ensure that the Merkle tree verification json produced by the `compute` command matches [#3](https://github.com/stacchain/stac-merkle-tree-cli/pull/3)
+- **Merkle Proofs**: Added new `proofs` command to generate standalone Merkle Inclusion Proof JSON files and link them in STAC Items (Spec v1.1.1).
+- **Deep Integrity**: Added `--deep-integrity` flag to the `compute` command. When enabled, it includes asset `file:checksum` values in the hash calculation.
+- **Safer Hashing**: Added `--ignore-links` flag (default: True) to exclude the `links` field from hashing, preventing circular dependency issues.
+- **Verification**: Added `verify` command to ensure the `merkle_tree.json` structure matches the computed hashes [#3](https://github.com/stacchain/stac-merkle-tree-cli/pull/3).
+
+### Changed
+
+- Updated default extension URL to `v1.1.1`.
+- Refactored `compute` logic to use a safer default field list (excluding links) instead of a wildcard `*`.
 
 ## [v0.3.0] - 2024-11-20
 
