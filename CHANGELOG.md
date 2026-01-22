@@ -7,20 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [v0.4.0] - 2026-01-12
+## [v0.4.0] - 2026-01-22
 
 ### Added
 
-- **Merkle Proofs**: Added new `proofs` command to generate standalone Merkle Inclusion Proof JSON files and link them in STAC Items (Spec v1.1.1).
-[#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
-- **Deep Integrity**: Added `--deep-integrity` flag to the `compute` command. When enabled, it includes asset `file:checksum` values in the hash calculation. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
-- **Safer Hashing**: Added `--ignore-links` flag (default: True) to exclude the `links` field from hashing, preventing circular dependency issues. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
-- **Verification**: Added `verify` command to ensure the `merkle_tree.json` structure matches the computed hashes [#3](https://github.com/stacchain/stac-merkle-tree-cli/pull/3).
+- **Merkle Proofs**: Added new `proofs` command to generate standalone Merkle Inclusion Proof JSON files for each Item and link them in STAC Items. Enables verification of individual items without downloading the entire catalog. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
+- **Opportunistic File Integrity**: The `compute` command now automatically detects and includes `file:checksum` values in hash calculations when present in asset metadata. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
+- **Verification Command**: Added `verify` command to recursively validate the integrity of a Merkle tree by recalculating `merkle:root` values and comparing them to stored values. [#3](https://github.com/stacchain/stac-merkle-tree-cli/pull/3)
+- **Link Ignore Option**: Added `--ignore-links / --include-links` flag (default: `--ignore-links`) to exclude the `links` field from hashing, preventing circular dependency issues. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
 
 ### Changed
 
 - Updated default extension URL to `v1.1.1`. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
-- Refactored `compute` logic to use a safer default field list (excluding links) instead of a wildcard `*`. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
+- Refactored CLI from single command to Click Group with three subcommands: `compute`, `proofs`, and `verify`. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
 
 ## [v0.3.0] - 2024-11-20
 

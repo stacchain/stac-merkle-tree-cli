@@ -29,19 +29,11 @@ def main():
     help="Path to the output Merkle tree structure file.",
 )
 @click.option(
-    "--deep-integrity",
-    is_flag=True,
-    default=False,
-    help="Enable Deep Integrity: Verify and include asset file checksums in the hash.",
-)
-@click.option(
     "--ignore-links/--include-links",
     default=True,
     help='Exclude the "links" field from hashing to prevent circular dependencies (Default: True).',
 )
-def compute(
-    catalog_path: str, merkle_tree_file: str, deep_integrity: bool, ignore_links: bool
-):
+def compute(catalog_path: str, merkle_tree_file: str, ignore_links: bool):
     """
     Computes Merkle hashes for a STAC Catalog.
 
@@ -64,14 +56,12 @@ def compute(
     }
 
     click.echo("Starting compute process...")
-    click.echo(f" - Deep Integrity: {'Enabled' if deep_integrity else 'Disabled'}")
     click.echo(f" - Ignore Links: {'Yes' if ignore_links else 'No'}")
 
-    # Process the root catalog with new flags
+    # Process the root catalog
     merkle_tree = process_catalog(
         catalog_json_path,
         root_hash_method,
-        deep_integrity=deep_integrity,
         ignore_links=ignore_links,
     )
 
@@ -109,9 +99,6 @@ def compute(
 def proofs(catalog_path: str, base_url: str, output_dir: str):
     """
     Generates Merkle Inclusion Proofs for all Items.
-
-    Reads the 'merkle_tree.json' (must run 'compute' first) and generates
-    individual JSON proof files for every Item in the catalog.
     """
     catalog_dir = Path(catalog_path)
     merkle_tree_path = catalog_dir / "merkle_tree.json"
@@ -124,8 +111,12 @@ def proofs(catalog_path: str, base_url: str, output_dir: str):
 
     click.echo(f"Generating proofs for {catalog_path}...")
 
-    # Implementation hook
-    generate_item_proofs(merkle_tree_path, output_dir, base_url)
+    try:
+        generate_item_proofs(merkle_tree_path, output_dir, base_url)
+        click.echo(f"Success! Proofs generated in '{output_dir}' and items updated.")
+    except Exception as e:
+        click.echo(f"Error generating proofs: {e}", err=True)
+        exit(1)
 
 
 @main.command()

@@ -43,9 +43,11 @@ class TestComputeMerkleObjectHash(unittest.TestCase):
             "description": "Test hash method.",
         }
 
-        result = compute_merkle_object_hash(stac_object, hash_method)
+        result = compute_merkle_object_hash(
+            stac_object, hash_method, ignore_links=False
+        )
 
-        # Expected data excludes Merkle fields recursively
+        # Expected data excludes Merkle fields recursively but includes links
         expected_data = {
             "type": "Feature",
             "id": "test-item",
@@ -85,9 +87,11 @@ class TestComputeMerkleObjectHash(unittest.TestCase):
             "description": "Test hash method.",
         }
 
-        result = compute_merkle_object_hash(stac_object, hash_method)
+        result = compute_merkle_object_hash(
+            stac_object, hash_method, ignore_links=False
+        )
 
-        # Expected data excludes Merkle fields
+        # Expected data excludes Merkle fields but includes links
         expected_data = {
             "type": "Collection",
             "id": "test-collection",
@@ -417,7 +421,9 @@ class TestProcessCollection(unittest.TestCase):
         }
 
         # Process the collection via process_collection only
-        collection_node = process_collection(collection_json_path, hash_method)
+        collection_node = process_collection(
+            collection_json_path, hash_method, ignore_links=True
+        )
 
         # Assertions
         self.assertIsNotNone(collection_node)
@@ -504,7 +510,9 @@ class TestProcessCollection(unittest.TestCase):
         }
 
         # Process the collection via process_collection only
-        collection_node = process_collection(collection_json_path, hash_method)
+        collection_node = process_collection(
+            collection_json_path, hash_method, ignore_links=True
+        )
 
         # Assertions
         self.assertIsNotNone(collection_node)
@@ -784,7 +792,7 @@ class TestProcessCatalog(unittest.TestCase):
             json.dump(catalog_json, f, indent=2)
 
         # Process the catalog instead of processing the collection directly
-        merkle_tree = process_catalog(catalog_json_path, hash_method)
+        merkle_tree = process_catalog(catalog_json_path, hash_method, ignore_links=True)
 
         # Assertions
         self.assertIsNotNone(merkle_tree)

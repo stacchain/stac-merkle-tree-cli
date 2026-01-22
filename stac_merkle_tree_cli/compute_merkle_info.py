@@ -38,9 +38,6 @@ def compute_merkle_object_hash(
     """
     fields = hash_method.get("fields", ["*"])
 
-    # Pre-processing to ensure Deep Integrity if required fields are present
-    # (Actual file checksum calculation would happen before this function is called)
-
     if fields == ["*"] or fields == ["all"]:
         data_to_hash = remove_merkle_fields(stac_object, ignore_links)
     else:
@@ -100,11 +97,11 @@ def compute_merkle_root(hashes: List[str], hash_method: Dict[str, Any]) -> str:
 def process_item(
     item_path: Path,
     hash_method: Dict[str, Any],
-    deep_integrity: bool = False,
     ignore_links: bool = True,
 ) -> Dict[str, Any]:
     """
-    Processes a STAC Item. If deep_integrity is True, it checks/updates file:checksum.
+    Processes a STAC Item.
+    Opportunistically checks for file:checksum to ensure the extension is listed.
     """
     try:
         with item_path.open("r", encoding="utf-8") as f:
@@ -113,19 +110,19 @@ def process_item(
         if item_json.get("type") != "Feature":
             return {}
 
-        # --- Deep Integrity Logic ---
-        if deep_integrity:
-            # 1. Ensure File Info extension is present
-            if "stac_extensions" not in item_json:
-                item_json["stac_extensions"] = []
+        # --- Opportunistic Deep Integrity Logic ---
+        # If ANY asset has a checksum, ensure the File Info extension is present
+        has_checksums = False
+        assets = item_json.get("assets", {})
+        for asset in assets.values():
+            if "file:checksum" in asset:
+                has_checksums = True
+                break
+
+        if has_checksums:
+            item_json.setdefault("stac_extensions", [])
             if FILE_INFO_URL not in item_json["stac_extensions"]:
                 item_json["stac_extensions"].append(FILE_INFO_URL)
-
-            # 2. Iterate assets and calculate checksums (Mocking logic for now)
-            # In a real impl, we would download the href and hash it.
-            # for asset in item_json.get('assets', {}).values():
-            #     if 'file:checksum' not in asset:
-            #          asset['file:checksum'] = calculate_file_hash(asset['href'])
 
         # Compute object hash
         object_hash = compute_merkle_object_hash(item_json, hash_method, ignore_links)
@@ -158,7 +155,6 @@ def process_item(
 def process_collection(
     collection_path: Path,
     parent_hash_method: Dict[str, Any],
-    deep_integrity: bool,
     ignore_links: bool,
 ) -> Dict[str, Any]:
     """
@@ -174,9 +170,6 @@ def process_collection(
         collection_dir = collection_path.parent
 
         # 1. Find and Process Children
-        # (This simplistic globbing assumes a flat or simple nested structure.
-        #  For production, use stac-api or pystac crawling if possible, but this works for static files)
-
         # Look for direct Item files
         for item_file in collection_dir.glob("*.json"):
             if item_file.name in ["collection.json", "catalog.json"]:
@@ -187,7 +180,7 @@ def process_collection(
                 if "Feature" not in f_check.read(100):
                     continue
 
-            node = process_item(item_file, hash_method, deep_integrity, ignore_links)
+            node = process_item(item_file, hash_method, ignore_links)
             if node:
                 children_nodes.append(node)
 
@@ -200,9 +193,7 @@ def process_collection(
             sub_cat = sub_dir / "catalog.json"
 
             if sub_coll.exists():
-                node = process_collection(
-                    sub_coll, hash_method, deep_integrity, ignore_links
-                )
+                node = process_collection(sub_coll, hash_method, ignore_links)
                 if node:
                     children_nodes.append(node)
             elif sub_cat.exists():
@@ -212,9 +203,7 @@ def process_collection(
                 # Check for Item in folder (e.g /item-id/item-id.json)
                 item_files = list(sub_dir.glob("*.json"))
                 if len(item_files) == 1:
-                    node = process_item(
-                        item_files[0], hash_method, deep_integrity, ignore_links
-                    )
+                    node = process_item(item_files[0], hash_method, ignore_links)
                     if node:
                         children_nodes.append(node)
 
@@ -228,10 +217,7 @@ def process_collection(
                 # Container: use ROOT hash to capture deep changes
                 tree_hashes.append(child["merkle:root"])
 
-        # Include self in the tree?
-        # Standard Merkle logic usually only hashes children.
-        # But STAC Merkle spec says "hashes from its child objects... optionally its own".
-        # Let's include own_object_hash to bind metadata (Title/Desc) to the tree.
+        # Include self in the tree
         own_object_hash = compute_merkle_object_hash(
             collection_json, hash_method, ignore_links
         )
@@ -274,7 +260,6 @@ def process_collection(
 def process_catalog(
     catalog_path: Path,
     parent_hash_method: Dict[str, Any],
-    deep_integrity: bool = False,
     ignore_links: bool = True,
 ) -> Dict[str, Any]:
     """
@@ -289,7 +274,6 @@ def process_catalog(
         catalog_dir = catalog_path.parent
 
         # Process 'collections' folder if exists, or direct subfolders
-        # (Adapting to your previous logic which looked for specific structure)
         scan_dirs = [catalog_dir]
         if (catalog_dir / "collections").exists():
             scan_dirs.append(catalog_dir / "collections")
@@ -299,9 +283,7 @@ def process_catalog(
                 if item.is_dir():
                     coll_path = item / "collection.json"
                     if coll_path.exists():
-                        node = process_collection(
-                            coll_path, hash_method, deep_integrity, ignore_links
-                        )
+                        node = process_collection(coll_path, hash_method, ignore_links)
                         if node:
                             children_nodes.append(node)
 
