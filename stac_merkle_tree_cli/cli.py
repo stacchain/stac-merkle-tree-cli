@@ -4,6 +4,7 @@ from pathlib import Path
 import click
 
 from .compute_merkle_info import process_catalog
+from .proofs import generate_item_proofs
 from .verify import verify_tree
 
 
@@ -124,9 +125,7 @@ def proofs(catalog_path: str, base_url: str, output_dir: str):
     click.echo(f"Generating proofs for {catalog_path}...")
 
     # Implementation hook
-    # generate_item_proofs(merkle_tree_path, output_dir, base_url)
-
-    click.echo("Proof generation logic not yet linked. (See next step)")
+    generate_item_proofs(merkle_tree_path, output_dir, base_url)
 
 
 @main.command()
