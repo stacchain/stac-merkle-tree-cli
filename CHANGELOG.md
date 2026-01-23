@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **Merkle Proofs**: Added new `proofs` command to generate standalone Merkle Inclusion Proof JSON files for each Item and link them in STAC Items. Enables verification of individual items without downloading the entire catalog. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
+- **Proof Verification**: Added `verify-proof` command to verify a single STAC Item against its Merkle Proof file. Allows data consumers to validate integrity without needing the entire catalog or the CLI tool installed. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
 - **Opportunistic File Integrity**: The `compute` command now automatically detects and includes `file:checksum` values in hash calculations when present in asset metadata. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
 - **Verification Command**: Added `verify` command to recursively validate the integrity of a Merkle tree by recalculating `merkle:root` values and comparing them to stored values. [#3](https://github.com/stacchain/stac-merkle-tree-cli/pull/3)
 - **Link Ignore Option**: Added `--ignore-links / --include-links` flag (default: `--ignore-links`) to exclude the `links` field from hashing, preventing circular dependency issues. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
