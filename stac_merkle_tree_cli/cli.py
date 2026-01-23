@@ -6,6 +6,7 @@ import click
 from .compute_merkle_info import process_catalog
 from .proofs import generate_item_proofs
 from .verify import verify_tree
+from .verify_proof import verify_item
 
 
 @click.group()
@@ -133,6 +134,39 @@ def verify(catalog_path: str):
     success = verify_tree(catalog_path)
 
     if not success:
+        exit(1)
+
+
+@main.command()
+@click.argument(
+    "item_path", type=click.Path(exists=True, file_okay=True), required=True
+)
+@click.argument(
+    "proof_path", type=click.Path(exists=True, file_okay=True), required=True
+)
+def verify_proof(item_path: str, proof_path: str):
+    """
+    Verify a single Item against a Merkle Proof file.
+
+    This allows users to verify an Item without needing the entire catalog.
+    """
+    try:
+        with open(item_path, "r") as f:
+            item = json.load(f)
+
+        with open(proof_path, "r") as f:
+            proof = json.load(f)
+
+        if verify_item(item, proof):
+            click.secho("✅ Verification SUCCESS", fg="green")
+        else:
+            click.secho("❌ Verification FAILED", fg="red")
+            exit(1)
+    except json.JSONDecodeError as e:
+        click.echo(f"Error: Invalid JSON in file: {e}", err=True)
+        exit(1)
+    except Exception as e:
+        click.echo(f"Error: {e}", err=True)
         exit(1)
 
 

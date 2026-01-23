@@ -10,12 +10,14 @@ A Command-Line Interface (CLI) tool for computing and adding Merkle Tree informa
 - [Installation](#installation)
 - [Directory Structure](#directory-structure)
 - [Usage](#usage)
-  - [Basic Usage](#basic-usage)
-  - [Example](#example)
+  - [1. `compute`](#1-compute)
+  - [2. `proofs`](#2-proofs)
+  - [3. `verify`](#3-verify)
+  - [4. `verify-proof`](#4-verify-proof)
+  - [How to Verify a Proof (Client-Side)](#how-to-verify-a-proof-client-side)
+- [File Integrity (Opportunistic Checksums)](#file-integrity-opportunistic-checksums)
 - [Merkle Tree Extension Specification](#merkle-tree-extension-specification)
-- [Output](#output)
 - [Contributing](#contributing)
-- [Verification Steps](#verification-steps)
 
 ## Overview
 
@@ -294,6 +296,154 @@ Example Output (Failure):
 
 ⛔ Merkle Tree Verification FAILED.
 ```
+
+## How to Verify a Proof (Client-Side)
+
+The power of Merkle Proofs is that any user can verify a single Item without downloading your entire catalog. Here is a simple Python snippet demonstrating how a client verifies an Item against its proof file.
+
+```python
+import json
+import hashlib
+
+def compute_hash(data):
+    """Compute SHA256 hash of data."""
+    if isinstance(data, dict):
+        # Canonical JSON dump to match CLI logic
+        encoded = json.dumps(data, sort_keys=True, separators=(',', ':')).encode('utf-8')
+    else:
+        # Hashing raw bytes/strings
+        encoded = data if isinstance(data, bytes) else data.encode('utf-8')
+    return hashlib.sha256(encoded).hexdigest()
+
+def verify_item(item_json, proof_json):
+    """
+    Verify a STAC Item against a Merkle Proof.
+    """
+    # 1. Clean the Item: Remove fields that change (merkle fields, links)
+    #    Note: This must match the '--ignore-links' setting used during generation.
+    clean_item = {
+        k: v for k, v in item_json.items()
+        if k not in ["merkle:object_hash", "merkle:root", "merkle:hash_method", "links"]
+    }
+
+    # 2. Calculate the Item's Hash
+    current_hash = compute_hash(clean_item)
+
+    # 3. Check if Identity matches
+    if current_hash != proof_json['target_hash']:
+        print("❌ Identity Mismatch: Item data has been altered.")
+        return False
+
+    # 4. Traverse the Path (The Merkle Proof)
+    for step in proof_json['path']:
+        sibling_hash = step['hash']
+        position = step['position']
+
+        # Combine hashes based on position
+        if position == 'left':
+            combined = bytes.fromhex(sibling_hash) + bytes.fromhex(current_hash)
+        else:
+            combined = bytes.fromhex(current_hash) + bytes.fromhex(sibling_hash)
+
+        current_hash = hashlib.sha256(combined).hexdigest()
+
+    # 5. Compare against the Trusted Root
+    if current_hash == proof_json['root']:
+        print("✅ SUCCESS: Item is verified against the Root.")
+        return True
+    else:
+        print("❌ FAILURE: Cryptographic proof failed.")
+        print(f"Calculated Root: {current_hash}")
+        print(f"Expected Root:   {proof_json['root']}")
+        return False
+
+# Example Usage
+if __name__ == "__main__":
+    with open("item.json") as f:
+        item = json.load(f)
+
+    with open("item.proof.json") as f:
+        proof = json.load(f)
+
+    verify_item(item, proof)
+```
+
+### Why This Snippet Matters
+
+**Transparency:** It proves there is no "magic" in the tool. The verification logic is standard cryptography (SHA256) that can be implemented in Python, JavaScript, Go, or any language.
+
+**Zero Dependencies:** A data consumer (e.g., a scientist or a frontend developer) can verify your data without needing to install the CLI tool. This snippet uses only Python's standard libraries (`json` and `hashlib`).
+
+**Trust:** It demonstrates that the Merkle implementation relies on standard, open cryptography (SHA256), not proprietary logic.
+
+**Portability:** Because the logic is simple (standard JSON serialization + SHA256), developers can easily port this snippet to JavaScript, Go, Rust, or other languages.
+
+### 4. `verify-proof`
+
+The `verify-proof` command verifies a single STAC Item against its Merkle Proof file. This is useful for data consumers who have downloaded an Item and its proof file and want to verify integrity without needing the entire catalog.
+
+```bash
+stac-merkle-tree-cli verify-proof path/to/item.json path/to/item.proof.json
+```
+
+#### Parameters:
+
+- `path/to/item.json`: (Required) Path to the STAC Item JSON file to verify.
+- `path/to/item.proof.json`: (Required) Path to the corresponding Merkle Proof JSON file.
+
+#### Example:
+
+Run the command:
+
+```bash
+stac-merkle-tree-cli verify-proof my_item.json my_item.proof.json
+```
+
+Example Output (Success):
+
+```bash
+✅ SUCCESS: Item is verified against the Root.
+✅ Verification SUCCESS
+```
+
+Example Output (Failure - Data Tampered):
+
+```bash
+❌ Identity Mismatch: Item data has been altered.
+❌ Verification FAILED
+```
+
+Example Output (Failure - Invalid Proof):
+
+```bash
+❌ FAILURE: Cryptographic proof failed.
+Calculated Root: abc123def456...
+Expected Root:   xyz789uvw012...
+❌ Verification FAILED
+```
+
+#### How It Works
+
+The `verify-proof` command performs the following steps:
+
+1. **Load Files:** Reads the Item JSON and Proof JSON files.
+2. **Clean Item:** Removes transient fields (`merkle:object_hash`, `merkle:root`, `merkle:hash_method`, `links`) that may change between versions.
+3. **Compute Hash:** Calculates the SHA256 hash of the cleaned Item using canonical JSON serialization.
+4. **Verify Identity:** Checks if the computed hash matches the `target_hash` in the proof.
+5. **Traverse Proof Path:** Follows the Merkle proof path, combining hashes at each step.
+6. **Verify Root:** Compares the final calculated root against the trusted `root` in the proof file.
+
+If all steps succeed, the Item is cryptographically verified to be part of the original catalog.
+
+#### Use Cases
+
+- **Data Consumer Verification:** A scientist downloads an Item and proof file from a data provider and verifies integrity locally.
+- **CI/CD Validation:** Automated tests verify that generated proofs are valid before publishing.
+- **Offline Verification:** Verify data integrity without network access to the original catalog.
+
+### Using the CLI to Verify Proofs
+
+You can verify a single Item against its proof file using the CLI command shown above. This performs the same verification as the Python snippet below, making it convenient for users who have the tool installed.
 
 ## File Integrity (Opportunistic Checksums)
 
