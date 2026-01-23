@@ -299,7 +299,7 @@ Example Output (Failure):
 
 ## How to Verify a Proof (Client-Side)
 
-The power of Merkle Proofs is that any user can verify a single Item without downloading your entire catalog. Here is a simple Python snippet demonstrating how a client verifies an Item against its proof file.
+You can verify a proof using the `verify-proof` command shown above. However, for clients who do not have this CLI installed, the verification logic is simple enough to implement in any language. Here is a standalone Python snippet demonstrating how to verify an Item against its proof file:
 
 ```python
 import json
