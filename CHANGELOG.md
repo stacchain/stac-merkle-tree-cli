@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated default extension URL to `v1.1.1`. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
 - Refactored CLI from single command to Click Group with three subcommands: `compute`, `proofs`, and `verify`. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
+- **Atomic File Writes**: Implemented atomic write pattern (write to temp file, then move) in `compute`, `proofs`, and `verify-proof` operations to prevent data corruption on crashes or interruptions. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
+- **verify-proof Command**: Added `--ignore-links / --include-links` option to `verify-proof` command to match the setting used during proof generation, ensuring verification consistency. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
 
 ## [v0.3.0] - 2024-11-20
 

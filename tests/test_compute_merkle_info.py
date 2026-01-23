@@ -721,9 +721,6 @@ class TestProcessCatalog(unittest.TestCase):
                 with item_path.open("w", encoding="utf-8") as f:
                     json.dump(item, f, indent=2)
 
-    @unittest.skip(
-        "Skipping this test temporarily due to CI environment inconsistency. Passing locally?"
-    )
     def test_process_catalog_simple(self):
         """
         Test processing a simple catalog with a single collection and items.
@@ -813,12 +810,15 @@ class TestProcessCatalog(unittest.TestCase):
         self.assertIn("children", collection_node)
         self.assertEqual(len(collection_node["children"]), 2)  # item1 and item2
 
-        # Check items
-        item_node1 = collection_node["children"][0]
+        # Check items (sorted for consistent ordering)
+        sorted_items = sorted(collection_node["children"], key=lambda x: x["node_id"])
+        self.assertEqual(len(sorted_items), 2)
+
+        item_node1 = sorted_items[0]
         self.assertEqual(item_node1["node_id"], "item1")
         self.assertIn("merkle:object_hash", item_node1)
 
-        item_node2 = collection_node["children"][1]
+        item_node2 = sorted_items[1]
         self.assertEqual(item_node2["node_id"], "item2")
         self.assertIn("merkle:object_hash", item_node2)
 

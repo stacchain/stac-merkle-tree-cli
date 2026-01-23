@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import os
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -135,9 +136,17 @@ def process_item(
             item_json["stac_extensions"].append(EXTENSION_URL)
             item_json["stac_extensions"].sort()
 
-        with item_path.open("w", encoding="utf-8") as f:
-            json.dump(item_json, f, indent=2)
-            f.write("\n")
+        # Atomic write pattern: write to temp file, then move
+        temp_path = item_path.with_suffix(".tmp")
+        try:
+            with temp_path.open("w", encoding="utf-8") as f:
+                json.dump(item_json, f, indent=2)
+                f.write("\n")
+            temp_path.replace(item_path)
+        except Exception:
+            if temp_path.exists():
+                os.remove(temp_path)
+            raise
 
         print(f"Processed Item: {item_path.name}")
 
@@ -236,9 +245,17 @@ def process_collection(
             collection_json["stac_extensions"].append(EXTENSION_URL)
             collection_json["stac_extensions"].sort()
 
-        with collection_path.open("w", encoding="utf-8") as f:
-            json.dump(collection_json, f, indent=2)
-            f.write("\n")
+        # Atomic write pattern: write to temp file, then move
+        temp_path = collection_path.with_suffix(".tmp")
+        try:
+            with temp_path.open("w", encoding="utf-8") as f:
+                json.dump(collection_json, f, indent=2)
+                f.write("\n")
+            temp_path.replace(collection_path)
+        except Exception:
+            if temp_path.exists():
+                os.remove(temp_path)
+            raise
 
         print(
             f"Processed Collection: {collection_path.name} -> Root: {merkle_root[:8]}..."
@@ -309,9 +326,17 @@ def process_catalog(
             catalog_json["stac_extensions"].append(EXTENSION_URL)
             catalog_json["stac_extensions"].sort()
 
-        with catalog_path.open("w", encoding="utf-8") as f:
-            json.dump(catalog_json, f, indent=2)
-            f.write("\n")
+        # Atomic write pattern: write to temp file, then move
+        temp_path = catalog_path.with_suffix(".tmp")
+        try:
+            with temp_path.open("w", encoding="utf-8") as f:
+                json.dump(catalog_json, f, indent=2)
+                f.write("\n")
+            temp_path.replace(catalog_path)
+        except Exception:
+            if temp_path.exists():
+                os.remove(temp_path)
+            raise
 
         print(f"Processed Root Catalog: {catalog_path.name}")
 

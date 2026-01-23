@@ -391,12 +391,22 @@ stac-merkle-tree-cli verify-proof path/to/item.json path/to/item.proof.json
 - `path/to/item.json`: (Required) Path to the STAC Item JSON file to verify.
 - `path/to/item.proof.json`: (Required) Path to the corresponding Merkle Proof JSON file.
 
+#### Options:
+
+- `--ignore-links / --include-links`: (Default: `--ignore-links`) Exclude or include the `links` field from the verification hash. **Important:** This must match the setting used when generating the proof with the `proofs` command. If the proof was generated with `--include-links`, you must use `--include-links` when verifying.
+
 #### Example:
 
-Run the command:
+Run the command (default: ignoring links):
 
 ```bash
 stac-merkle-tree-cli verify-proof my_item.json my_item.proof.json
+```
+
+Or, if the proof was generated with `--include-links`:
+
+```bash
+stac-merkle-tree-cli verify-proof my_item.json my_item.proof.json --include-links
 ```
 
 Example Output (Success):

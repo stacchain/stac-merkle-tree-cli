@@ -144,7 +144,12 @@ def verify(catalog_path: str):
 @click.argument(
     "proof_path", type=click.Path(exists=True, file_okay=True), required=True
 )
-def verify_proof(item_path: str, proof_path: str):
+@click.option(
+    "--ignore-links/--include-links",
+    default=True,
+    help='Exclude the "links" field from verification hash (must match the setting used during proof generation).',
+)
+def verify_proof(item_path: str, proof_path: str, ignore_links: bool):
     """
     Verify a single Item against a Merkle Proof file.
 
@@ -157,7 +162,7 @@ def verify_proof(item_path: str, proof_path: str):
         with open(proof_path, "r") as f:
             proof = json.load(f)
 
-        if verify_item(item, proof):
+        if verify_item(item, proof, ignore_links=ignore_links):
             click.secho("✅ Verification SUCCESS", fg="green")
         else:
             click.secho("❌ Verification FAILED", fg="red")

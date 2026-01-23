@@ -26,30 +26,33 @@ def compute_hash(data: Any) -> str:
     return hashlib.sha256(encoded).hexdigest()
 
 
-def verify_item(item_json: Dict[str, Any], proof_json: Dict[str, Any]) -> bool:
+def verify_item(
+    item_json: Dict[str, Any],
+    proof_json: Dict[str, Any],
+    ignore_links: bool = True,
+) -> bool:
     """
     Verify a STAC Item against a Merkle Proof.
 
     Args:
         item_json: The STAC Item JSON object
         proof_json: The Merkle proof JSON object
+        ignore_links: Whether to exclude 'links' field from verification (default: True)
 
     Returns:
         True if verification succeeds, False otherwise
     """
     # 1. Clean the Item: Remove fields that change (merkle fields, links)
     #    Note: This must match the '--ignore-links' setting used during generation.
-    clean_item = {
-        k: v
-        for k, v in item_json.items()
-        if k
-        not in [
-            "merkle:object_hash",
-            "merkle:root",
-            "merkle:hash_method",
-            "links",
-        ]
-    }
+    exclude_fields = [
+        "merkle:object_hash",
+        "merkle:root",
+        "merkle:hash_method",
+    ]
+    if ignore_links:
+        exclude_fields.append("links")
+
+    clean_item = {k: v for k, v in item_json.items() if k not in exclude_fields}
 
     # 2. Calculate the Item's Hash
     current_hash = compute_hash(clean_item)

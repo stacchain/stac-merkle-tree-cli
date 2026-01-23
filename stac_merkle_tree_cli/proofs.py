@@ -1,5 +1,6 @@
 import hashlib
 import json
+import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -131,6 +132,20 @@ def generate_full_proof(
                 f"Integrity Error: Child {child['node_id']} not found in parent {parent['node_id']}"
             )
 
+        # 2. Add Parent's OWN hash (Crucial!)
+        if "merkle:object_hash" in parent:
+            sibling_hashes.append(parent["merkle:object_hash"])
+
+        # 3. Sort (Crucial!)
+        sibling_hashes.sort()
+
+        # Recalculate target_index after sorting
+        if sibling["type"] == "Item":
+            target_hash = child["merkle:object_hash"]
+        else:
+            target_hash = child["merkle:root"]
+        target_index = sibling_hashes.index(target_hash)
+
         # Generate the binary tree proof for this specific layer
         layer_proof = compute_binary_layer_proof(sibling_hashes, target_index)
 
@@ -166,9 +181,17 @@ def update_item_with_link(item_path: Path, proof_filename: str, base_url: str):
             {"rel": PROOF_REL_TYPE, "href": proof_url, "type": PROOF_MEDIA_TYPE}
         )
 
-        with item_path.open("w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2)
-            f.write("\n")
+        # Atomic write pattern: write to temp file, then move
+        temp_path = item_path.with_suffix(".tmp")
+        try:
+            with temp_path.open("w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2)
+                f.write("\n")
+            temp_path.replace(item_path)
+        except Exception:
+            if temp_path.exists():
+                os.remove(temp_path)
+            raise
 
     except Exception as e:
         print(f"Error updating item {item_path}: {e}")
