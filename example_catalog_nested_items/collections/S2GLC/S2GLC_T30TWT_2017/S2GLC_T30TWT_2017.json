@@ -64,6 +64,12 @@
       "rel": "collection",
       "type": "application/json",
       "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/S2GLC"
+    },
+    {
+      "rel": "merkle-proof",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/S2GLC/items/S2GLC_T30TWT_2017.proof.json",
+      "title": "Merkle Inclusion Proof"
     }
   ],
   "assets": {

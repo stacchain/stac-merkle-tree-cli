@@ -66,6 +66,12 @@
       "rel": "collection",
       "type": "application/json",
       "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM"
+    },
+    {
+      "rel": "merkle-proof",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items/DEM1_SAR_DGE_90_20101212T102356_20130709T103701_ADS_000000_8521.proof.json",
+      "title": "Merkle Inclusion Proof"
     }
   ],
   "assets": {
