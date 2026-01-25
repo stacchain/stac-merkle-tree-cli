@@ -242,12 +242,19 @@ def generate_item_proofs(merkle_tree_path: Path, output_dir: str, base_url: str)
             proof_obj = generate_full_proof(tree_root, item_id)
 
             if proof_obj:
-                # 4. Save Proof File
+                # 4. Save Proof File (Atomic)
                 proof_filename = f"{item_id}.proof.json"
                 proof_file_path = output_path / proof_filename
+                temp_proof_path = proof_file_path.with_suffix(".tmp")
 
-                with proof_file_path.open("w") as f:
-                    json.dump(proof_obj, f, indent=2)
+                try:
+                    with temp_proof_path.open("w") as f:
+                        json.dump(proof_obj, f, indent=2)
+                    temp_proof_path.replace(proof_file_path)
+                except Exception:
+                    if temp_proof_path.exists():
+                        os.remove(temp_proof_path)
+                    raise
 
                 # 5. Link Item to Proof
                 update_item_with_link(item_file, proof_filename, base_url)

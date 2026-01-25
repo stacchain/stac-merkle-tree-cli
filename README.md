@@ -319,11 +319,14 @@ def verify_item(item_json, proof_json):
     """
     Verify a STAC Item against a Merkle Proof.
     """
-    # 1. Clean the Item: Remove fields that change (merkle fields, links)
-    #    Note: This must match the '--ignore-links' setting used during generation.
+    # 1. Clean the Item: Remove fields that change (merkle fields)
+    #    Note: 'links' should be removed ONLY if you used '--ignore-links' (default)
+    #    during the 'compute' step. If you used '--include-links', remove 'links' from this list.
+    fields_to_remove = ["merkle:object_hash", "merkle:root", "merkle:hash_method", "links"]
+
     clean_item = {
         k: v for k, v in item_json.items()
-        if k not in ["merkle:object_hash", "merkle:root", "merkle:hash_method", "links"]
+        if k not in fields_to_remove
     }
 
     # 2. Calculate the Item's Hash

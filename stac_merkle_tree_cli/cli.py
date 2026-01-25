@@ -147,7 +147,7 @@ def verify(catalog_path: str):
 @click.option(
     "--ignore-links/--include-links",
     default=True,
-    help='Exclude the "links" field from verification hash (must match the setting used during proof generation).',
+    help='Exclude the "links" field from verification hash (must match the setting used during the "compute" step).',
 )
 def verify_proof(item_path: str, proof_path: str, ignore_links: bool):
     """
