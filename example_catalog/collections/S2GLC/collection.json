@@ -48,6 +48,12 @@
       "rel": "items",
       "type": "application/json",
       "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/S2GLC/items"
+    },
+    {
+      "rel": "merkle-proof",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/S2GLC.proof.json",
+      "title": "Merkle Inclusion Proof"
     }
   ],
   "merkle:object_hash": "84ab0e102924c012d4cf2a3b3e10ed4f768f695001174cfd5d9c75d4335b7a48",

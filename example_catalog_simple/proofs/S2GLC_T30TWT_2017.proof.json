@@ -1,0 +1,18 @@
+{
+  "target_hash": "3a3803a0dae5dbaf9561aeb4cce2770bf38b5da4b71ca67398fb24d48c43a68f",
+  "root": "f0ed08b316b917a98c085e699c090af1cea964b697dd0bc44491ebced4d0006c",
+  "path": [
+    {
+      "position": "left",
+      "hash": "84ab0e102924c012d4cf2a3b3e10ed4f768f695001174cfd5d9c75d4335b7a48"
+    },
+    {
+      "position": "right",
+      "hash": "aa7f89b29cb339032ec86d81d4090bdbd52199152fb657f50b08eec1b3234ee2"
+    },
+    {
+      "position": "right",
+      "hash": "6ae6f97edd2994b632b415ff810af38639faa84544aa8a33a88bdf867a649374"
+    }
+  ]
+}
