@@ -1,7 +1,7 @@
 {
   "stac_version": "1.0.0",
   "stac_extensions": [
-    "https://stacchain.github.io/merkle-tree/v1.0.0/schema.json"
+    "https://stacchain.github.io/merkle-tree/v1.1.1/schema.json"
   ],
   "id": "TERRAAQUA",
   "title": "TERRAAQUA",
