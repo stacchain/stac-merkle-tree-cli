@@ -7,9 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v0.4.0] - 2026-01-22
+
 ### Added
 
-- Added `verify` command to cli with accompanying script to ensure that the Merkle tree verification json produced by the `compute` command matches [#3](https://github.com/stacchain/stac-merkle-tree-cli/pull/3)
+- **Merkle Proofs**: Added new `proofs` command to generate standalone Merkle Inclusion Proof JSON files for each Item and link them in STAC Items. Enables verification of individual items without downloading the entire catalog. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
+- **Proof Verification**: Added `verify-proof` command to verify a single STAC Item against its Merkle Proof file. Allows data consumers to validate integrity without needing the entire catalog or the CLI tool installed. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
+- **Opportunistic File Integrity**: The `compute` command now automatically detects and includes `file:checksum` values in hash calculations when present in asset metadata. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
+- **Verification Command**: Added `verify` command to recursively validate the integrity of a Merkle tree by recalculating `merkle:root` values and comparing them to stored values. [#3](https://github.com/stacchain/stac-merkle-tree-cli/pull/3)
+- **Link Ignore Option**: Added `--ignore-links / --include-links` flag (default: `--ignore-links`) to exclude the `links` field from hashing, preventing circular dependency issues. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
+
+### Changed
+
+- Updated default extension URL to `v1.1.1`. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
+- Refactored CLI from single command to Click Group with three subcommands: `compute`, `proofs`, and `verify`. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
+- **Atomic File Writes**: Implemented atomic write pattern (write to temp file, then move) in `compute`, `proofs`, and `verify-proof` operations to prevent data corruption on crashes or interruptions. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
+- **verify-proof Command**: Added `--ignore-links / --include-links` option to `verify-proof` command to match the setting used during proof generation, ensuring verification consistency. [#6](https://github.com/stacchain/stac-merkle-tree-cli/pull/6)
 
 ## [v0.3.0] - 2024-11-20
 
@@ -28,7 +41,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - first release
 
-[Unreleased]: https://github.com/stacchain/stac-merkle-tree-cli/tree/v0.3.0...main
+[Unreleased]: https://github.com/stacchain/stac-merkle-tree-cli/tree/v0.4.0...main
+[v0.4.0]: https://github.com/stacchain/stac-merkle-tree-cli/tree/v0.3.0...v0.4.0
 [v0.3.0]: https://github.com/stacchain/stac-merkle-tree-cli/tree/v0.2.0...v0.3.0
 [v0.2.0]: https://github.com/stacchain/stac-merkle-tree-cli/tree/v0.1.0...v0.2.0
 [v0.1.0]: https://github.com/stacchain/stac-merkle-tree-cli/tree/v0.1.0

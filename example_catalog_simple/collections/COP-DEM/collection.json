@@ -1,7 +1,7 @@
 {
   "stac_version": "1.0.0",
   "stac_extensions": [
-    "https://stacchain.github.io/merkle-tree/v1.0.0/schema.json"
+    "https://stacchain.github.io/merkle-tree/v1.1.1/schema.json"
   ],
   "id": "COP-DEM",
   "title": "COP-DEM",
@@ -48,6 +48,12 @@
       "rel": "items",
       "type": "application/json",
       "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM/items"
+    },
+    {
+      "rel": "merkle-proof",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/COP-DEM.proof.json",
+      "title": "Merkle Inclusion Proof"
     }
   ],
   "merkle:root": "7e990e84a86dc146547b6e3a3e35196f53e0123b6f216f871abd5d1f55d2ccc5",

@@ -1,7 +1,7 @@
 {
   "stac_version": "1.0.0",
   "stac_extensions": [
-    "https://stacchain.github.io/merkle-tree/v1.0.0/schema.json"
+    "https://stacchain.github.io/merkle-tree/v1.1.1/schema.json"
   ],
   "id": "TERRAAQUA",
   "title": "TERRAAQUA",
@@ -48,6 +48,12 @@
       "rel": "items",
       "type": "application/json",
       "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/TERRAAQUA/items"
+    },
+    {
+      "rel": "merkle-proof",
+      "type": "application/json",
+      "href": "https://catalogue.dataspace.copernicus.eu/stac/collections/TERRAAQUA.proof.json",
+      "title": "Merkle Inclusion Proof"
     }
   ],
   "merkle:object_hash": "6ae6f97edd2994b632b415ff810af38639faa84544aa8a33a88bdf867a649374",
